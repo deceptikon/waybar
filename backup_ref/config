@@ -1,0 +1,81 @@
+[
+  {
+    "name": "bar-horiz",
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "modules-left": [
+      "group/hardware",
+      "group/temp-group",
+      "group/audio",
+    ],
+    "modules-center": ["sway/window", "group/title"],
+    "modules-right": ["group/music",
+      "group/bright",
+      "group/switches",
+      "group/bat-group",
+      "user",
+      "tray",
+    ],
+    "modules-darker": {
+      "background": "rgba(30, 30, 46, 0.95)",
+      "modules": ["group/hardware", "group/temp-group", "group/audio"]
+    },
+    "include": [
+        "/home/lexx/.config/waybar/default-modules.json"
+    ],
+    "tray": {
+    "icon-size": 15,
+    "spacing": 3,
+    "show-passive-items": "false",
+},
+    "user": {
+        "format": "{user} (up {work_d} days ↑)",
+        "interval": 60,
+        "height": 30,
+        "width": 30,
+        "icon": true,
+        "open-on-click": true,
+    }
+  },
+  {
+    "name": "bar-vert",
+    "layer": "top",
+    "position": "right",
+    "width": 62,
+    "fixed-center": true,
+    "modules-center": ["sway/workspaces"],
+    "modules-left": [
+      "clock",
+      "group/title",
+      "power-profiles-daemon",
+    ],
+    "modules-right": [
+      "custom/powerbtn",
+      "custom/vpn",
+      "custom/checkupdates",
+      "idle_inhibitor",
+      "custom/dunst",
+      "custom/recorder",
+      "custom/kbd-auto",
+      "custom/lang",
+    ],
+    "modules-darker": {
+      "background": "rgba(0, 0, 0, 0.85)",
+      "modules": ["clock", "group/title", "custom/powerbtn"]
+    },
+    "include": ["/home/lexx/.config/waybar/default-modules.json"],
+    "power-profiles-daemon": {
+      "format": "{icon}   {profile}",
+      "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+      "tooltip": true,
+      "format-icons": {
+        "default": "",
+        "performance": "",
+        "balanced": "",
+        "power-saver": ""
+      }
+    },
+  }
+]
+

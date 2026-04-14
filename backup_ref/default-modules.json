@@ -1,0 +1,377 @@
+{
+  "group/switches": {
+    "orientation": "horizontal",
+    "drawer": { "transition-duration": 500, "transition-left-to-right": false },
+    "modules": ["group/base-switches", "bluetooth", "network"]
+  },
+  "group/base-switches": {
+    "orientation": "horizontal",
+    "modules": ["bluetooth#lite", "network#lite"]
+  },
+  "group/hardware": {
+    "orientation": "horizontal",
+    "drawer": { "transition-duration": 500, "transition-left-to-right": true },
+    "modules": ["group/subcpu", "memory", "custom/disk-io", "load"]
+  },
+  "group/temp-group": {
+    "orientation": "horizontal",
+    "drawer": { "transition-duration": 500, "transition-left-to-right": true },
+    "modules": [
+      "group/temperatura",
+      "custom/fan",
+      "custom/fan2",
+      "custom/temp-detailed"
+    ]
+  },
+  "group/temperatura": {
+    "orientation": "horizontal",
+    "modules": ["temperature", "custom/fanlabel"]
+  },
+  "group/power": {
+    "orientation": "horizontal",
+    "modules": ["battery", "custom/asus-profile"]
+  },
+  "group/bat-group": {
+    "orientation": "horizontal",
+    "drawer": { "transition-duration": 500, "transition-left-to-right": false },
+    "modules": [
+      "group/power",
+      "custom/battery-info",
+      "custom/acpi-detailed",
+      "custom/power-draw"
+    ]
+  },
+
+  "group/subcpu": {
+    "orientation": "horizontal",
+    "modules": ["cpu", "custom/ram"]
+  },
+  "cpu": { "format": "  <sub>CPU</sub> {usage}% ", "interval": 2 },
+  "custom/ram": { "format": "   {} " },
+  "custom/fanlabel": { "format": "   " },
+  "memory": {
+    "interval": 30,
+    "format": "free:{avail:0.1f}G used:{used:0.1f}G   "
+  },
+  "custom/disk-io": {
+    "exec": "iostat -d 1 2 | grep '^nvme' | tail -n 1 | awk '{printf \" ↓%.1f ↑%.1f MB/s (IOPS: %d)\", $3/1024, $4/1024, $2}'",
+    "interval": 2,
+    "format": " 󰋊 <sub>SSD:</sub> {}"
+  },
+  "temperature": {
+    "hwmon-path": "/sys/class/hwmon/hwmon6/temp1_input",
+    "critical-threshold": 85,
+    "format": " {icon} {temperatureC}°C ",
+    "format-icons": ["", "", ""]
+  },
+  "custom/fan": {
+    "exec": "cat /sys/class/hwmon/hwmon8/fan1_input",
+    "format": "{}<sub>RPM</sub> ",
+    "interval": 5
+  },
+  "custom/fan2": {
+    "exec": "cat /sys/class/hwmon/hwmon8/fan2_input",
+    "format": ": 󰈐 {}<sub>RPM</sub> ",
+    "interval": 5
+  },
+  "custom/temp-detailed": {
+    "exec": "sensors | awk '/amdgpu/{c=\"G\"} /nvme/{c=\"S\"} /mt7921/{c=\"W\"} /acpitz/{c=\"M\"} /edge|Composite|temp1|temp2/{split($2,a,/[+°]/); v=a[2]; if(c==\"G\")gpu=v; if(c==\"S\")ssd=v; if(c==\"W\")wf=v; if(c==\"M\"&&/temp1/)m1=v; if(c==\"M\"&&/temp2/)m2=v} END {printf \"󰢮 %s° 󰋊 %s° 󰖶 %s° 󰟀 %s/%s°\\n\", gpu, ssd, wf, m1, m2}'",
+    // "return-type": "json",
+    "interval": 5,
+    "format": " {} "
+  },
+  "battery": {
+    "bat": "BAT0",
+    "interval": 20,
+    "full-at": 90,
+    "states": {
+      "good": 50,
+      "warning": 10,
+      "critical": 5
+    },
+    "design-capacity": false,
+    "format-time": "{H}:{M}",
+    "format-good": " {icon}<small> {capacity}%</small>",
+    "format-warning": " {icon}<small> {capacity}%</small>",
+    "format-critical": " {icon}<small> {capacity}% LOW CHARGE! (off in {time})</small> ",
+    "format": " {icon} ",
+    "format-charging": "  {icon} ",
+    "format-icons": {
+      "default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+      "charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+    },
+    "tooltip-format": "Time remaining: {time}\nCycles: {cycles}\nPower draw: {power}W",
+    "tooltip-format-charging": "Time to full: {time}\nCycles: {cycles}\nPower draw: {power}W"
+  },
+  "custom/battery-info": {
+    "exec": "upower -i /org/freedesktop/UPower/devices/battery_BAT0 | awk '/state:/ {s=$2} /energy-full:/ {ef=$2} /energy-rate:/ {er=$2} /voltage:/ {v=$2} /percentage:/ {p=$2} /time to (empty|full):/ {t=$(NF-1) \" \" $NF} END {mah=int((ef/v)*1000); printf \"{\\\"text\\\":\\\"%s 󱎫 %s |  %sW | 󱐌 %sV |  %smAh \\\"}\\n\", p, t, er, v, mah}'",
+    "return-type": "json",
+    "interval": 20,
+    "format": " {}"
+  },
+  "custom/acpi-detailed": {
+    "exec": "acpi -b | awk '{print $3, $4, $5}'",
+    "interval": 10,
+    "format": "󰚥 {}"
+  },
+  "custom/power-draw": {
+    "exec": "awk '{printf \"%.1f W\", $1/1000000}' /sys/class/power_supply/BAT0/power_now",
+    "interval": 5,
+    "format": " {}"
+  },
+  "custom/asus-profile": {
+    //"exec": "asusctl profile get | grep 'Active profile' | awk '{print $NF}'",
+    "exec": "asusctl profile get | awk '/Active profile/ {p=$NF; icon=(p==\"Quiet\"?\" ECO\":(p==\"Balanced\"?\"  BAL\":\" PERF\")); print icon}'",
+    "interval": 2,
+    "format": " {} ",
+    "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
+    "signal": 10,
+    "rewrite": {
+      "Quiet": "Quiet ",
+      "Balanced": "Bal ",
+      "Performance": "Perf "
+    }
+  },
+  "network": {
+    "format-wifi": "  {essid} ",
+    "format": "󰈀 {ifname}",
+    "format-disconnected": "⚠ Disconnected"
+  },
+  "network#lite": {
+    "format-wifi": "  <sub>({signalStrength}%)</sub> ",
+    "format": " 󰈀 {ifname}",
+    "format-disconnected": " 󰌙 DOWN"
+  },
+  "bluetooth#lite": {
+    "format": " {icon} ",
+    "format-icons": { "enabled": "", "disabled": "󰂲" },
+    "on-click": "blueman-manager",
+    "format-connected": " {device_alias}",
+    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%"
+  },
+  "bluetooth": {
+    "format": " {icon} {status}",
+    "format-icons": { "enabled": "󰂯", "disabled": "󰂲" },
+    "on-click": "blueman-manager",
+    "format-connected": " {device_alias}",
+    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%"
+  },
+  "group/audio": {
+    "orientation": "horizontal",
+    "modules": ["pulseaudio", "pulseaudio/slider"]
+  },
+  "group/bright": {
+    "orientation": "horizontal",
+    "modules": ["backlight", "backlight/slider"]
+  },
+  "pulseaudio": {
+    "format": " {icon}",
+    "format-muted": " ",
+    "format-icons": {
+      "alsa_output.pci-0000_00_1f.3.analog-stereo": "",
+      "alsa_output.pci-0000_00_1f.3.analog-stereo-muted": "",
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "phone-muted": "",
+      "portable": "",
+      "car": "",
+      "default": ["", "", ""]
+    },
+    "on-click": "amixer -q sset Master toggle",
+    "scroll-step": 1,
+    "on-right-click": "pavucontrol"
+  },
+  "pulseaudio/slider": {
+    "min": 0,
+    "max": 90,
+    "orientation": "horizontal",
+    "format": "SUSU {}"
+  },
+  "backlight": { "format": " 󰃟" },
+  "backlight/slider": {
+    "min": 9,
+    "max": 100,
+    "orientation": "horizontal",
+    "device": "intel_backlight"
+  },
+  "sway/window": {
+    "format": " {}",
+    "rewrite": { "(.*) Mozilla Firefox": "$1 🌎", "(.*) VSCodium": "$1 󰨞" }
+  },
+  "mpris#cassette": {
+    "format": " 󰧔 <small>{status_icon}</small> {position}",
+    "status-icons": { "paused": "", "stopped": "", "playing": "" },
+    "dynamic-len": 25
+  },
+  "group/music": {
+    "orientation": "horizontal",
+    "modules": ["mpris#cassette","mpris"],
+    "drawer": { "transition-duration": 500, "transition-left-to-right": true },
+  },
+  "mpris": {
+    "format": " {status_icon} {dynamic}♫  ",
+    // "format": "[♬ {player_icon} {dynamic}] ♫",
+    // "player": "chromium",
+    "dynamic-len": 25,
+    "player-icons": { "default": "", "mpv": "🎵" },
+    "status-icons": { "paused": "", "stopped": "", "playing": "" }
+  },
+  "sway/workspaces": {
+    "disable-scroll": false,
+    "enable-bar-scroll": true,
+    "disable-auto-back-and-forth": true,
+    "smooth-scrolling-threshold": 20,
+    "disable-scroll-wraparound": false,
+    "format": ". {icon} <sub>{value}</sub> .",
+    "format-icons": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "focused": "",
+      "urgent": "",
+      "active": "",
+      "default": ""
+    },
+    "sort-by-number": true,
+    "persistent_workspaces": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": []
+    }
+  },
+  "custom/recorder": {
+    "format": "{}",
+    "interval": "once",
+    "return-type": "json",
+    //"exec-if": "pgrep -x wf-recorder", // Проверка не нужна для "once", логика ниже
+    "exec": "echo \"$(pgrep -x wf-recorder > /dev/null && echo '{\"text\":\"󰨜 <sup>󰑊</sup>\",\"class\":\"recording\"}' || echo '{\"text\":\"󰨜 <sup></sup>\",\"class\":\"stopped\"}')\"",
+    "signal": 8,
+    "on-click": "$HOME/.config/waybar/scripts/capturer.sh",
+    "on-right-click": "kill $(pgrep -x wf-recorder)",
+    "tooltip": false
+  },
+  "custom/checkupdates": {
+    "exec": "~/.config/waybar/scripts/checkupdates.sh",
+    "return-type": "json",
+    "interval": 3600,
+    "format": "{}",
+    "on-click": "wezterm -e paru -Syyu --noconfirm && paru -Sc --noconfirm && pkill -SIGRTMIN+8 waybar && notify-send 'Обновление завершено'",
+    "signal": 8
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": " <sup>󰒳</sup>",
+      "deactivated": "󰾪 <sup>󰒲</sup>"
+    }
+  },
+  "custom/vpnOFF": {
+    "format": "",
+    "on-click": "~/.config/waybar/scripts/toggle-vpn.sh && pkill -SIGRTMIN+3 waybar",
+    "exec": "~/.config/waybar/scripts/toggle-vpn.sh refresh",
+    "return-type": "json",
+    "interval": 5,
+    "signal": 3
+  },
+  "custom/lang": {
+    "exec": "swaymsg -t get_inputs | grep layout_name | grep -v En | awk 'END{if(NR == 0){print \"EN\"}else{print toupper(substr($2,2,2))}}'",
+    "interval": 1,
+    "format": "{}"
+  },
+  "custom/dunst": {
+    "exec": "~/.config/toggleDunst.sh refresh",
+    "return-type": "json",
+    "interval": 1000,
+    "on-click": "~/.config/toggleDunst.sh",
+    "signal": 9
+  },
+  "custom/powerbtn": {
+    "exec": "uptime",
+    "exec": "echo \"{'text':'󰨜 <sup>󰑊</sup>','tooltip':'$(uptime)'}\"",
+    "interval": 60,
+    "format": "󰐥",
+    "tooltip": "true",
+    "return-type": "json",
+    "on-click": "exec ~/.config/shutdown-dmenu.sh"
+  },
+  "tray": {
+    "icon-size": 20,
+    "spacing": 10
+  },
+  "clock": {
+    "format": " {:%H:%M\n%d.%m.%y}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "on-click": "yad --name=yad-calendar --calendar --undecorated",
+    "actions": {
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down"
+    }
+  },
+
+
+    "custom/kbd-auto": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": 30, // Редкое обновление для страховки
+        "exec": "/usr/local/bin/kbd_status_json.sh",
+        "on-click": "/usr/local/bin/kbd_toggle.sh",
+        "signal": 8
+    },
+    "group/title": {
+        "orientation": "vertical",
+        "modules": ["sway/mode", "privacy"]
+    },
+    "tray": {
+    "icon-size": 15,
+    "spacing": 3,
+    "show-passive-items": "false",
+},
+
+  "privacy": {
+	"icon-spacing": 4,
+	"icon-size": 18,
+	"transition-duration": 250,
+	"modules": [
+		{
+			"type": "screenshare",
+			"tooltip": true,
+			"tooltip-icon-size": 24
+		},
+		{
+			"type": "audio-out",
+			"tooltip": true,
+			"tooltip-icon-size": 24
+		},
+		{
+			"type": "audio-in",
+			"tooltip": true,
+			"tooltip-icon-size": 24
+		}
+	],
+	"ignore-monitor": true,
+	"ignore": [
+		{
+			"type": "audio-in",
+			"name": "cava"
+		},
+		{
+			"type": "screenshare",
+			"name": "obs"
+		}
+	]
+  }
+}

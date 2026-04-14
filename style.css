@@ -1,0 +1,726 @@
+* {
+  border: none;
+  border-radius: 8px;
+  font-family:
+    "Monaspace Krypton Frozen", "JetBrainsMono Nerd Font", "MesloLGS Nerd Font", monospace;
+  font-size: 14px;
+  font-weight: 500;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(15, 15, 20, 0.3);
+  border-top: 2px solid rgba(0, 128, 128, 0.4);
+  color: #ffffff;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+  padding: 0;
+  margin: 0;
+}
+
+#mode {
+  color: #ffffff;
+  background-color: rgba(166, 3, 36, 0.657);
+  font-size: 9px;
+  padding: 0 6px;
+  margin: 2px 0;
+  border-radius: 10px;
+  animation: blink 0.5s infinite alternate;
+  min-width: 150px;
+  /* text-align: center; */
+}
+
+#window {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 2px 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 600px;
+  /* text-align: center; */
+}
+
+#title-mode,
+#uptime-mode {
+   min-width: 400px;
+   /* justify-content: center; */
+}
+
+/* Fix spacing for title area */
+#uptime-mode {
+   margin-top: 6px;    /* Space above tray */
+   margin-bottom: 4px; /* Space between tray and title */
+}
+
+#window {
+   margin-top: 4px;    /* Reduced space above title */
+   margin-bottom: 2px; /* Reduced spacing below title */
+}
+window#waybar.solo #window {
+  color: #eee8d5; /* base2 */
+  background-color: #073642; /*base02*/
+}
+
+window#waybar.floating #window {
+  padding: 2px 15px;
+  color: #eee8d5; /* base2 */
+  background-color: #b58900; /*yellow*/
+}
+
+window#waybar.tiled #window {
+  padding: 2px 15px;
+  color: #eee8d5; /* base2 */
+  background-color: #334b16; /* orange */
+}
+window#waybar.stacked #window {
+  padding: 2px 15px;
+  color: #eee8d5; /* base2 */
+  background: #2aa196; /*cyan*/
+}
+window#waybar.tabbed {
+  padding: 2px 15px;
+  color: #eee8d5; /* base2 */
+  background: #859900; /*green*/
+}
+
+window#waybar.code-oss.bar-low * {
+  background-color: #007acc;
+}
+
+.bar-horiz .modules-left,
+.bar-horiz .modules-center,
+.bar-horiz .modules-right {
+  background: rgba(30, 30, 46, 0.9);
+  margin: 0px 4px;
+  padding: 2px 12px;
+  border-radius: 0 0 15px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.bar-horiz .modules-right {
+  border-radius: 0 0 0 15px;
+}
+.bar-horiz .modules-left {
+  border-radius: 0 0 15px 0;
+}
+window.bar-vert {
+  background: rgba(15, 15, 20, 0.6);
+  padding: 10px 0;
+}
+.bar-vert .modules-left,
+.bar-vert .modules-center,
+.bar-vert .modules-right {
+  background: rgba(0, 0, 0, 0.4);
+  margin: 4px;
+  padding: 6px 2px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+window.bar-low#window .code-oss *{
+  background: #007acc;
+
+}
+
+#workspaces button {
+  margin: 4px 0;
+  padding: 6px 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 9px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border-top: 1px solid transparent;
+  min-width: 40px;
+  min-height: 30px;
+}
+
+#workspaces button.focused {
+  color: teal;
+  background: rgba(0, 128, 128, 0.2);
+  border: 1px solid teal;
+  border-radius: 9px;
+}
+
+#workspaces button.urgent {
+  color: coral;
+  background: rgba(0, 128, 128, 0.2);
+  border: 1px solid coral;
+  border-radius: 11px;
+}
+
+#workspaces button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cdd6f4;
+}
+
+/* === 1. CLUSTER THEME (Restoring Initial Look) === */
+#switches,
+#hardware,
+#temp-group,
+#bat-group,
+#audio,
+#sub-cpu,
+#tray,
+#user,
+#bright {
+  color: teal;
+  background: rgba(0, 128, 128, 0.2);
+  border-top: 2px solid rgba(0, 128, 128, 0.2);
+  border-bottom: 2px solid mediumaquamarine;
+  margin: 2px 4px;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+#cpu,
+#memory,
+#custom-ram,
+#temperature,
+#temperatura,
+#custom-fan,
+#custom-fan2,
+#custom-disk-io {
+  font-size: 12px;
+  padding: 0 4px;
+}
+/* Individual colors for readable icons inside clusters */
+#cpu {
+  color: #fab387;
+}
+#memory,
+#custom-ram {
+  color: #cba7f7;
+}
+#temperature,
+#temperatura,
+#custom-fan,
+#custom-fan2 {
+  color: #eba0ac;
+}
+#custom-temp-detailed {
+  color: silver;
+}
+#power,
+#custom-battery-info {
+  color: #94e2d5;
+  font-size: 14px;
+}
+#battery {
+  font-size: 16px;
+  border-radius: 8px;
+  min-width: 40px;
+  padding: 2px;
+}
+#battery.warning {
+  animation: blinkwarn 0.3s linear alternate 3s infinite;
+}
+#battery.critical {
+  animation: blinkred 0.6s linear infinite alternate;
+}
+#network {
+  color: palegreen;
+}
+#network.disconnected {
+  background: rgba(200, 30, 30, 0.5);
+  animation: blinkred 0.2s linear infinite alternate;
+  padding: 0px 10px 0 0;
+  border-radius: 10px 50px 50px 10px;
+}
+#clock {
+  color: #cba6f7;
+  font-size: 14px;
+  padding: 4px;
+}
+#custom-uptime {
+  color: #fab387;
+  font-size: 9px;
+  padding: 0 8px;
+  min-width: 100px;
+}
+#custom-ollama {
+  color: #249e94;
+  font-size: 9px;
+  padding: 0 8px;
+}
+#custom-ollama.on {
+  color: #94e2d5;
+}
+#custom-ollama.off {
+  color: #666;
+}
+#custom-disk-io {
+  color: #94e2d5;
+}
+
+/* === 2. SLIDER STYLING (Restored) === */
+#pulseaudio {
+  color: #89b4fa;
+  font-size: 16px;
+}
+#backlight {
+  color: olivedrab;
+  font-size: 16px;
+}
+#pulseaudio-slider trough,
+#backlight-slider trough {
+  min-height: 3px;
+  min-width: 60px;
+  border-radius: 1px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 1px 3px rgba(33, 233, 33, 0.3);
+}
+
+#pulseaudio-slider highlight {
+  background: #89b4fa;
+  border-radius: 1px;
+}
+#backlight-slider highlight {
+  background: olivedrab;
+  border-radius: 1px;
+}
+
+#pulseaudio-slider slider,
+#backlight-slider slider {
+  border: 0px solid transparent;
+  /*border-top: 20px solid red;*/
+  /*border-right: 3px solid red;*/
+  background: transparent;
+  font-size: 1px;
+  min-width: 0px;
+  min-height: 0px;
+}
+
+/* === 3. VERTICAL BAR BUTTONS === */
+#custom-powerbtn,
+#idle_inhibitor,
+#power-profiles-daemon,
+#custom-dunst,
+#custom-recorder,
+#custom-kbd-auto,
+#custom-fnlock,
+#custom-backlight,
+#custom-checkupdates {
+   border: 1px solid rgba(0, 128, 128, 0.3);
+   border-top: 2px solid lightseagreen;
+   border-bottom: 2px solid teal;
+   border-radius: 8px;
+   margin: 2px 4px;
+   min-height: 20px;
+   min-width: 30px;
+   color: #249e94;
+   font-size: 24px;
+   padding: 4px;
+   box-shadow: -1px 1px 3px rgba(0, 128, 128, 0.3);
+}
+#custom-backlight.active,
+#custom-fnlock.active {
+    border: 1px solid lightseagreen;
+    box-shadow: -1px 1px 5px rgba(222, 90, 0, 0.95);
+    border-bottom: 4px solid teal;
+    color: #90ee90;
+}
+
+#custom-checkupdates.notify,
+#idle_inhibitor.activated,
+#custom-dunst.paused,
+#custom-lang,
+#custom-recorder.recording,
+#custom-backlight.active,
+#custom-fnlock.active,
+#custom-checkupdates.active {
+  border: 1px solid lightseagreen;
+  box-shadow: -1px 1px 5px rgba(222, 90, 0, 0.95);
+  border-bottom: 4px solid teal;
+  background: rgba(0, 99, 99, 0.3);
+}
+
+#custom-recorder.recording {
+  color: crimson;
+  /* animation: blinkred 0.2s linear infinite alternate; */
+}
+
+/*#custom-asus-profile,
+#bat-group {
+    background: rgba(255, 255, 0, 0.1);
+    padding: 0px;
+    margin: 2px;
+    border-radius: 15px;
+}*/
+#bat-group,
+#hardware,
+#audio,
+#bright,
+#switches,
+#music,
+#tray,
+#user,
+#temp-group {
+  border-top: 4px double rgba(0, 158, 208, 0.9);
+  /*border-bottom: 5px double rgba(0, 158, 208, 0.6);*/
+  margin: 0px 10px 0 0;
+  padding: 0px;
+  font-size: 8px;
+  border-radius: 25px;
+}
+
+#tray {
+  padding: 0 10px;
+  min-width: 120px;
+}
+#tray > .passive {
+  background: rgba(100, 100, 100, 0.3);
+  border-radius: 4px;
+}
+#tray > .active {
+  background: rgba(0, 128, 128, 0.2);
+  border-radius: 4px;
+}
+#tray > .needs-attention {
+  background: rgba(200, 50, 50, 0.4);
+  border-radius: 4px;
+}
+#tray.lite {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+#tray.lite > .passive {
+  background: rgba(80, 80, 80, 0.2);
+  border-radius: 4px;
+}
+#tray.lite > .active {
+  background: rgba(0, 128, 128, 0.15);
+  border-radius: 4px;
+}
+#tray.lite > .needs-attention {
+  background: rgba(200, 50, 50, 0.3);
+  border-radius: 4px;
+}
+#bat-group,
+#custom-asus-profile {
+  background: rgba(0, 128, 128, 0.2);
+}
+#hardware,
+#custom-disk-io,
+#cpu {
+  background: rgba(200, 100, 0, 0.2);
+}
+
+#temp-group,
+#custom-temp-detailed,
+#temperature {
+  background: rgba(255, 100, 100, 0.2);
+}
+#switches,
+#network.lite {
+  background: rgba(155, 110, 200, 0.2);
+  color: gold;
+}
+
+/* Custom indicator styles */
+#custom-cpu-indicator.transparent,
+#custom-ram-indicator.transparent,
+#custom-io-indicator.transparent,
+#custom-network-indicator.transparent {
+  background: rgba(0, 0, 0, 0);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#custom-cpu-indicator.low,
+#custom-ram-indicator.low,
+#custom-io-indicator.low,
+#custom-network-indicator.low {
+  background: rgba(0, 128, 0, 0.3);
+  color: #90ee90;
+}
+
+#custom-cpu-indicator.medium,
+#custom-ram-indicator.medium,
+#custom-io-indicator.medium,
+#custom-network-indicator.medium {
+  background: rgba(255, 255, 0, 0.3);
+  color: #ffff99;
+}
+
+#custom-cpu-indicator.high,
+#custom-ram-indicator.high,
+#custom-io-indicator.high,
+#custom-network-indicator.high {
+  background: rgba(255, 0, 0, 0.3);
+  color: #ff6b6b;
+}
+
+/* Style for the progress bar text */
+#custom-cpu-indicator,
+#custom-ram-indicator,
+#custom-io-indicator,
+#custom-network-indicator {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-weight: bold;
+  letter-spacing: -0.5px;
+}
+
+/* Style for the progress bar text */
+#custom-cpu-indicator,
+#custom-ram-indicator,
+#custom-io-indicator,
+#custom-network-indicator {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-weight: bold;
+  letter-spacing: -0.5px;
+}
+
+/* Top-bottom indicator styles */
+#custom-cpu-indicator-top-bottom {
+}
+
+/* Custom vertical indicator styles */
+#custom-cpu-indicator-vertical.transparent,
+#custom-ram-indicator-vertical.transparent,
+#custom-io-indicator-vertical.transparent,
+#custom-network-indicator-vertical.transparent {
+  background: rgba(0, 0, 0, 0);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#custom-cpu-indicator-vertical.low,
+#custom-ram-indicator-vertical.low,
+#custom-io-indicator-vertical.low,
+#custom-network-indicator-vertical.low {
+  background: rgba(0, 128, 0, 0.3);
+  color: #90ee90;
+}
+
+#custom-cpu-indicator-vertical.medium,
+#custom-ram-indicator-vertical.medium,
+#custom-io-indicator-vertical.medium,
+#custom-network-indicator-vertical.medium {
+  background: rgba(255, 255, 0, 0.3);
+  color: #ffff99;
+}
+
+#custom-cpu-indicator-vertical.high,
+#custom-ram-indicator-vertical.high,
+#custom-io-indicator-vertical.high,
+#custom-network-indicator-vertical.high {
+  background: rgba(255, 0, 0, 0.3);
+  color: #ff6b6b;
+}
+
+/* Grouped indicators for top bar */
+#cpu-ram-group,
+#io-network-group,
+#temp-fan-group {
+  background: rgba(30, 30, 46, 0.8);
+  border: 1px solid rgba(0, 128, 128, 0.4);
+  border-radius: 10px;
+  padding: 4px 6px;
+  margin: 2px 6px;
+}
+
+#audio,
+#bright,
+#network-bt {
+  background: rgba(30, 30, 46, 0.6);
+  border: 1px solid rgba(0, 128, 128, 0.3);
+  border-top: 2px double rgba(0, 158, 208, 0.7);
+  border-bottom: 2px double rgba(0, 158, 208, 0.5);
+  border-radius: 10px;
+  padding: 4px 6px;
+  margin: 2px 6px;
+}
+
+#cpu-ram-group > *,
+#io-network-group > *,
+#temp-fan-group > *,
+#audio > *,
+#bright > *,
+#network-bt > * {
+  margin: 0 4px;
+}
+
+#custom-cpu-indicator-vertical,
+#custom-ram-indicator-vertical,
+#custom-io-indicator-vertical,
+#custom-network-indicator-vertical,
+#custom-io-speed,
+#custom-net-speed,
+#custom-temp-fan {
+  min-width: 30px;
+  min-height: 22px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#custom-cpu-indicator-vertical {
+  color: #fab387;
+  border-color: rgba(250, 179, 135, 0.3);
+}
+
+#custom-ram-indicator-vertical {
+  color: #cba7f7;
+  border-color: rgba(203, 167, 247, 0.3);
+}
+
+#custom-io-speed,
+#custom-net-speed {
+  color: #94e2d5;
+  border-color: rgba(148, 226, 213, 0.3);
+  background: rgba(0, 128, 128, 0.1);
+}
+
+#custom-io-speed.medium,
+#custom-net-speed.medium {
+  color: #f9e2af;
+  border-color: rgba(249, 226, 175, 0.4);
+  background: rgba(255, 200, 0, 0.15);
+}
+
+#custom-io-speed.warning,
+#custom-net-speed.warning {
+  color: #fab387;
+  border-color: rgba(250, 179, 135, 0.5);
+  background: rgba(255, 150, 50, 0.2);
+}
+
+#custom-io-speed.critical,
+#custom-net-speed.critical {
+  color: #f38ba8;
+  border-color: rgba(243, 139, 168, 0.5);
+  background: rgba(255, 0, 0, 0.2);
+}
+
+#custom-temp-fan {
+  color: #6c6c6c;
+  border-color: rgba(108, 108, 108, 0.3);
+  background: rgba(108, 108, 108, 0.1);
+}
+
+#custom-temp-fan.medium {
+  color: #89b4fa;
+  border-color: rgba(137, 180, 250, 0.4);
+  background: rgba(137, 180, 250, 0.15);
+}
+
+#custom-temp-fan.warning {
+  color: #fab387;
+  border-color: rgba(250, 179, 135, 0.5);
+  background: rgba(250, 179, 135, 0.15);
+}
+
+#custom-temp-fan.critical {
+  color: #f38ba8;
+  border-color: rgba(243, 139, 168, 0.5);
+  background: rgba(243, 139, 168, 0.15);
+}
+
+#network-bt {
+  min-width: 80px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  color: teal;
+  background: rgba(0, 128, 128, 0.2);
+  border-top: 4px double rgba(0, 158, 208, 0.9);
+  border-bottom: 4px double rgba(0, 158, 208, 0.6);
+}
+
+#custom-wifi-indicator {
+   min-width: 80px;
+   min-height: 22px;
+   padding: 2px 6px;
+   font-size: 11px;
+   font-weight: bold;
+   color: teal;
+   background: transparent;
+   border: none;
+}
+#custom-wifi-indicator.medium {
+  color: #f9e2af;
+}
+#custom-wifi-indicator.warning {
+  color: #fab387;
+}
+#custom-wifi-indicator.critical {
+  color: #f38ba8;
+}
+#custom-wifi-indicator.disconnected {
+  color: #666;
+}
+
+#custom-bt-indicator {
+  min-width: 40px;
+  min-height: 22px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  background: rgba(50, 50, 50, 0.15);
+  border-top: 4px double rgba(100, 100, 100, 0.4);
+  border-bottom: 4px double rgba(100, 100, 100, 0.2);
+}
+#custom-bt-indicator.enabled,
+#custom-bt-indicator.connected {
+  color: teal;
+  background: rgba(0, 128, 128, 0.2);
+  border-top: 4px double rgba(0, 158, 208, 0.9);
+  border-bottom: 4px double rgba(0, 158, 208, 0.6);
+}
+#custom-bt-indicator.connected {
+  color: #94e2d5;
+}
+
+#custom-bt-indicator {
+  min-width: 40px;
+  min-height: 22px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  background: rgba(50, 50, 50, 0.15);
+  border-top: 4px double rgba(100, 100, 100, 0.4);
+  border-bottom: 4px double rgba(100, 100, 100, 0.2);
+}
+#custom-bt-indicator.enabled,
+#custom-bt-indicator.connected {
+  color: teal;
+  background: rgba(0, 128, 128, 0.2);
+  border-top: 4px double rgba(0, 158, 208, 0.9);
+  border-bottom: 4px double rgba(0, 158, 208, 0.6);
+}
+#custom-bt-indicator.connected {
+  color: #94e2d5;
+}
+/* === 4. ANIMATIONS === */
+@keyframes blinkwarn {
+  to {
+    color: #ff5500;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 20px;
+    /*color:#333;*/
+  }
+}
+
+@keyframes wait {
+  to {
+    text-decoration: underline;
+  }
+}
+
+@keyframes blink {
+  to {
+    background-color: rgba(98, 159, 173, 0.3);
+    color: black;
+  }
+}
+@keyframes blinkred {
+  to {
+    background-color: firebrick;
+    color: white;
+  }
+}

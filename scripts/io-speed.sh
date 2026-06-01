@@ -4,8 +4,9 @@ set -euo pipefail
 io_data=$(iostat -d 1 2 | grep '^nvme' | tail -n 1)
 
 if [ -z "$io_data" ]; then
+    full_text=$(printf "󰋊<sup>i</sup>\n-")
     jq -n --compact-output \
-        --arg text "󰋊\\n-" \
+        --arg text "$full_text" \
         --arg class "good" \
         --arg tooltip "No NVMe device found" \
         '{text: $text, class: $class, tooltip: $tooltip}'
@@ -28,9 +29,10 @@ else
     io_class="good"
 fi
 
+full_text=$(printf "󰋊<sup>i</sup> %s\n↓%s ↑%s" "$iops" "$read_mb" "$write_mb")
+
 jq -n --compact-output \
-    --arg text "󰋊 $iops
-↓$read_mb ↑$write_mb" \
+    --arg text "$full_text" \
     --arg class "$io_class" \
     --arg tooltip "IOPS: $iops | Read: $read_mb MB/s | Write: $write_mb MB/s" \
     '{text: $text, class: $class, tooltip: $tooltip}'

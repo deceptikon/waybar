@@ -8,12 +8,12 @@ if [ "${1:-}" == "refresh" ]; then
   else
     echo '{"class": "off"}'
   fi
-  pkill -SIGRTMIN+3 waybar || true
+  # Never self-signal from refresh path — would cause infinite loop
   exit 0
 fi
 
 if [ -f /sys/class/net/kvnet/operstate ]; then
-  sudo kvpnc stop 
+  sudo kvpnc stop
   echo '{"class": "off"}'
 else
   sudo kvpnc start

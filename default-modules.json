@@ -1,21 +1,42 @@
 {
   "group/switches": {
     "orientation": "horizontal",
-    "drawer": { "transition-duration": 500, "transition-left-to-right": false },
-    "modules": ["group/base-switches", "bluetooth", "network"]
+    "drawer": {
+      "transition-duration": 500,
+      "transition-left-to-right": false
+    },
+    "modules": [
+      "group/base-switches",
+      "bluetooth",
+      "network"
+    ]
   },
   "group/base-switches": {
     "orientation": "horizontal",
-    "modules": ["bluetooth#lite", "network#lite"]
+    "modules": [
+      "bluetooth#lite",
+      "network#lite"
+    ]
   },
   "group/hardware": {
     "orientation": "horizontal",
-    "drawer": { "transition-duration": 500, "transition-left-to-right": true },
-    "modules": ["group/subcpu", "memory", "custom/disk-io", "load"]
+    "drawer": {
+      "transition-duration": 500,
+      "transition-left-to-right": true
+    },
+    "modules": [
+      "group/subcpu",
+      "memory",
+      "custom/disk-io",
+      "load"
+    ]
   },
   "group/temp-group": {
     "orientation": "horizontal",
-    "drawer": { "transition-duration": 500, "transition-left-to-right": true },
+    "drawer": {
+      "transition-duration": 500,
+      "transition-left-to-right": true
+    },
     "modules": [
       "group/temperatura",
       "custom/fan",
@@ -25,15 +46,24 @@
   },
   "group/temperatura": {
     "orientation": "horizontal",
-    "modules": ["temperature", "custom/fanlabel"]
+    "modules": [
+      "temperature",
+      "custom/fanlabel"
+    ]
   },
   "group/power": {
     "orientation": "horizontal",
-    "modules": ["battery", "custom/asus-profile"]
+    "modules": [
+      "battery",
+      "custom/asus-profile"
+    ]
   },
   "group/bat-group": {
     "orientation": "vertical",
-    "drawer": { "transition-duration": 500, "transition-left-to-right": false },
+    "drawer": {
+      "transition-duration": 500,
+      "transition-left-to-right": false
+    },
     "modules": [
       "group/power",
       "custom/battery-info",
@@ -41,28 +71,41 @@
       "custom/power-draw"
     ]
   },
-
   "group/subcpu": {
     "orientation": "horizontal",
-    "modules": ["cpu", "custom/ram"]
+    "modules": [
+      "cpu",
+      "custom/ram"
+    ]
   },
-  "cpu": { "format": "  <sub>CPU</sub> {usage}% ", "interval": 2 },
-  "custom/ram": { "format": "   {} " },
-  "custom/fanlabel": { "format": "   " },
+  "cpu": {
+    "format": " \uf2db <sub>CPU</sub> {usage}% ",
+    "interval": 2
+  },
+  "custom/ram": {
+    "format": "  \uf538 {} "
+  },
+  "custom/fanlabel": {
+    "format": "  \uf863 "
+  },
   "memory": {
     "interval": 30,
     "format": "free:{avail:0.1f}G used:{used:0.1f}G   "
   },
   "custom/disk-io": {
-    "exec": "iostat -d 1 2 | grep '^nvme' | tail -n 1 | awk '{printf \" ↓%.1f ↑%.1f MB/s (IOPS: %d)\", $3/1024, $4/1024, $2}'",
+    "exec": "iostat -d 1 2 | grep '^nvme' | tail -n 1 | awk '{printf \" \u2193%.1f \u2191%.1f MB/s (IOPS: %d)\", $3/1024, $4/1024, $2}'",
     "interval": 2,
-    "format": " 󰋊 <sub>SSD:</sub> {}"
+    "format": " \udb80\udeca <sub>SSD:</sub> {}"
   },
   "temperature": {
     "hwmon-path": "/sys/class/hwmon/hwmon6/temp1_input",
     "critical-threshold": 85,
-    "format": " {icon} {temperatureC}°C ",
-    "format-icons": ["", "", ""]
+    "format": " {icon} {temperatureC}\u00b0C ",
+    "format-icons": [
+      "\uf2cb",
+      "\uf2c9",
+      "\uf2c7"
+    ]
   },
   "custom/fan": {
     "exec": "cat /sys/class/hwmon/hwmon8/fan1_input",
@@ -71,17 +114,17 @@
   },
   "custom/fan2": {
     "exec": "cat /sys/class/hwmon/hwmon8/fan2_input",
-    "format": ": 󰈐 {}<sub>RPM</sub> ",
+    "format": ": \udb80\ude10 {}<sub>RPM</sub> ",
     "interval": 5
   },
-   "custom/ollama": {
-     "exec": "if curl -s http://localhost:11111/api/tags > /dev/null 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps 2>/dev/null | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -n --arg m \"$models\" --compact-output '{text:(\"󱚣 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -n --compact-output '{text:\"󱚣 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -n --compact-output '{text:\"󱚣 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
-     "interval": 5,
-     "format": "{}",
-     "return-type": "json"
-   },
+  "custom/ollama": {
+    "exec": "if curl -s http://localhost:11111/api/tags > /dev/null 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps 2>/dev/null | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -n --arg m \"$models\" --compact-output '{text:(\"\udb85\udea3 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -n --compact-output '{text:\"\udb85\udea3 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -n --compact-output '{text:\"\udb85\udea3 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json"
+  },
   "custom/temp-detailed": {
-    "exec": "sensors | awk '/amdgpu/{c=\"G\"} /nvme/{c=\"S\"} /mt7921/{c=\"W\"} /acpitz/{c=\"M\"} /edge|Composite|temp1|temp2/{split($2,a,/[+°]/); v=a[2]; if(c==\"G\")gpu=v; if(c==\"S\")ssd=v; if(c==\"W\")wf=v; if(c==\"M\"&&/temp1/)m1=v; if(c==\"M\"&&/temp2/)m2=v} END {printf \"󰢮 %s° 󰋊 %s° 󰖶 %s° 󰟀 %s/%s°\\n\", gpu, ssd, wf, m1, m2}'",
+    "exec": "sensors | awk '/amdgpu/{c=\"G\"} /nvme/{c=\"S\"} /mt7921/{c=\"W\"} /acpitz/{c=\"M\"} /edge|Composite|temp1|temp2/{split($2,a,/[+\u00b0]/); v=a[2]; if(c==\"G\")gpu=v; if(c==\"S\")ssd=v; if(c==\"W\")wf=v; if(c==\"M\"&&/temp1/)m1=v; if(c==\"M\"&&/temp2/)m2=v} END {printf \"\udb82\udcae %s\u00b0 \udb80\udeca %s\u00b0 \udb81\uddb6 %s\u00b0 \udb81\udfc0 %s/%s\u00b0\\n\", gpu, ssd, wf, m1, m2}'",
     "interval": 5,
     "format": " {} "
   },
@@ -100,16 +143,40 @@
     "format-warning": " {icon}<small> {capacity}%</small>",
     "format-critical": " {icon}<small> {capacity}% LOW CHARGE! (off in {time})</small> ",
     "format": " {icon} ",
-    "format-charging": "  {icon} ",
+    "format-charging": " \uf1e6 {icon} ",
     "format-icons": {
-      "default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-      "charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+      "default": [
+        "\udb80\udc8e",
+        "\udb80\udc7a",
+        "\udb80\udc7b",
+        "\udb80\udc7c",
+        "\udb80\udc7d",
+        "\udb80\udc7e",
+        "\udb80\udc7f",
+        "\udb80\udc80",
+        "\udb80\udc81",
+        "\udb80\udc82",
+        "\udb80\udc79"
+      ],
+      "charging": [
+        "\udb82\udc9f",
+        "\udb82\udc9c",
+        "\udb80\udc86",
+        "\udb80\udc87",
+        "\udb80\udc88",
+        "\udb82\udc9d",
+        "\udb80\udc89",
+        "\udb82\udc9e",
+        "\udb80\udc8a",
+        "\udb80\udc8b",
+        "\udb80\udc85"
+      ]
     },
     "tooltip-format": "Time remaining: {time}\nCycles: {cycles}\nPower draw: {power}W",
     "tooltip-format-charging": "Time to full: {time}\nCycles: {cycles}\nPower draw: {power}W"
   },
   "custom/battery-info": {
-    "exec": "upower -i /org/freedesktop/UPower/devices/battery_BAT0 | awk '/state:/ {s=$2} /energy-full:/ {ef=$2} /energy-rate:/ {er=$2} /voltage:/ {v=$2} /percentage:/ {p=$2} /time to (empty|full):/ {t=$(NF-1) \" \" $NF} END {mah=int((ef/v)*1000); printf \"{\\\"text\\\":\\\"%s 󱎫 %s |  %sW | 󱐌 %sV |  %smAh \\\"}\\n\", p, t, er, v, mah}'",
+    "exec": "upower -i /org/freedesktop/UPower/devices/battery_BAT0 | awk '/state:/ {s=$2} /energy-full:/ {ef=$2} /energy-rate:/ {er=$2} /voltage:/ {v=$2} /percentage:/ {p=$2} /time to (empty|full):/ {t=$(NF-1) \" \" $NF} END {mah=int((ef/v)*1000); printf \"{\\\"text\\\":\\\"%s \udb84\udfab %s | \uf5df %sW | \udb85\udc0c %sV | \uf043 %smAh \\\"}\\n\", p, t, er, v, mah}'",
     "return-type": "json",
     "interval": 20,
     "format": " {}"
@@ -117,41 +184,44 @@
   "custom/acpi-detailed": {
     "exec": "acpi -b | awk '{print $3, $4, $5}'",
     "interval": 10,
-    "format": "󰚥 {}"
+    "format": "\udb81\udea5 {}"
   },
   "custom/power-draw": {
     "exec": "awk '{printf \"%.1f W\", $1/1000000}' /sys/class/power_supply/BAT0/power_now",
     "interval": 5,
-    "format": " {}"
+    "format": "\uf0e7 {}"
   },
   "custom/asus-profile": {
-    "exec": "asusctl profile get | awk '/Active profile/ {p=$NF; icon=(p==\"Quiet\"?\" ECO\":(p==\"Balanced\"?\"  BAL\":\" PERF\")); print icon}'",
+    "exec": "asusctl profile get | awk '/Active profile/ {p=$NF; icon=(p==\"Quiet\"?\"\uf06c ECO\":(p==\"Balanced\"?\"\uf24e  BAL\":\"\uf625 PERF\")); print icon}'",
     "interval": 2,
     "format": " {} ",
     "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
     "signal": 10,
     "rewrite": {
-      "Quiet": "Quiet ",
-      "Balanced": "Bal ",
-      "Performance": "Perf "
+      "Quiet": "Quiet \uf06c",
+      "Balanced": "Bal \uf24e",
+      "Performance": "Perf \uf625"
     }
   },
   "network": {
-    "format-wifi": "  {essid} ",
-    "format": "󰈀 {ifname}",
-    "format-disconnected": "⚠ Disconnected"
+    "format-wifi": " \uf1eb {essid} ",
+    "format": "\udb80\ude00 {ifname}",
+    "format-disconnected": "\u26a0 Disconnected"
   },
   "network#lite": {
-    "format-wifi": "  <sub>({signalStrength}%)</sub> ",
-    "format": " 󰈀 {ifname}",
-    "format-disconnected": " 󰌙 DOWN"
+    "format-wifi": " \uf1eb <sub>({signalStrength}%)</sub> ",
+    "format": " \udb80\ude00 {ifname}",
+    "format-disconnected": " \udb80\udf19 DOWN"
   },
   "bluetooth#lite": {
     "format": " {icon} ",
-    "format-icons": { "enabled": "", "disabled": "󰂲" },
+    "format-icons": {
+      "enabled": "\uf293",
+      "disabled": "\udb80\udcb2"
+    },
     "on-click": "blueman-manager",
-    "format-connected": " {device_alias}",
-    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "format-connected": "\uf294 {device_alias}",
+    "format-connected-battery": "\uf294 {device_alias} {device_battery_percentage}%",
     "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
     "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
@@ -159,10 +229,13 @@
   },
   "bluetooth": {
     "format": " {icon} {status}",
-    "format-icons": { "enabled": "󰂯", "disabled": "󰂲" },
+    "format-icons": {
+      "enabled": "\udb80\udcaf",
+      "disabled": "\udb80\udcb2"
+    },
     "on-click": "blueman-manager",
-    "format-connected": " {device_alias}",
-    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "format-connected": "\uf294 {device_alias}",
+    "format-connected-battery": "\uf294 {device_alias} {device_battery_percentage}%",
     "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
     "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
@@ -170,26 +243,36 @@
   },
   "group/audio": {
     "orientation": "horizontal",
-    "modules": ["pulseaudio", "pulseaudio/slider"]
+    "modules": [
+      "pulseaudio",
+      "pulseaudio/slider"
+    ]
   },
   "group/bright": {
     "orientation": "horizontal",
-    "modules": ["backlight", "backlight/slider"]
+    "modules": [
+      "backlight",
+      "backlight/slider"
+    ]
   },
   "pulseaudio": {
     "format": " {icon}",
-    "format-muted": " ",
+    "format-muted": " \ueb24",
     "format-icons": {
-      "alsa_output.pci-0000_00_1f.3.analog-stereo": "",
-      "alsa_output.pci-0000_00_1f.3.analog-stereo-muted": "",
-      "headphone": "",
-      "hands-free": "",
-      "headset": "",
-      "phone": "",
-      "phone-muted": "",
-      "portable": "",
-      "car": "",
-      "default": ["", "", ""]
+      "alsa_output.pci-0000_00_1f.3.analog-stereo": "\ue32d",
+      "alsa_output.pci-0000_00_1f.3.analog-stereo-muted": "\ueee8\ue32d",
+      "headphone": "\uf025",
+      "hands-free": "\uf590",
+      "headset": "\uf590",
+      "phone": "\uf095",
+      "phone-muted": "\ued17",
+      "portable": "\uf095",
+      "car": "\uf1b9",
+      "default": [
+        "\uf026",
+        "\uf027",
+        "\uf028"
+      ]
     },
     "on-click": "amixer -q sset Master toggle",
     "scroll-step": 1,
@@ -201,7 +284,9 @@
     "orientation": "horizontal",
     "format": "SUSU {}"
   },
-  "backlight": { "format": " 󰃟" },
+  "backlight": {
+    "format": " \udb80\udcdf"
+  },
   "backlight/slider": {
     "min": 9,
     "max": 100,
@@ -209,29 +294,49 @@
     "device": "intel_backlight"
   },
   "sway/window": {
-    "format": " [{title}] {app_id}",
+    "format": "\uf17c [{title}] {app_id}",
     "max-length": "",
     "all-outputs": true,
     "offscreen-css": true,
-    "offscreen-css-text": "САСЯМБА",
+    "offscreen-css-text": "\u0421\u0410\u0421\u042f\u041c\u0411\u0410",
     "icon-size": 48,
-    "rewrite": { "(.*) Mozilla Firefox": "$1 🌎", "(.*) VSCodium": "$1 󰨞" }
+    "rewrite": {
+      "(.*) Mozilla Firefox": "$1 \ud83c\udf0e",
+      "(.*) VSCodium": "$1 \udb82\ude1e"
+    }
   },
   "mpris#cassette": {
-    "format": " 󰧔 <small>{status_icon}</small> {position}",
-    "status-icons": { "paused": "", "stopped": "", "playing": "" },
+    "format": " \udb82\uddd4 <small>{status_icon}</small> {position}",
+    "status-icons": {
+      "paused": "\ueb2c",
+      "stopped": "\ueb2c",
+      "playing": "\uead1"
+    },
     "dynamic-len": 25
   },
   "group/music": {
     "orientation": "horizontal",
-    "modules": ["mpris#cassette","mpris"],
-    "drawer": { "transition-duration": 500, "transition-left-to-right": true }
+    "modules": [
+      "mpris#cassette",
+      "mpris"
+    ],
+    "drawer": {
+      "transition-duration": 500,
+      "transition-left-to-right": true
+    }
   },
   "mpris": {
-    "format": " {status_icon} {dynamic}♫  ",
+    "format": " {status_icon} {dynamic}\u266b  ",
     "dynamic-len": 25,
-    "player-icons": { "default": "", "mpv": "🎵" },
-    "status-icons": { "paused": "", "stopped": "", "playing": "" }
+    "player-icons": {
+      "default": "\ueb2c",
+      "mpv": "\ud83c\udfb5"
+    },
+    "status-icons": {
+      "paused": "\ueb2c",
+      "stopped": "\ueb2c",
+      "playing": "\uead1"
+    }
   },
   "sway/workspaces": {
     "disable-scroll": false,
@@ -241,15 +346,15 @@
     "disable-scroll-wraparound": false,
     "format": ". {icon} <sub>{value}</sub> .",
     "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "",
-      "focused": "",
-      "urgent": "",
-      "active": "",
-      "default": ""
+      "1": "\uf120",
+      "2": "\uf268",
+      "3": "\uf121",
+      "4": "\uf1bc",
+      "5": "\uf075",
+      "focused": "\uf192",
+      "urgent": "\uf06a",
+      "active": "\uf192",
+      "default": "\uf111"
     },
     "sort-by-number": true,
     "persistent_workspaces": {
@@ -264,7 +369,7 @@
     "format": "{}",
     "interval": "once",
     "return-type": "json",
-    "exec": "echo \"$(pgrep -x wf-recorder > /dev/null && echo '{\"text\":\"󰨜 <sup>󰑊</sup>\",\"class\":\"recording\"}' || echo '{\"text\":\"󰨜 <sup></sup>\",\"class\":\"stopped\"}')\"",
+    "exec": "echo \"$(pgrep -x wf-recorder > /dev/null && echo '{\"text\":\"\udb82\ude1c <sup>\udb81\udc4a</sup>\",\"class\":\"recording\"}' || echo '{\"text\":\"\udb82\ude1c <sup>\ueba7</sup>\",\"class\":\"stopped\"}')\"",
     "signal": 8,
     "on-click": "~/.config/waybar/scripts/capturer.sh",
     "on-right-click": "kill $(pgrep -x wf-recorder)",
@@ -275,18 +380,18 @@
     "return-type": "json",
     "interval": 3600,
     "format": "{}",
-    "on-click": "wezterm -e paru -Syyu --noconfirm && paru -Sc --noconfirm && pkill -SIGRTMIN+8 waybar && notify-send 'Обновление завершено'",
+    "on-click": "wezterm -e paru -Syyu --noconfirm && paru -Sc --noconfirm && pkill -SIGRTMIN+8 waybar && notify-send '\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e'",
     "signal": 8
   },
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
-      "activated": " <sup>󰒳</sup>",
-      "deactivated": "󰾪 <sup>󰒲</sup>"
+      "activated": "\uec15 <sup>\udb81\udcb3</sup>",
+      "deactivated": "\udb83\udfaa <sup>\udb81\udcb2</sup>"
     }
   },
   "custom/vpnOFF": {
-    "format": "",
+    "format": "\uf3ed",
     "on-click": "~/.config/waybar/scripts/toggle-vpn.sh && pkill -SIGRTMIN+3 waybar",
     "exec": "~/.config/waybar/scripts/toggle-vpn.sh refresh",
     "return-type": "json",
@@ -302,12 +407,12 @@
     "exec": "~/.config/waybar/scripts/toggleDunst.sh refresh",
     "return-type": "json",
     "interval": 1000,
-    "format": "{}",
+    "format": "{}<sup>\uf0a2</sup>",
     "on-click": "~/.config/waybar/scripts/toggleDunst.sh",
     "signal": 9
   },
   "custom/powerbtn": {
-    "exec": "echo \"{\\\"text\\\":\\\"󰐥\\\",\\\"tooltip\\\":\\\"$(uptime)\\\"}\"",
+    "exec": "echo \"{\\\"text\\\":\\\"\udb81\udc25<sub>\uf011</sub>\\\",\\\"tooltip\\\":\\\"$(uptime)\\\"}\"",
     "interval": 60,
     "format": "{}",
     "tooltip": "true",
@@ -323,7 +428,7 @@
     "spacing": 6
   },
   "clock": {
-    "format": " {:%H:%M\n%d.%m.%y}",
+    "format": "\uf017 {:%H:%M\n%d.%m.%y}",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     "on-click": "yad --name=yad-calendar --calendar --undecorated",
     "actions": {
@@ -333,160 +438,180 @@
   },
   "group/title": {
     "orientation": "vertical",
-    "modules": ["sway/mode", "privacy"]
+    "modules": [
+      "sway/mode",
+      "privacy"
+    ]
   },
-   "privacy": {
-     "icon-spacing": 4,
-     "icon-size": 18,
-     "transition-duration": 250,
-     "modules": [
-       {
-         "type": "screenshare",
-         "tooltip": true,
-         "tooltip-icon-size": 24
-       },
-       {
-         "type": "audio-out",
-         "tooltip": true,
-         "tooltip-icon-size": 24
-       },
-       {
-         "type": "audio-in",
-         "tooltip": true,
-         "tooltip-icon-size": 24
-       }
-     ],
-     "ignore-monitor": true,
-     "ignore": [
-       {
-         "type": "audio-in",
-         "name": "cava"
-       },
-       {
-         "type": "screenshare",
-         "name": "obs"
-       }
-     ]
-   },
-   "custom/cpu-indicator": {
-     "exec": "~/.config/waybar/scripts/cpu-indicator.sh",
-     "interval": 2,
-     "format": "{}",
-     "return-type": "json"
-   },
-   "custom/ram-indicator": {
-      "exec": "~/.config/waybar/scripts/ram-indicator.sh",
-      "interval": 2,
-      "format": "{}",
-      "return-type": "json"
-   },
-   "custom/io-indicator": {
-      "exec": "~/.config/waybar/scripts/io-indicator.sh",
-      "interval": 2,
-      "format": "{}",
-      "return-type": "json"
-   },
-   "custom/network-indicator": {
-      "exec": "~/.config/waybar/scripts/network-indicator.sh",
-      "interval": 2,
-      "format": "{}",
-      "return-type": "json"
-   },
-   "custom/cpu-indicator-vertical": {
-      "exec": "~/.config/waybar/scripts/cpu-indicator-vertical.sh",
-      "interval": 2,
-      "format": "{}",
-      "return-type": "json"
-   },
-   "custom/ram-indicator-vertical": {
-      "exec": "~/.config/waybar/scripts/ram-indicator-vertical.sh",
-      "interval": 2,
-      "format": "{}",
-      "return-type": "json"
-   },
-   "custom/io-indicator-vertical": {
-      "exec": "~/.config/waybar/scripts/io-indicator-vertical.sh",
-      "interval": 2,
-      "format": "{}",
-      "return-type": "json"
-   },
-   "custom/network-indicator-vertical": {
-      "exec": "~/.config/waybar/scripts/network-indicator-vertical.sh",
-      "interval": 2,
-      "format": "{}",
-      "return-type": "json"
-   },
-    "group/vertical-indicators": {
-       "orientation": "vertical",
-       "modules": [
-         "custom/cpu-indicator-vertical",
-         "custom/ram-indicator-vertical",
-         "custom/io-indicator-vertical",
-         "custom/network-indicator-vertical"
-       ]
-    },
-    "group/cpu-ram-group": {
-       "orientation": "horizontal",
-       "modules": [
-         "custom/cpu-indicator-vertical",
-         "custom/ram-indicator-vertical"
-       ]
-    },
-    "group/io-network-group": {
-       "orientation": "horizontal",
-       "modules": [
-         "custom/io-speed",
-         "custom/net-speed"
-       ]
-    },
-    "custom/io-speed": {
-       "exec": "~/.config/waybar/scripts/io-speed.sh",
-       "interval": 2,
-       "format": "{}",
-       "return-type": "json"
-    },
-    "custom/net-speed": {
-       "exec": "~/.config/waybar/scripts/net-speed.sh",
-       "interval": 2,
-       "format": "{}",
-       "return-type": "json"
-    },
-    "group/temp-fan-group": {
-       "orientation": "horizontal",
-       "modules": [
-         "custom/temp-fan"
-       ]
-    },
-    "custom/temp-fan": {
-       "exec": "~/.config/waybar/scripts/temp-fan.sh",
-       "interval": 3,
-       "format": "{}",
-       "return-type": "json"
-    },
-     "group/network-bt": {
-        "orientation": "horizontal",
-        "modules": [
-          "custom/wifi-indicator",
-          "custom/bt-indicator"
-        ]
-     },
-     "custom/cpu-indicator-top-bottom": {
-       "exec": "~/.config/waybar/scripts/cpu-indicator-top-bottom.sh",
-       "interval": 2,
-       "format": "{}",
-       "return-type": "json"
-    },
-     "custom/wifi-indicator": {
-       "exec": "~/.config/waybar/scripts/wifi-indicator.sh",
-       "interval": 5,
-       "format": "{}",
-       "return-type": "json"
-     },
-     "custom/bt-indicator": {
-       "exec": "~/.config/waybar/scripts/bt-indicator.sh",
-       "interval": 5,
-       "format": "{}",
-       "return-type": "json",
-       "on-click": "blueman-manager"
-     }
- }
+  "privacy": {
+    "icon-spacing": 4,
+    "icon-size": 18,
+    "transition-duration": 250,
+    "modules": [
+      {
+        "type": "screenshare",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      },
+      {
+        "type": "audio-out",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      },
+      {
+        "type": "audio-in",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      }
+    ],
+    "ignore-monitor": true,
+    "ignore": [
+      {
+        "type": "audio-in",
+        "name": "cava"
+      },
+      {
+        "type": "screenshare",
+        "name": "obs"
+      }
+    ]
+  },
+  "custom/cpu-indicator": {
+    "exec": "~/.config/waybar/scripts/cpu-indicator.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/ram-indicator": {
+    "exec": "~/.config/waybar/scripts/ram-indicator.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/io-indicator": {
+    "exec": "~/.config/waybar/scripts/io-indicator.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/network-indicator": {
+    "exec": "~/.config/waybar/scripts/network-indicator.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/cpu-indicator-vertical": {
+    "exec": "~/.config/waybar/scripts/cpu-indicator-vertical.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/ram-indicator-vertical": {
+    "exec": "~/.config/waybar/scripts/ram-indicator-vertical.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/io-indicator-vertical": {
+    "exec": "~/.config/waybar/scripts/io-indicator-vertical.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/network-indicator-vertical": {
+    "exec": "~/.config/waybar/scripts/network-indicator-vertical.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "group/vertical-indicators": {
+    "orientation": "vertical",
+    "modules": [
+      "custom/cpu-indicator-vertical",
+      "custom/ram-indicator-vertical",
+      "custom/io-indicator-vertical",
+      "custom/network-indicator-vertical"
+    ]
+  },
+  "group/cpu-ram-group": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/cpu-indicator-vertical",
+      "custom/ram-indicator-vertical"
+    ]
+  },
+  "group/io-network-group": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/io-speed"
+    ]
+  },
+  "custom/io-speed": {
+    "exec": "~/.config/waybar/scripts/io-speed.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/net-speed": {
+    "exec": "~/.config/waybar/scripts/net-speed.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "group/temp-fan-group": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/temp-fan"
+    ]
+  },
+  "custom/temp-fan": {
+    "exec": "~/.config/waybar/scripts/temp-fan.sh",
+    "interval": 3,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "group/network-bt": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/bt-indicator"
+    ]
+  },
+  "custom/cpu-indicator-top-bottom": {
+    "exec": "~/.config/waybar/scripts/cpu-indicator-top-bottom.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/wifi-indicator": {
+    "exec": "~/.config/waybar/scripts/wifi-indicator.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/bt-indicator": {
+    "exec": "~/.config/waybar/scripts/bt-indicator.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "blueman-manager"
+  },
+  "group/network-combined": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/wifi-big-icon",
+      "custom/net-combined-info"
+    ]
+  },
+  "custom/wifi-big-icon": {
+    "exec": "~/.config/waybar/scripts/wifi-big-icon.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/net-combined-info": {
+    "exec": "~/.config/waybar/scripts/net-combined-info.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json"
+  }
+}

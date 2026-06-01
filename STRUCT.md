@@ -271,6 +271,14 @@ groups:
     signal: 8
     on-click: "/usr/local/bin/toggle_fn_lock.sh"
 
+  custom/ext-display:
+    exec: "~/.config/waybar/scripts/toggle-ext-display.sh refresh"
+    return-type: "json"
+    format: "{}"
+    on-click: "~/.config/waybar/scripts/toggle-ext-display.sh"
+    signal: 11
+    tooltip: "Toggles external HDMI-A-1 display on/off"
+
   custom/lang:
     format: "{}"
 

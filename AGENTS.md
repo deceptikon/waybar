@@ -68,6 +68,7 @@ Both `default-modules-v2.json` and `default-modules.json` are included in every 
 | `SIGRTMIN+8` | Recorder, checkupdates, keyboard backlight |
 | `SIGRTMIN+9` | Dunst toggle |
 | `SIGRTMIN+10` | ASUS profile switch |
+| `SIGRTMIN+11` | External display toggle |
 
 ## Adding a New Module
 

@@ -25,7 +25,7 @@
     "position": "top",
     "height": 17,
     "modules-left": [
-      "custom/qwen-network"
+      "group/qwen-network"
     ],
     "modules-center": [],
     "modules-right": [],

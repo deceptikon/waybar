@@ -1,6 +1,19 @@
 {
-  "custom/qwen-network": {
-    "exec": "~/.config/waybar/scripts/qwen-network.sh",
+  "group/qwen-network": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-wifi-icon",
+      "custom/qwen-wifi-info"
+    ]
+  },
+  "custom/qwen-wifi-icon": {
+    "exec": "~/.config/waybar/scripts/wifi-big-icon.sh",
+    "interval": 8,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/qwen-wifi-info": {
+    "exec": "~/.config/waybar/scripts/qwen-wifi-info.sh",
     "interval": 10,
     "format": "{}",
     "return-type": "json",

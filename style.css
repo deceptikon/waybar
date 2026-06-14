@@ -739,21 +739,44 @@ window.bar-low#window .code-oss * {
 }
 
 /* === 5. DEV BAR — qwen-network sandbox === */
-#custom-qwen-network {
-  /* Let content drive size; no min-height/min-width so bar can stay compact */
-  padding: 2px 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #94e2d5;
-  background: rgba(0, 128, 128, 0.1);
-  border: 1px solid rgba(148, 226, 213, 0.35);
-  border-radius: 6px;
+#group-qwen-network {
+  /* Group container: just space between tiles, no outer border */
+  border: none;
+  background: transparent;
+  padding: 0;
   margin: 0 4px;
 }
-#custom-qwen-network.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); color: #f9e2af; }
-#custom-qwen-network.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); color: #fab387; }
-#custom-qwen-network.critical { background: rgba(243, 139, 168, 0.15); border-color: rgba(243, 139, 168, 0.5); color: #f38ba8; }
-#custom-qwen-network.disconnected { background: rgba(100, 100, 100, 0.15); border-color: rgba(120, 120, 120, 0.3); color: #888; }
+
+#custom-qwen-wifi-icon,
+#custom-qwen-wifi-info {
+  /* Shared tile style */
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 226, 213, 0.35);
+  background: rgba(0, 128, 128, 0.1);
+  color: #94e2d5;
+}
+
+/* Icon tile: large centered icon */
+#custom-qwen-wifi-icon {
+  font-size: 18px;
+  min-width: 28px;
+  padding: 2px 6px;
+  margin-right: 4px;
+}
+
+/* Info tile: two-row stacked */
+#custom-qwen-wifi-info {
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 0;
+}
+
+/* Per-signal-state coloring on the info tile */
+#custom-qwen-wifi-info.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); color: #f9e2af; }
+#custom-qwen-wifi-info.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); color: #fab387; }
+#custom-qwen-wifi-info.critical { background: rgba(243, 139, 168, 0.15); border-color: rgba(243, 139, 168, 0.5); color: #f38ba8; }
+#custom-qwen-wifi-info.disconnected { background: rgba(100, 100, 100, 0.15); border-color: rgba(120, 120, 120, 0.3); color: #888; }
 
 /* === 4. ANIMATIONS === */
 @keyframes blinkwarn {

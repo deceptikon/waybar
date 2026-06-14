@@ -219,6 +219,7 @@ Single outer frame contains both — icon floats, info tile stands out.
 - `auto-skill-horizontal-bar-refactor`: Flattening groups and consistent spacing
 - `auto-skill-waybar-module-sandbox`: Testing new modules in a dev bar
 - `auto-skill-waybar-script-debug`: Debugging scripts that produce silent failures
+- `auto-skill-waybar-ssd-module`: Composite SSD module (icon+temp + bar + I/O)
 
 ## Resources
 

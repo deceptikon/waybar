@@ -1,21 +1,24 @@
 #!/bin/bash
 
 # SSD icon tile — main disk icon + temperature badge
+# Uses printf to embed exact UTF-8 bytes (Monaspace Nerd Font glyphs)
 
-device=$(df / | tail -1 | awk '{print $1}')
-parent=$(lsblk -no PKNAME "$device" 2>/dev/null | head -1)
-[ -z "$parent" ] && parent="${device#/dev/}"
+DEVICE=$(df / | tail -1 | awk '{print $1}')
+parent=$(lsblk -no PKNAME "$DEVICE" 2>/dev/null | head -1)
+[ -z "$parent" ] && parent="${DEVICE#/dev/}"
 
-# Main icon: SSD vs HDD
+# Main icon: SSD vs HDD via rotational flag
 rotational=1
 if [ -r "/sys/block/$parent/queue/rotational" ]; then
   rotational=$(cat "/sys/block/$parent/queue/rotational" 2>/dev/null || echo "1")
 fi
 
+# nf-mdi-ssd = U+F0CCA bytes: f3 b0 b3 8a
+# nf-mdi-harddisk = U+F0CC9 bytes: f3 b0 b3 89
 if [ "$rotational" = "0" ]; then
-  main_icon=""   # NF-MDFI_SSD
+  main_icon=$(printf '\xf3\xb0\xb3\x8a')
 else
-  main_icon=""   # NF-MDFI_HDD
+  main_icon=$(printf '\xf3\xb0\xb3\x89')
 fi
 
 # Secondary badge: temperature from hwmon (millidegrees C)
@@ -33,22 +36,17 @@ if [ -n "$temp_input" ]; then
   temp_c=$((temp_raw / 1000))
 fi
 
+# nf-mdi-thermometer = U+F050F bytes: f3 b0 94 8f
+badge_icon=$(printf '\xf3\xb0\x94\x8f')
+
 # Color class by temperature
-if   [ "$temp_c" -ge 80 ]; then badge_class="critical"
-elif [ "$temp_c" -ge 70 ]; then badge_class="warning"
-elif [ "$temp_c" -ge 60 ]; then badge_class="medium"
-else badge_class="good"; fi
-
-# Small badge icon for temperature
-if   [ "$temp_c" -ge 70 ]; then badge_icon=""   # NF-MDFI_WARNING
-elif [ "$temp_c" -gt 0 ];    then badge_icon="" # MDI_LIGHTBULB_ON / thermometer-ish
-else badge_icon=""   # placeholder
-
-fi
-
+if   [ "$temp_c" -ge 80 ]; then badge_cls="critical"
+elif [ "$temp_c" -ge 70 ]; then badge_cls="warning"
+elif [ "$temp_c" -ge 60 ]; then badge_cls="medium"
+else badge_cls="good"; fi
 
 jq -n --compact-output \
   --arg main "$main_icon" \
   --arg badge "$badge_icon" \
-  --arg cls "$badge_class" \
-  '{text: ($main + $badge), class: ("icon " + $cls)}'
+  --arg cls "$badge_cls" \
+  '{text: ($main + " " + $badge), class: ("icon " + $cls)}'

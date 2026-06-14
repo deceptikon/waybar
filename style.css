@@ -568,7 +568,7 @@ window.bar-low#window .code-oss * {
   border: none;
   background: transparent;
   border-radius: 0;
-  min-width: auto;
+  min-width: 0;
 }
 
 #custom-cpu-indicator-vertical,

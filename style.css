@@ -740,36 +740,36 @@ window.bar-low#window .code-oss * {
 
 /* === 5. DEV BAR — qwen-network sandbox === */
 #group-qwen-network {
-  /* Group container: just space between tiles, no outer border */
-  border: none;
-  background: transparent;
-  padding: 0;
+  /* Outer box: single rounded border containing both tiles */
+  background: rgba(0, 128, 128, 0.1);
+  border: 1px solid rgba(148, 226, 213, 0.35);
+  border-radius: 8px;
+  padding: 2px 4px 2px 6px;
   margin: 0 4px;
 }
 
-#custom-qwen-wifi-icon,
+/* Icon tile: no border/bg — only the icon itself */
+#custom-qwen-wifi-icon {
+  font-size: 18px;
+  min-width: 28px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #94e2d5;
+  margin-right: 2px;
+}
+
+/* Info tile: keeps its own bordered look inside the outer box */
 #custom-qwen-wifi-info {
-  /* Shared tile style */
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 0;
   padding: 2px 8px;
   border-radius: 6px;
   border: 1px solid rgba(148, 226, 213, 0.35);
   background: rgba(0, 128, 128, 0.1);
   color: #94e2d5;
-}
-
-/* Icon tile: large centered icon */
-#custom-qwen-wifi-icon {
-  font-size: 18px;
-  min-width: 28px;
-  padding: 2px 6px;
-  margin-right: 4px;
-}
-
-/* Info tile: two-row stacked */
-#custom-qwen-wifi-info {
-  font-size: 12px;
-  font-weight: 500;
-  min-width: 0;
 }
 
 /* Per-signal-state coloring on the info tile */

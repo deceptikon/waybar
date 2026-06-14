@@ -30,7 +30,7 @@
       "custom/cpu-indicator-vertical",
       "custom/ram-indicator-vertical",
       "custom/io-speed",
-      "group/net-combined"
+      "group/network-combined"
     ],
     "modules-center": [
       "sway/window"

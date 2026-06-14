@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # SSD info tile — compact visual usage bar + live I/O speeds
-# Layout: [bar 19%] / [↓read  ↑write]
+# Layout: [bar 19%] / [↑read ↓write]
 
 DEVICE=$(df / | tail -1 | awk '{print $1}')
 parent=$(lsblk -no PKNAME "$DEVICE" 2>/dev/null | head -1)
@@ -12,7 +12,6 @@ usage_pct=$(df --output=pcent / | tail -1 | tr -d ' %')
 
 # Visual usage bar — 4 segments (compact)
 # Filled uses ▓ (U+2593), empty uses ▒ (U+2592)
-# Both colored via Pango fgcolor so even identical glyphs contrast
 segments=4
 filled=$((usage_pct * segments / 100))
 [ "$filled" -gt "$segments" ] && filled="$segments"
@@ -69,17 +68,15 @@ if   [ "$io_total" -gt 104857600  ]; then io_cls="critical"
 elif [ "$io_total" -gt 10485760   ]; then io_cls="warning"
 elif [ "$io_total" -gt 1048576    ]; then io_cls="medium"; fi
 
-# ↓ = U+2193 bytes: e2 86 93
-# ↑ = U+2191 bytes: e2 86 91
-arr_down=$(printf '\xe2\x86\x93')
+# Arrows: ↑ = U+2191 (e2 86 91), ↓ = U+2193 (e2 86 93)
+# ↑ for read (data flowing up from disk), ↓ for write (data flowing down to disk)
 arr_up=$(printf '\xe2\x86\x91')
+arr_down=$(printf '\xe2\x86\x93')
 
-# Two-row Pango:
-#   Row 1: [filled][empty]  pct
-#   Row 2: ↓read  ↑write
+# Single-row: [bar] [pct%]  ↑read ↓write
 text=$(printf "<b><span fgcolor='#a6e3a1'>%s</span><span fgcolor='#555'>%s</span></b> <b>%d%%</b>\n<span size='small' fgcolor='#94e2d5'>%s%s  %s%s</span>" \
   "$filled_str" "$empty_str" "$usage_pct" \
-  "$arr_down" "$read_fmt/s" "$arr_up" "$write_fmt/s")
+  "$arr_up" "$read_fmt/s" "$arr_down" "$write_fmt/s")
 
 jq -n --compact-output \
   --arg text "$text" \

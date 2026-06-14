@@ -40,5 +40,26 @@
     "return-type": "json",
     "on-click": "gnome-disks",
     "on-right-click": "lsblk"
+  },
+  "group/qwen-system": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-system-icon",
+      "custom/qwen-system-info"
+    ]
+  },
+  "custom/qwen-system-icon": {
+    "exec": "~/.config/waybar/scripts/qwen-system-icon.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/qwen-system-info": {
+    "exec": "~/.config/waybar/scripts/qwen-system-info.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "htop",
+    "on-right-click": "gnome-system-monitor"
   }
 }

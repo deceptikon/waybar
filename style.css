@@ -289,10 +289,10 @@ window.bar-low#window .code-oss * {
 #pulseaudio-slider slider,
 #backlight-slider slider {
   border: none;
-  background: linear-gradient(to bottom, #a6e3a1, #74c7ec);
-  border-radius: 4px;
-  min-width: 4px;
-  min-height: 10px;
+  background: transparent;
+  border-radius: 0;
+  min-width: 2px;
+  min-height: 2px;
 }
 
 /* === 3. HORIZONTAL BAR BUTTONS (powerbtn) + VERTICAL BAR BUTTONS === */
@@ -553,7 +553,7 @@ window.bar-low#window .code-oss * {
   margin-left: 2px;
 }
 
-/* Wifi + net-info group wrapper */
+/* Wifi + net-info group wrapper — unified single bordered box */
 #group-network-combined {
   background: rgba(0, 128, 128, 0.1);
   border: 1px solid rgba(148, 226, 213, 0.3);
@@ -565,6 +565,10 @@ window.bar-low#window .code-oss * {
 
 #group-network-combined > * {
   margin: 0 2px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  min-width: auto;
 }
 
 #custom-cpu-indicator-vertical,

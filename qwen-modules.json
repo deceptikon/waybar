@@ -29,13 +29,13 @@
   },
   "custom/qwen-ssd-icon": {
     "exec": "~/.config/waybar/scripts/qwen-ssd-icon.sh",
-    "interval": 60,
+    "interval": 30,
     "format": "{}",
     "return-type": "json"
   },
   "custom/qwen-ssd-info": {
     "exec": "~/.config/waybar/scripts/qwen-ssd-info.sh",
-    "interval": 60,
+    "interval": 5,
     "format": "{}",
     "return-type": "json",
     "on-click": "gnome-disks",

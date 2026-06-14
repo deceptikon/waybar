@@ -1,40 +1,33 @@
 #!/bin/bash
+set -euo pipefail
 
 # Get memory usage in GB
-mem_info=$(free | grep Mem)
-mem_total_kb=$(echo "$mem_info" | awk '{print $2}')
-mem_used_kb=$(echo "$mem_info" | awk '{print $3}')
-mem_free_kb=$(echo "$mem_info" | awk '{print $4}')
+read -r mem_total_kb mem_used_kb mem_free_kb < <(free | awk '/Mem/{print $2, $3, $4}')
+read -r swap_total_kb swap_used_kb < <(free | awk '/^Swap/{print $2, $3}')
 
-# Convert to GB (rounded to nearest whole number)
-mem_total_gb=$(echo "scale=0; $mem_total_kb / 1024 / 1024" | bc)
-mem_used_gb=$(echo "scale=0; $mem_used_kb / 1024 / 1024" | bc)
-mem_free_gb=$(echo "scale=0; $mem_free_kb / 1024 / 1024" | bc)
+# Convert to GB (1 decimal)
+mem_total_gb=$(awk "BEGIN{printf \"%.1f\", $mem_total_kb/1048576}")
+mem_used_gb=$(awk "BEGIN{printf \"%.1f\", $mem_used_kb/1048576}")
+swap_used_gb=$(awk "BEGIN{printf \"%.1f\", ${swap_used_kb:-0}/1048576}")
 
-# Calculate usage percentage for progress bar and coloring
-mem_usage=$(echo "scale=2; $mem_used_kb * 100 / $mem_total_kb" | bc)
-mem_usage_int=$(printf "%.0f" "$mem_usage")
+# Calculate usage percentage for coloring
+mem_usage_int=$(awk "BEGIN{printf \"%d\", ($mem_used_kb/$mem_total_kb)*100}")
 
 # Determine class based on usage
 if (( mem_usage_int <= 30 )); then
     mem_class="transparent"
-    mem_icon=""
 elif (( mem_usage_int <= 50 )); then
     mem_class="low"
-    mem_icon=""
 elif (( mem_usage_int <= 80 )); then
     mem_class="medium"
-    mem_icon=""
 else
     mem_class="high"
-    mem_icon=""
 fi
 
-# Create thinner progress bar visualization (5 blocks instead of 10)
-filled_blocks=$(( mem_usage_int / 20 ))  # Each block represents 20%
-empty_blocks=$(( 5 - filled_blocks ))    # Total of 5 blocks for 100%
+# Progress bar (5 blocks)
+filled_blocks=$(( mem_usage_int / 20 ))
+empty_blocks=$(( 5 - filled_blocks ))
 
-# Create the progress bar using block characters
 progress_bar=""
 for ((i=0; i<filled_blocks; i++)); do
     progress_bar+="█"
@@ -43,5 +36,12 @@ for ((i=0; i<empty_blocks; i++)); do
     progress_bar+="░"
 done
 
+# Compact text: icon bar used/totalG [swap]
+text=" $progress_bar ${mem_used_gb}/${mem_total_gb}G"
+if (( $(awk "BEGIN{print ($swap_used_gb > 0.01)}") )); then
+    text+=" ⇄ ${swap_used_gb}G"
+fi
+
 # Output JSON for Waybar
-echo "{\"text\":\"$mem_icon $progress_bar ${mem_used_gb}/${mem_total_gb}G\",\"tooltip\":\"RAM Usage: ${mem_used_gb}G/${mem_total_gb}G (${mem_usage_int}%)\",\"class\":\"$mem_class\"}" | jq --compact-output
+jq -n --arg t "$text" --arg tip "RAM: ${mem_used_gb}G/${mem_total_gb}G (${mem_usage_int}%)\nSwap: ${swap_used_gb}G" --arg c "$mem_class" \
+    '{text:$t,tooltip:$tip,class:$c}' --compact-output

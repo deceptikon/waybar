@@ -52,14 +52,16 @@
     "interval": 2
   },
   "custom/ram": {
-    "format": "  \uf538 {} "
+    "exec": "free | awk '/Mem/{u=$3/1048576; t=$2/1048576} /^Swap/{s=$3/1048576} END{printf \"\\uf538 %.1f/%.1fG\", u, t; if(s>0.01) printf \" \\uf6a8 %.1fG\", s}'",
+    "interval": 5,
+    "format": " {} "
   },
   "custom/fanlabel": {
     "format": "  \uf863 "
   },
   "memory": {
-    "interval": 30,
-    "format": "free:{avail:0.1f}G used:{used:0.1f}G   "
+    "interval": 5,
+    "format": " \uf538 {used:0.1f}G/{total:0.1f}G "
   },
   "custom/disk-io": {
     "exec": "iostat -d 1 2 | grep '^nvme' | tail -n 1 | awk '{printf \" \u2193%.1f \u2191%.1f MB/s (IOPS: %d)\", $3/1024, $4/1024, $2}'",

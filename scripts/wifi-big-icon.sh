@@ -29,8 +29,8 @@ else
   fi
 fi
 
-# Use a specific Pango size and dim the color for the signal text
-full_text=$(printf "%s\n<span size='5000' foreground='#666666' weight='light'>%s</span>" "$icon" "$signal_text")
+# Output just the icon, no signal text below
+full_text="$icon"
 
 jq -n --compact-output \
   --arg text "$full_text" \

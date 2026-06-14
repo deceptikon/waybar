@@ -5,18 +5,11 @@
       "transition-duration": 500,
       "transition-left-to-right": false
     },
-    "modules": [
-      "group/base-switches",
-      "bluetooth",
-      "network"
-    ]
+    "modules": ["group/base-switches", "bluetooth", "network"]
   },
   "group/base-switches": {
     "orientation": "horizontal",
-    "modules": [
-      "bluetooth#lite",
-      "network#lite"
-    ]
+    "modules": ["bluetooth#lite", "network#lite"]
   },
   "group/hardware": {
     "orientation": "horizontal",
@@ -24,12 +17,7 @@
       "transition-duration": 500,
       "transition-left-to-right": true
     },
-    "modules": [
-      "group/subcpu",
-      "memory",
-      "custom/disk-io",
-      "load"
-    ]
+    "modules": ["group/subcpu", "memory", "custom/disk-io", "load"]
   },
   "group/temp-group": {
     "orientation": "horizontal",
@@ -37,26 +25,15 @@
       "transition-duration": 500,
       "transition-left-to-right": true
     },
-    "modules": [
-      "group/temperatura",
-      "custom/fan",
-      "custom/fan2",
-      "custom/temp-detailed"
-    ]
+    "modules": ["group/temperatura", "custom/fan", "custom/fan2", "custom/temp-detailed"]
   },
   "group/temperatura": {
     "orientation": "horizontal",
-    "modules": [
-      "temperature",
-      "custom/fanlabel"
-    ]
+    "modules": ["temperature", "custom/fanlabel"]
   },
   "group/power": {
     "orientation": "horizontal",
-    "modules": [
-      "battery",
-      "custom/asus-profile"
-    ]
+    "modules": ["battery", "custom/asus-profile"]
   },
   "group/bat-group": {
     "orientation": "vertical",
@@ -64,19 +41,11 @@
       "transition-duration": 500,
       "transition-left-to-right": false
     },
-    "modules": [
-      "group/power",
-      "custom/battery-info",
-      "custom/acpi-detailed",
-      "custom/power-draw"
-    ]
+    "modules": ["group/power", "custom/battery-info", "custom/acpi-detailed", "custom/power-draw"]
   },
   "group/subcpu": {
     "orientation": "horizontal",
-    "modules": [
-      "cpu",
-      "custom/ram"
-    ]
+    "modules": ["cpu", "custom/ram"]
   },
   "cpu": {
     "format": " \uf2db <sub>CPU</sub> {usage}% ",
@@ -101,11 +70,7 @@
     "hwmon-path": "/sys/class/hwmon/hwmon6/temp1_input",
     "critical-threshold": 85,
     "format": " {icon} {temperatureC}\u00b0C ",
-    "format-icons": [
-      "\uf2cb",
-      "\uf2c9",
-      "\uf2c7"
-    ]
+    "format-icons": ["\uf2cb", "\uf2c9", "\uf2c7"]
   },
   "custom/fan": {
     "exec": "cat /sys/class/hwmon/hwmon8/fan1_input",
@@ -243,17 +208,11 @@
   },
   "group/audio": {
     "orientation": "horizontal",
-    "modules": [
-      "pulseaudio",
-      "pulseaudio/slider"
-    ]
+    "modules": ["pulseaudio", "pulseaudio/slider"]
   },
   "group/bright": {
     "orientation": "horizontal",
-    "modules": [
-      "backlight",
-      "backlight/slider"
-    ]
+    "modules": ["backlight", "backlight/slider"]
   },
   "pulseaudio": {
     "format": " {icon}",
@@ -268,11 +227,7 @@
       "phone-muted": "\ued17",
       "portable": "\uf095",
       "car": "\uf1b9",
-      "default": [
-        "\uf026",
-        "\uf027",
-        "\uf028"
-      ]
+      "default": ["\uf026", "\uf027", "\uf028"]
     },
     "on-click": "amixer -q sset Master toggle",
     "scroll-step": 1,
@@ -316,10 +271,7 @@
   },
   "group/music": {
     "orientation": "horizontal",
-    "modules": [
-      "mpris#cassette",
-      "mpris"
-    ],
+    "modules": ["mpris#cassette", "mpris"],
     "drawer": {
       "transition-duration": 500,
       "transition-left-to-right": true
@@ -412,7 +364,7 @@
     "signal": 9
   },
   "custom/powerbtn": {
-    "exec": "echo \"{\\\"text\\\":\\\"\udb81\udc25<sub>\uf011</sub>\\\",\\\"tooltip\\\":\\\"$(uptime)\\\"}\"",
+    "exec": "echo \"{\\\"text\\\":\\\"\uf011\\\",\\\"tooltip\\\":\\\"$(uptime)\\\"}\"",
     "interval": 60,
     "format": "{}",
     "tooltip": "true",
@@ -438,10 +390,7 @@
   },
   "group/title": {
     "orientation": "vertical",
-    "modules": [
-      "sway/mode",
-      "privacy"
-    ]
+    "modules": ["sway/mode", "privacy"]
   },
   "privacy": {
     "icon-spacing": 4,
@@ -535,16 +484,11 @@
   },
   "group/cpu-ram-group": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/cpu-indicator-vertical",
-      "custom/ram-indicator-vertical"
-    ]
+    "modules": ["custom/cpu-indicator-vertical", "custom/ram-indicator-vertical"]
   },
   "group/io-network-group": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/io-speed"
-    ]
+    "modules": ["custom/io-speed"]
   },
   "custom/io-speed": {
     "exec": "~/.config/waybar/scripts/io-speed.sh",
@@ -560,9 +504,7 @@
   },
   "group/temp-fan-group": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/temp-fan"
-    ]
+    "modules": ["custom/temp-fan"]
   },
   "custom/temp-fan": {
     "exec": "~/.config/waybar/scripts/temp-fan.sh",
@@ -572,9 +514,7 @@
   },
   "group/network-bt": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/bt-indicator"
-    ]
+    "modules": ["custom/bt-indicator"]
   },
   "custom/cpu-indicator-top-bottom": {
     "exec": "~/.config/waybar/scripts/cpu-indicator-top-bottom.sh",
@@ -597,10 +537,7 @@
   },
   "group/network-combined": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/wifi-big-icon",
-      "custom/net-combined-info"
-    ]
+    "modules": ["custom/wifi-big-icon", "custom/net-combined-info"]
   },
   "custom/wifi-big-icon": {
     "exec": "~/.config/waybar/scripts/wifi-big-icon.sh",

@@ -23,13 +23,14 @@
     "name": "bar-horiz",
     "layer": "top",
     "position": "top",
-    "height": 25,
+    "height": 17,
     "modules-left": [
       "custom/powerbtn",
-      "group/temp-fan-group",
-      "group/cpu-ram-group",
-      "group/io-network-group",
-      "group/network-combined"
+      "custom/temp-fan",
+      "custom/cpu-indicator-vertical",
+      "custom/ram-indicator-vertical",
+      "custom/io-speed",
+      "group/net-combined"
     ],
     "modules-center": [
       "sway/window"
@@ -37,8 +38,20 @@
     "modules-right": [
       "group/audio",
       "group/bright",
-      "group/network-bt"
+      "custom/bt-indicator"
     ],
+    "pulseaudio/slider": {
+      "min": 0,
+      "max": 90,
+      "orientation": "horizontal",
+      "format": "SUSU {}"
+    },
+    "backlight/slider": {
+      "min": 9,
+      "max": 100,
+      "orientation": "horizontal",
+      "device": "intel_backlight"
+    },
     "include": [
       "/home/lexx/.config/waybar/default-modules-v2.json",
       "/home/lexx/.config/waybar/default-modules.json"

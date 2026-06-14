@@ -41,19 +41,19 @@ window#waybar {
 
 #title-mode,
 #uptime-mode {
-   min-width: 400px;
-   /* justify-content: center; */
+  min-width: 400px;
+  /* justify-content: center; */
 }
 
 /* Fix spacing for title area */
 #uptime-mode {
-   margin-top: 6px;    /* Space above tray */
-   margin-bottom: 4px; /* Space between tray and title */
+  margin-top: 6px; /* Space above tray */
+  margin-bottom: 4px; /* Space between tray and title */
 }
 
 #window {
-   margin-top: 4px;    /* Reduced space above title */
-   margin-bottom: 2px; /* Reduced spacing below title */
+  margin-top: 4px; /* Reduced space above title */
+  margin-bottom: 2px; /* Reduced spacing below title */
 }
 window#waybar.solo #window {
   color: #eee8d5; /* base2 */
@@ -114,9 +114,8 @@ window.bar-vert {
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-window.bar-low#window .code-oss *{
+window.bar-low#window .code-oss * {
   background: #007acc;
-
 }
 
 #workspaces button {
@@ -267,7 +266,7 @@ window.bar-low#window .code-oss *{
 }
 #pulseaudio-slider trough,
 #backlight-slider trough {
-  min-height: 3px;
+  min-height: 6px;
   min-width: 60px;
   border-radius: 1px;
   background: rgba(0, 0, 0, 0.3);
@@ -300,14 +299,14 @@ window.bar-low#window .code-oss *{
 
 /* === 3. HORIZONTAL BAR BUTTONS (powerbtn) + VERTICAL BAR BUTTONS === */
 #custom-powerbtn {
-   border: 1px solid rgba(0, 128, 128, 0.3);
-   border-radius: 6px;
-   margin: 0 2px;
-   min-height: 20px;
-   min-width: 28px;
-   color: #249e94;
-   font-size: 18px;
-   padding: 2px 4px;
+  margin: 0 4px;
+  border: 1px solid rgba(0, 128, 128, 0.3);
+  border-radius: 6px;
+  min-height: 20px;
+  min-width: 28px;
+  color: #249e94;
+  font-size: 18px;
+  padding: 2px 4px;
 }
 
 #idle_inhibitor,
@@ -319,33 +318,33 @@ window.bar-low#window .code-oss *{
 #custom-backlight,
 #custom-ext-display,
 #custom-checkupdates {
-   border: 1px solid rgba(0, 128, 128, 0.3);
-   border-top: 2px solid lightseagreen;
-   border-bottom: 2px solid teal;
-   border-radius: 8px;
-   margin: 2px 4px;
-   min-height: 20px;
-   min-width: 30px;
-   color: #249e94;
-   font-size: 24px;
-   padding: 4px;
-   box-shadow: -1px 1px 3px rgba(0, 128, 128, 0.3);
+  border: 1px solid rgba(0, 128, 128, 0.3);
+  border-top: 2px solid lightseagreen;
+  border-bottom: 2px solid teal;
+  border-radius: 8px;
+  margin: 2px 4px;
+  min-height: 20px;
+  min-width: 30px;
+  color: #249e94;
+  font-size: 24px;
+  padding: 4px;
+  box-shadow: -1px 1px 3px rgba(0, 128, 128, 0.3);
 }
 #custom-backlight.active,
 #custom-fnlock.active {
-    border: 1px solid lightseagreen;
-    box-shadow: -1px 1px 5px rgba(222, 90, 0, 0.95);
-    border-bottom: 4px solid teal;
-    color: #90ee90;
+  border: 1px solid lightseagreen;
+  box-shadow: -1px 1px 5px rgba(222, 90, 0, 0.95);
+  border-bottom: 4px solid teal;
+  color: #90ee90;
 }
 
 #custom-ext-display.off {
-    color: #666;
+  color: #666;
 }
 
 #custom-ext-display.disconnected {
-    color: #444;
-    opacity: 0.5;
+  color: #444;
+  opacity: 0.5;
 }
 
 #custom-checkupdates.notify,
@@ -536,76 +535,35 @@ window.bar-low#window .code-oss *{
   color: #ff6b6b;
 }
 
-/* Grouped indicators for top bar */
-#cpu-ram-group,
-#io-network-group,
-#temp-fan-group,
-#network-combined {
-  background: transparent;
-  border: none;
-  border-radius: 0px;
-  padding: 0px 2px;
-  margin: 0px 2px;
-}
-
+/* Audio and brightness groups */
 #audio,
 #bright {
   background: transparent;
   border: none;
-  border-radius: 0px;
-  padding: 0px 2px;
-  margin: 0px 2px;
-}
-
-/* Network combined: group wrapper with single shared border */
-#network-combined {
-  background: transparent;
-  border: none;
-  border-radius: 0px;
-  padding: 0px 2px;
-  margin: 0px 2px;
-}
-
-#network-combined > * {
-  margin: 0;
-}
-#network-combined #custom-wifi-big-icon {
-  border: none;
   border-radius: 0;
-  background: transparent;
-  padding: 0px 4px 0px 0px;
-  margin: 0;
-  min-width: 30px;
-  font-size: 20px;
-}
-#network-combined #custom-net-combined-info,
-#io-network-group #custom-io-speed {
-  border-radius: 6px;
-  border: 1px solid rgba(148, 226, 213, 0.3);
-  background: rgba(0, 128, 128, 0.1);
-  padding: 2px 8px;
-  margin: 0;
-  min-width: 95px;
-  min-height: 20px;
-  font-size: 11px;
+  padding: 0;
+  margin: 0 2px;
 }
 
-#network-bt {
-  background: transparent;
-  border: none;
-  border-radius: 0px;
-  padding: 0px;
-  margin: 0px 2px;
-}
-
-#cpu-ram-group > *,
-#io-network-group > *,
-#temp-fan-group > *,
-#network-combined > *,
+/* Children zero-margin inside groups */
 #audio > *,
-#bright > *,
-#network-bt > * {
+#bright > * {
   margin: 0;
+}
+
+/* Single bordered box for wifi + net-info */
+#group-net-combined {
+  background: rgba(0, 128, 128, 0.1);
+  border: 1px solid rgba(148, 226, 213, 0.3);
+  border-radius: 6px;
+  padding: 2px 6px;
+  min-height: 20px;
+  color: #94e2d5;
+  margin: 0 4px;
+}
+
+#group-net-combined > * {
+  margin: 0 2px;
 }
 
 #custom-cpu-indicator-vertical,
@@ -617,6 +575,7 @@ window.bar-low#window .code-oss *{
 #custom-wifi-big-icon,
 #custom-net-combined-info,
 #custom-temp-fan {
+  margin: 0 4px;
   min-width: 35px;
   min-height: 20px;
   padding: 2px 4px;
@@ -723,40 +682,6 @@ window.bar-low#window .code-oss *{
   background: rgba(108, 108, 108, 0.1);
 }
 
-/* Network combined: group wrapper with single shared border */
-#network-combined {
-  background: rgba(30, 30, 46, 0.8);
-  border: 1px solid rgba(0, 128, 128, 0.4);
-  border-radius: 10px;
-  padding: 4px 6px;
-  margin: 2px 6px;
-}
-
-#network-combined > * {
-  margin: 0 3px;
-  /* Remove individual module borders so group looks unified */
-}
-#network-combined #custom-wifi-big-icon {
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  padding: 0px 4px 0px 0px;
-  margin: 0;
-  min-width: 32px;
-  font-size: 28px;
-}
-#network-combined #custom-net-combined-info,
-#io-network-group #custom-io-speed {
-  border-radius: 6px;
-  border: 1px solid rgba(148, 226, 213, 0.3);
-  background: rgba(0, 128, 128, 0.1);
-  padding: 2px 8px;
-  margin: 0;
-  min-width: 100px;
-  min-height: 32px;
-  font-size: 13px;
-}
-
 #network-bt {
   min-width: 80px;
   padding: 2px 4px;
@@ -768,14 +693,14 @@ window.bar-low#window .code-oss *{
 }
 
 #custom-wifi-indicator {
-   min-width: 80px;
-   min-height: 22px;
-   padding: 2px 6px;
-   font-size: 11px;
-   font-weight: bold;
-   color: teal;
-   background: transparent;
-   border: none;
+  min-width: 80px;
+  min-height: 22px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: bold;
+  color: teal;
+  background: transparent;
+  border: none;
 }
 #custom-wifi-indicator.medium {
   color: #f9e2af;
@@ -795,48 +720,23 @@ window.bar-low#window .code-oss *{
   padding: 1px 0;
 }
 
-
-
 #custom-bt-indicator {
-  min-width: 32px;
+  margin: 0 4px;
+  min-width: 36px;
   min-height: 20px;
-  padding: 2px 4px;
+  padding: 2px 6px;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  color: #555;
-  background: rgba(50, 50, 50, 0.15);
-  border: 1px solid rgba(100, 100, 100, 0.3);
+  color: #94e2d5;
+  background: rgba(0, 128, 128, 0.15);
+  border: 1px solid rgba(148, 226, 213, 0.4);
 }
 #custom-bt-indicator.enabled,
 #custom-bt-indicator.connected {
-  color: teal;
-  background: rgba(0, 128, 128, 0.2);
-  border: 1px solid rgba(0, 158, 208, 0.6);
-}
-#custom-bt-indicator.connected {
   color: #94e2d5;
-}
-
-#custom-bt-indicator {
-  min-width: 32px;
-  min-height: 20px;
-  padding: 2px 4px;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #555;
-  background: rgba(50, 50, 50, 0.15);
-  border: 1px solid rgba(100, 100, 100, 0.3);
-}
-#custom-bt-indicator.enabled,
-#custom-bt-indicator.connected {
-  color: teal;
-  background: rgba(0, 128, 128, 0.2);
-  border: 1px solid rgba(0, 158, 208, 0.6);
-}
-#custom-bt-indicator.connected {
-  color: #94e2d5;
+  background: rgba(0, 128, 128, 0.3);
+  border: 1px solid rgba(148, 226, 213, 0.8);
 }
 /* === 4. ANIMATIONS === */
 @keyframes blinkwarn {

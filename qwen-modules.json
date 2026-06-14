@@ -41,25 +41,46 @@
     "on-click": "gnome-disks",
     "on-right-click": "lsblk"
   },
-  "group/qwen-system": {
+  "group/qwen-cpu": {
     "orientation": "horizontal",
     "modules": [
-      "custom/qwen-system-icon",
-      "custom/qwen-system-info"
+      "custom/qwen-cpu-icon",
+      "custom/qwen-cpu-info"
     ]
   },
-  "custom/qwen-system-icon": {
-    "exec": "~/.config/waybar/scripts/qwen-system-icon.sh",
+  "custom/qwen-cpu-icon": {
+    "exec": "~/.config/waybar/scripts/qwen-cpu-icon.sh",
     "interval": 5,
     "format": "{}",
     "return-type": "json"
   },
-  "custom/qwen-system-info": {
-    "exec": "~/.config/waybar/scripts/qwen-system-info.sh",
+  "custom/qwen-cpu-info": {
+    "exec": "~/.config/waybar/scripts/qwen-cpu-info.sh",
     "interval": 5,
     "format": "{}",
     "return-type": "json",
     "on-click": "htop",
     "on-right-click": "gnome-system-monitor"
+  },
+  "group/qwen-ram": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-ram-icon",
+      "custom/qwen-ram-info"
+    ]
+  },
+  "custom/qwen-ram-icon": {
+    "exec": "~/.config/waybar/scripts/qwen-ram-icon.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/qwen-ram-info": {
+    "exec": "~/.config/waybar/scripts/qwen-ram-info.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "gnome-system-monitor",
+    "on-right-click": "free -h"
   }
 }

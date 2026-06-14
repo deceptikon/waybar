@@ -26,7 +26,8 @@
     "height": 17,
     "modules-left": [
       "group/qwen-network",
-      "group/qwen-system",
+      "group/qwen-cpu",
+      "group/qwen-ram",
       "group/qwen-ssd"
     ],
     "modules-center": [],

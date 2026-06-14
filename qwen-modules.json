@@ -1,0 +1,10 @@
+{
+  "custom/qwen-network": {
+    "exec": "~/.config/waybar/scripts/qwen-network.sh",
+    "interval": 10,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "nm-connection-editor",
+    "on-right-click": "nm-applet --indicator"
+  }
+}

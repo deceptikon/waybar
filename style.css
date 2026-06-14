@@ -737,6 +737,24 @@ window.bar-low#window .code-oss * {
   background: rgba(0, 128, 128, 0.45);
   border: 1px solid rgba(148, 226, 213, 0.9);
 }
+
+/* === 5. DEV BAR — qwen-network sandbox === */
+#custom-qwen-network {
+  /* Let content drive size; no min-height/min-width so bar can stay compact */
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #94e2d5;
+  background: rgba(0, 128, 128, 0.1);
+  border: 1px solid rgba(148, 226, 213, 0.35);
+  border-radius: 6px;
+  margin: 0 4px;
+}
+#custom-qwen-network.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); color: #f9e2af; }
+#custom-qwen-network.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); color: #fab387; }
+#custom-qwen-network.critical { background: rgba(243, 139, 168, 0.15); border-color: rgba(243, 139, 168, 0.5); color: #f38ba8; }
+#custom-qwen-network.disconnected { background: rgba(100, 100, 100, 0.15); border-color: rgba(120, 120, 120, 0.3); color: #888; }
+
 /* === 4. ANIMATIONS === */
 @keyframes blinkwarn {
   to {

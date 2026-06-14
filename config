@@ -20,6 +20,20 @@
     ]
   },
   {
+    "name": "bar-horiz-dev",
+    "layer": "top",
+    "position": "top",
+    "height": 17,
+    "modules-left": [
+      "custom/qwen-network"
+    ],
+    "modules-center": [],
+    "modules-right": [],
+    "include": [
+      "/home/lexx/.config/waybar/qwen-modules.json"
+    ]
+  },
+  {
     "name": "bar-horiz",
     "layer": "top",
     "position": "top",

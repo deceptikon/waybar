@@ -23,7 +23,7 @@
     "name": "bar-horiz",
     "layer": "top",
     "position": "top",
-    "height": 30,
+    "height": 20,
     "modules-left": [
       "custom/powerbtn",
       "group/temp-fan-group",
@@ -32,7 +32,7 @@
       "group/network-combined"
     ],
     "modules-center": [
-      "group/title-mode"
+      "sway/window"
     ],
     "modules-right": [
       "group/audio",

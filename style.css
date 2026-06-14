@@ -788,8 +788,8 @@ window.bar-low#window .code-oss * {
 }
 
 #custom-qwen-ssd-icon {
-  font-size: 18px;
-  min-width: 28px;
+  font-size: 16px;
+  min-width: 42px;
   padding: 2px 4px;
   border: none;
   background: transparent;
@@ -797,6 +797,9 @@ window.bar-low#window .code-oss * {
   color: #a6e3a1;
   margin-right: 2px;
 }
+#custom-qwen-ssd-icon.critical { color: #f38ba8; }
+#custom-qwen-ssd-icon.warning  { color: #fab387; }
+#custom-qwen-ssd-icon.medium   { color: #f9e2af; }
 
 #custom-qwen-ssd-info {
   font-size: 12px;

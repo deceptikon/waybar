@@ -25,7 +25,8 @@
     "position": "top",
     "height": 17,
     "modules-left": [
-      "group/qwen-network"
+      "group/qwen-network",
+      "group/qwen-ssd"
     ],
     "modules-center": [],
     "modules-right": [],

@@ -19,5 +19,26 @@
     "return-type": "json",
     "on-click": "nm-connection-editor",
     "on-right-click": "nm-applet --indicator"
+  },
+  "group/qwen-ssd": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-ssd-icon",
+      "custom/qwen-ssd-info"
+    ]
+  },
+  "custom/qwen-ssd-icon": {
+    "exec": "~/.config/waybar/scripts/qwen-ssd-icon.sh",
+    "interval": 60,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "custom/qwen-ssd-info": {
+    "exec": "~/.config/waybar/scripts/qwen-ssd-info.sh",
+    "interval": 60,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "gnome-disks",
+    "on-right-click": "lsblk"
   }
 }

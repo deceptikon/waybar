@@ -31,12 +31,12 @@ window#waybar {
 }
 
 #window {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  padding: 1px 10px;
+  padding: 2px 12px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  min-width: 400px;
+  min-width: 450px;
 }
 
 #title-mode,
@@ -90,8 +90,8 @@ window#waybar.code-oss.bar-low * {
 .bar-horiz .modules-center,
 .bar-horiz .modules-right {
   background: rgba(30, 30, 46, 0.9);
-  margin: 2px 4px;
-  padding: 2px 6px;
+  margin: 2px 3px;
+  padding: 2px 8px;
   border-radius: 0 0 12px 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -253,22 +253,22 @@ window.bar-low#window .code-oss *{
 /* === 2. SLIDER STYLING (Restored) === */
 #pulseaudio {
   color: #89b4fa;
-  font-size: 14px;
-  padding: 1px 3px;
-  min-width: 20px;
-  min-height: 16px;
+  font-size: 15px;
+  padding: 2px 4px;
+  min-width: 24px;
+  min-height: 20px;
 }
 #backlight {
   color: olivedrab;
-  font-size: 14px;
-  padding: 1px 3px;
-  min-width: 20px;
-  min-height: 16px;
+  font-size: 15px;
+  padding: 2px 4px;
+  min-width: 24px;
+  min-height: 20px;
 }
 #pulseaudio-slider trough,
 #backlight-slider trough {
-  min-height: 2px;
-  min-width: 50px;
+  min-height: 3px;
+  min-width: 60px;
   border-radius: 1px;
   background: rgba(0, 0, 0, 0.3);
   box-shadow: 0px 1px 3px rgba(33, 233, 33, 0.2);
@@ -285,8 +285,8 @@ window.bar-low#window .code-oss *{
 
 #pulseaudio-slider,
 #backlight-slider {
-  min-height: 16px;
-  padding: 1px 0;
+  min-height: 20px;
+  padding: 2px 0;
 }
 
 #pulseaudio-slider slider,
@@ -302,12 +302,12 @@ window.bar-low#window .code-oss *{
 #custom-powerbtn {
    border: 1px solid rgba(0, 128, 128, 0.3);
    border-radius: 6px;
-   margin: 0 1px;
-   min-height: 16px;
-   min-width: 24px;
+   margin: 0 2px;
+   min-height: 20px;
+   min-width: 28px;
    color: #249e94;
-   font-size: 16px;
-   padding: 1px 3px;
+   font-size: 18px;
+   padding: 2px 4px;
 }
 
 #idle_inhibitor,
@@ -544,8 +544,8 @@ window.bar-low#window .code-oss *{
   background: transparent;
   border: none;
   border-radius: 0px;
-  padding: 0px 1px;
-  margin: 0px 1px;
+  padding: 0px 2px;
+  margin: 0px 2px;
 }
 
 #audio,
@@ -553,8 +553,8 @@ window.bar-low#window .code-oss *{
   background: transparent;
   border: none;
   border-radius: 0px;
-  padding: 0px 1px;
-  margin: 0px 1px;
+  padding: 0px 2px;
+  margin: 0px 2px;
 }
 
 /* Network combined: group wrapper with single shared border */
@@ -562,8 +562,8 @@ window.bar-low#window .code-oss *{
   background: transparent;
   border: none;
   border-radius: 0px;
-  padding: 0px 1px;
-  margin: 0px 1px;
+  padding: 0px 2px;
+  margin: 0px 2px;
 }
 
 #network-combined > * {
@@ -573,21 +573,21 @@ window.bar-low#window .code-oss *{
   border: none;
   border-radius: 0;
   background: transparent;
-  padding: 0px 2px 0px 0px;
+  padding: 0px 4px 0px 0px;
   margin: 0;
-  min-width: 26px;
-  font-size: 18px;
+  min-width: 30px;
+  font-size: 20px;
 }
 #network-combined #custom-net-combined-info,
 #io-network-group #custom-io-speed {
-  border-radius: 5px;
+  border-radius: 6px;
   border: 1px solid rgba(148, 226, 213, 0.3);
   background: rgba(0, 128, 128, 0.1);
-  padding: 1px 6px;
+  padding: 2px 8px;
   margin: 0;
-  min-width: 80px;
-  min-height: 16px;
-  font-size: 10px;
+  min-width: 95px;
+  min-height: 20px;
+  font-size: 11px;
 }
 
 #network-bt {
@@ -595,7 +595,7 @@ window.bar-low#window .code-oss *{
   border: none;
   border-radius: 0px;
   padding: 0px;
-  margin: 0px 1px;
+  margin: 0px 2px;
 }
 
 #cpu-ram-group > *,
@@ -617,11 +617,11 @@ window.bar-low#window .code-oss *{
 #custom-wifi-big-icon,
 #custom-net-combined-info,
 #custom-temp-fan {
-  min-width: 28px;
-  min-height: 16px;
-  padding: 1px 3px;
-  border-radius: 5px;
-  font-size: 10px;
+  min-width: 35px;
+  min-height: 20px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: bold;
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
@@ -798,11 +798,11 @@ window.bar-low#window .code-oss *{
 
 
 #custom-bt-indicator {
-  min-width: 26px;
-  min-height: 16px;
-  padding: 1px 3px;
-  border-radius: 5px;
-  font-size: 14px;
+  min-width: 32px;
+  min-height: 20px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-size: 16px;
   font-weight: bold;
   color: #555;
   background: rgba(50, 50, 50, 0.15);
@@ -819,11 +819,11 @@ window.bar-low#window .code-oss *{
 }
 
 #custom-bt-indicator {
-  min-width: 26px;
-  min-height: 16px;
-  padding: 1px 3px;
-  border-radius: 5px;
-  font-size: 14px;
+  min-width: 32px;
+  min-height: 20px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-size: 16px;
   font-weight: bold;
   color: #555;
   background: rgba(50, 50, 50, 0.15);

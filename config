@@ -23,7 +23,7 @@
     "name": "bar-horiz",
     "layer": "top",
     "position": "top",
-    "height": 20,
+    "height": 25,
     "modules-left": [
       "custom/powerbtn",
       "group/temp-fan-group",

@@ -1,5 +1,5 @@
 #!/bin/bash
-# RAM info — bar used/totalG + swap:usedG
+# RAM — inline capacity bar ▓ usedG · · · totalG + swap
 
 read_meminfo() {
   awk '
@@ -19,23 +19,35 @@ st=${m[st]:-0}; sf=${m[sf]:-0}
 used=$((mt - ma)); pct=$((used * 100 / mt))
 swap=$((st - sf))
 
-to_gib() { awk "BEGIN{printf \"%.1f\", $1/1024/1024}"; }
-ug=$(to_gib "$used"); tg=$(to_gib "$mt"); sw=$(to_gib "$swap")
+# Round to integer GiB
+ug=$((used / 1048576))
+total_gb=$((mt / 1048576))
 
-# 4-segment bar
-filled=$((pct * 4 / 100)); [ "$filled" -gt 4 ] && filled=4
-empty=$((4 - filled))
-fs=""; es=""
-[ "$filled" -gt 0 ] && fs=$(printf '\xe2\x96\x93%.0s' $(seq 1 $filled))
-[ "$empty" -gt 0  ] && es=$(printf '\xe2\x96\x92%.0s' $(seq 1 $empty))
+# 12-segment capacity bar — keep printing symbols after the used label
+seg_total=12; seg_used=$((pct * seg_total / 100))
+bar=""
+for ((i=0; i<seg_total; i++)); do
+  if [ "$i" -eq "$seg_used" ]; then
+    bar+=$(printf " <span fgcolor='#89b4fa'>%dG</span>" "$ug")
+  fi
+  if [ "$i" -lt "$seg_used" ]; then
+    bar+=$(printf "<span fgcolor='#89b4fa'>▓</span>")
+  else
+    bar+=$(printf "<span fgcolor='#383838'>·</span>")
+  fi
+done
+# If 100% full, inject label at end
+[ "$pct" -ge 100 ] && bar+=$(printf " <span fgcolor='#89b4fa'>%dG</span>" "$ug")
+bar+=$(printf "<span fgcolor='#383838' size='xx-small'> %dG</span>" "$total_gb")
 
-if   [ "$pct" -ge 90 ]; then bc="#f38ba8"; cls="critical"
-elif [ "$pct" -ge 75 ]; then bc="#f9e2af"; cls="warning"
-elif [ "$pct" -ge 50 ]; then bc="#89b4fa"; cls="medium"
-else bc="#a6e3a1"; cls="good"; fi
+line1="$bar"
+line2=$(printf "<span fgcolor='#6c7086' size='small'>swap: %sG</span>" "$(awk "BEGIN{printf \"%.1f\", $swap/1024/1024}")")
 
-# printf interprets \n inside its format string as a REAL newline byte
-text=$(printf "<span fgcolor='%s'>%s</span><span fgcolor='#383838'>%s</span> <span fgcolor='%s'><b>%s/%sG</b></span>\n<span fgcolor='#585b70' size='xx-small'>swap:%sG</span>" \
-  "$bc" "$fs" "$es" "$bc" "$ug" "$tg" "$sw")
+text=$(printf "%s\n%s" "$line1" "$line2")
+
+cls="good"
+[ "$pct" -ge 50 ] && cls="medium"
+[ "$pct" -ge 75 ] && cls="warning"
+[ "$pct" -ge 90 ] && cls="critical"
 
 jq -nc --arg text "$text" --arg cls "$cls" '{text:$text,class:$cls}'

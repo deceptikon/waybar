@@ -1,47 +1,42 @@
 #!/bin/bash
+# RAM — inline capacity bar + swap (production module)
 set -euo pipefail
 
-# Get memory usage in GB
-read -r mem_total_kb mem_used_kb mem_free_kb < <(free | awk '/Mem/{print $2, $3, $4}')
-read -r swap_total_kb swap_used_kb < <(free | awk '/^Swap/{print $2, $3}')
+read -r mem_total_kb mem_available_kb < <(awk '/MemTotal|MemAvailable/{print $2}' /proc/meminfo)
+# meminfo order: MemAvailable is on next line after MemTotal
+avail=$(awk '/MemAvailable/{print $2}' /proc/meminfo)
 
-# Convert to GB (1 decimal)
-mem_total_gb=$(awk "BEGIN{printf \"%.1f\", $mem_total_kb/1048576}")
-mem_used_gb=$(awk "BEGIN{printf \"%.1f\", $mem_used_kb/1048576}")
-swap_used_gb=$(awk "BEGIN{printf \"%.1f\", ${swap_used_kb:-0}/1048576}")
+used=$((mem_total_kb - avail))
+pct=$((used * 100 / mem_total_kb))
+swap_used_kb=$(awk '/SwapTotal/{t=$2} /SwapFree/{f=$2} END{if(t&&f)print t-f; else print 0}' /proc/meminfo)
 
-# Calculate usage percentage for coloring
-mem_usage_int=$(awk "BEGIN{printf \"%d\", ($mem_used_kb/$mem_total_kb)*100}")
+to_gib() { awk "BEGIN{printf \"%.1f\", $1/1024/1024}"; }
+ug=$(to_gib "$used"); sw=$(to_gib "$swap_used_kb")
+total_gb=$((mem_total_kb / 1048576))
 
-# Determine class based on usage
-if (( mem_usage_int <= 30 )); then
-    mem_class="transparent"
-elif (( mem_usage_int <= 50 )); then
-    mem_class="low"
-elif (( mem_usage_int <= 80 )); then
-    mem_class="medium"
-else
-    mem_class="high"
-fi
-
-# Progress bar (5 blocks)
-filled_blocks=$(( mem_usage_int / 20 ))
-empty_blocks=$(( 5 - filled_blocks ))
-
-progress_bar=""
-for ((i=0; i<filled_blocks; i++)); do
-    progress_bar+="█"
+seg_total=8; seg_used=$((pct * seg_total / 100))
+bar=""
+for ((i=0; i<seg_total; i++)); do
+  if [ "$i" -eq "$seg_used" ]; then
+    bar+=$(printf "<span fgcolor='#89b4fa'><b>%sG</b></span>" "$ug")
+  fi
+  if [ "$i" -lt "$seg_used" ]; then
+    bar+=$(printf "<span fgcolor='#89b4fa'>▓</span>")
+  else
+    bar+=$(printf "<span fgcolor='#383838'>·</span>")
+  fi
 done
-for ((i=0; i<empty_blocks; i++)); do
-    progress_bar+="░"
-done
+[ "$pct" -ge 100 ] && bar+=$(printf "<span fgcolor='#89b4fa'><b>%sG</b></span>" "$ug")
+bar+=$(printf "<span fgcolor='#383838' size='xx-small'>%dG</span>" "$total_gb")
 
-# Compact text: icon used/totalG [swap_usedG]
-text=" $progress_bar ${mem_used_gb}/${mem_total_gb}G"
-if (( $(awk "BEGIN{print ($swap_used_gb > 0.01)}") )); then
-    text+=" ⇄ ${swap_used_gb}G"
-fi
+line1="$bar"
+line2=$(printf "<span fgcolor='#585b70' size='xx-small'>swap: %sG</span>" "$sw")
 
-# Output JSON for Waybar
-jq -n --arg t "$text" --arg tip "RAM: ${mem_used_gb}G/${mem_total_gb}G (${mem_usage_int}%)\nSwap: ${swap_used_gb}G" --arg c "$mem_class" \
-    '{text:$t,tooltip:$tip,class:$c}' --compact-output
+text=$(printf "%s\n%s" "$line1" "$line2")
+
+cls="good"
+[ "$pct" -ge 50 ] && cls="medium"
+[ "$pct" -ge 75 ] && cls="warning"
+[ "$pct" -ge 90 ] && cls="critical"
+
+jq -nc --arg text "$text" --arg cls "$cls" '{text:$text,class:$cls}'

@@ -21,7 +21,7 @@ window#waybar {
 #mode {
   color: #ffffff;
   background-color: rgba(166, 3, 36, 0.657);
-  font-size: 9px;
+  font-size: 8px;
   padding: 0 6px;
   margin: 2px 0;
   border-radius: 10px;
@@ -230,13 +230,13 @@ window.bar-low#window .code-oss * {
 }
 #custom-uptime {
   color: #fab387;
-  font-size: 9px;
+  font-size: 8px;
   padding: 0 8px;
   min-width: 100px;
 }
 #custom-ollama {
   color: #249e94;
-  font-size: 9px;
+  font-size: 8px;
   padding: 0 8px;
 }
 #custom-ollama.on {
@@ -849,29 +849,33 @@ window.bar-low#window .code-oss * {
 
 /* --- RAM group — blue accent, bar + usage + swap --- */
 #group-qwen-ram {
+  padding: 1px 3px 1px 5px;
   background: rgba(20, 20, 28, 0.92);
   border: 1px solid rgba(137, 180, 250, 0.4);
   border-radius: 8px;
-  padding: 2px 4px 2px 6px;
+  padding: 1px 3px 1px 5px;
   margin: 0 4px;
 }
 
 #custom-qwen-ram-icon {
-  font-size: 20px;
+  margin-right: 0px;
+  font-size: 22px;
+  min-width: 32px;
+  font-size: 22px;
   min-width: 32px;
   padding: 2px 4px;
   border: none;
   background: transparent;
   border-radius: 0;
   color: #89b4fa;
-  margin-right: 2px;
+  margin-right: 0px;
 }
 
 #custom-qwen-ram-info {
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 500;
   min-width: 0;
-  padding: 2px 8px;
+  padding: 1px 6px 1px 8px;
   border-radius: 6px;
   border: 1px solid rgba(137, 180, 250, 0.4);
   background: rgba(30, 30, 42, 0.85);

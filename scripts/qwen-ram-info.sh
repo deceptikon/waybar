@@ -1,5 +1,5 @@
 #!/bin/bash
-# RAM — inline capacity bar ▓ usedG · · · totalG + swap
+# RAM — inline capacity bar  usedG · · · totalG + swap
 
 read_meminfo() {
   awk '
@@ -19,26 +19,32 @@ st=${m[st]:-0}; sf=${m[sf]:-0}
 used=$((mt - ma)); pct=$((used * 100 / mt))
 swap=$((st - sf))
 
-# Round to integer GiB
-ug=$((used / 1048576))
 total_gb=$((mt / 1048576))
+ug=$((used / 1048576))
 
-# 12-segment capacity bar — keep printing symbols after the used label
 seg_total=12; seg_used=$((pct * seg_total / 100))
+
 bar=""
-for ((i=0; i<seg_total; i++)); do
-  if [ "$i" -eq "$seg_used" ]; then
-    bar+=$(printf " <span fgcolor='#89b4fa'>%dG</span>" "$ug")
-  fi
-  if [ "$i" -lt "$seg_used" ]; then
+if [ "$pct" -eq 100 ]; then
+  # At 100%%: all filled, label after the last ▓
+  for ((i=0; i<seg_total; i++)); do
     bar+=$(printf "<span fgcolor='#89b4fa'>▓</span>")
-  else
-    bar+=$(printf "<span fgcolor='#383838'>·</span>")
-  fi
-done
-# If 100% full, inject label at end
-[ "$pct" -ge 100 ] && bar+=$(printf " <span fgcolor='#89b4fa'>%dG</span>" "$ug")
-bar+=$(printf "<span fgcolor='#383838' size='xx-small'> %dG</span>" "$total_gb")
+  done
+  bar+=$(printf "<span fgcolor='#89b4fa'><span size='smaller' rise='-4000'>%dG</span></span>" "$ug")
+else
+  # Partial: print used ▓, then inject label at boundary, then empty · + total
+  for ((i=0; i<seg_total; i++)); do
+    if [ "$i" -eq "$seg_used" ]; then
+      bar+=$(printf "<span fgcolor='#89b4fa'><span size='smaller' rise='-4000'>%dG</span></span>" "$ug")
+    fi
+    if [ "$i" -lt "$seg_used" ]; then
+      bar+=$(printf "<span fgcolor='#89b4fa'>▓</span>")
+    else
+      bar+=$(printf "<span fgcolor='#383838'>·</span>")
+    fi
+  done
+  bar+=$(printf "<span fgcolor='#383838' size='xx-small'> %dG</span>" "$total_gb")
+fi
 
 line1="$bar"
 line2=$(printf "<span fgcolor='#6c7086' size='small'>swap: %sG</span>" "$(awk "BEGIN{printf \"%.1f\", $swap/1024/1024}")")

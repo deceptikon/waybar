@@ -837,33 +837,38 @@ window.bar-low#window .code-oss * {
 }
 
 #custom-qwen-cpu-info {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 500;
   min-width: 0;
-  padding: 2px 8px;
+  padding: 1px 4px 1px 4px;
   border-radius: 6px;
   border: 1px solid rgba(166, 227, 161, 0.4);
   background: rgba(30, 30, 42, 0.85);
   color: #a6e3a1;
+  font-family: "JetBrainsMono Nerd Font", "MesloLGS Nerd Font", monospace;
 }
+
+#custom-qwen-cpu-info.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); }
+#custom-qwen-cpu-info.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); }
+#custom-qwen-cpu-info.critical { background: rgba(243, 139, 168, 0.18); border-color: rgba(243, 139, 168, 0.55); }
 
 /* --- RAM group — blue accent, bar + usage + swap --- */
 #group-qwen-ram {
-  padding: 1px 3px 1px 5px;
+  padding: 0 2px 0 4px;
   background: rgba(20, 20, 28, 0.92);
   border: 1px solid rgba(137, 180, 250, 0.4);
   border-radius: 8px;
-  padding: 1px 3px 1px 5px;
+  padding: 0 2px 0 4px;
   margin: 0 4px;
 }
 
 #custom-qwen-ram-icon {
   margin-right: 0px;
   font-size: 22px;
-  min-width: 32px;
+  min-width: 24px;
   font-size: 22px;
-  min-width: 32px;
-  padding: 2px 4px;
+  min-width: 24px;
+  padding: 0 2px;
   border: none;
   background: transparent;
   border-radius: 0;
@@ -875,7 +880,7 @@ window.bar-low#window .code-oss * {
   font-size: 9px;
   font-weight: 500;
   min-width: 0;
-  padding: 1px 6px 1px 8px;
+  padding: 1px 4px 1px 4px;
   border-radius: 6px;
   border: 1px solid rgba(137, 180, 250, 0.4);
   background: rgba(30, 30, 42, 0.85);

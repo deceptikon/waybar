@@ -55,7 +55,7 @@
     "return-type": "json"
   },
   "custom/qwen-cpu-info": {
-    "exec": "~/.config/waybar/scripts/qwen-cpu-info.sh",
+    "exec": "~/.config/waybar/scripts/qwen-cpu-info.sh refresh",
     "interval": 5,
     "format": "{}",
     "return-type": "json",

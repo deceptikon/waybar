@@ -1,16 +1,15 @@
 #!/bin/bash
-# CPU info — per-core 4×4 grid, avg + temp header
+# CPU info — Row 1: 16 per-core usage blocks, Row 2: big avg + temp
 
 read_samples() {
   awk '/^cpu[0-9]/ {tot=$2+$3+$4+$5+$6+$7+$8; idle=$5; printf "%s %d %d\n", $1, tot, idle}' /proc/stat
 }
 
 read_samples > /tmp/qb_r1
-sleep 0.5
+sleep 0.3
 read_samples > /tmp/qb_r2
 
-awk '
-BEGIN { sq = sprintf("%c", 39) }
+AWKOUT=$(awk '
 FNR==NR { tot1[$1]=$2; idle1[$1]=$3; next }
 {
   n=$1; dt=$2-tot1[n]; di=$3-idle1[n];
@@ -22,64 +21,49 @@ FNR==NR { tot1[$1]=$2; idle1[$1]=$3; next }
 }
 END {
   avg=int(sum/cnt);
-  printf "%d\n", avg;
-  for (r=0; r<4; r++) {
-    sep="";
-    for (c=0; c<4; c++) {
-      i=r*4+c; name="cpu"i;
-      if (!(name in loads)) { if (c>0) printf "  "; continue }
-      p=loads[name];
-      if      (p<20)  col="#45475a";
-      else if (p<25)  col="#a6e3a1";
-      else if (p<40)  col="#89b4fa";
-      else if (p<70)  col="#b4befe";
-      else if (p<90)  col="#f9e2af";
-      else              col="#f38ba8";
-      printf "%s<span fgcolor=" sq "%s" sq "><span size=xx-small>%d:%d%%</span></span>", sep, col, i, p;
-      sep="  ";
-    }
-    if (r<3) printf "\n";
+  # Row 1: all 16 cores
+  for (c=0; c<16; c++) {
+    name = "cpu"c;
+    p = (name in loads) ? loads[name] : -1;
+    if      (p >= 90)  col = "#f38ba8";
+    else if (p >= 70)  col = "#fab387";
+    else if (p >= 40)  col = "#f9e2af";
+    else if (p >= 15)  col = "#89b4fa";
+    else if (p >= 0)   col = "#383838";
+    else               col = "#2a2a2a";
+    printf "<span fgcolor=\"%s\">▓</span>", col;
   }
+  printf "\nAVG %d\n", avg;
 }
-' /tmp/qb_r1 /tmp/qb_r2 > /tmp/qb_grid
+' /tmp/qb_r1 /tmp/qb_r2)
 
-overall=$(head -1 /tmp/qb_grid)
-row1=$(sed -n '2p' /tmp/qb_grid)
-row2=$(sed -n '3p' /tmp/qb_grid)
-row3=$(sed -n '4p' /tmp/qb_grid)
-row4=$(sed -n '5p' /tmp/qb_grid)
+line1=$(echo "$AWKOUT" | sed -n '1p')
+avg=$(echo "$AWKOUT" | sed -n '2p' | awk '{print $2}')
 
+# CPU temp
 cpu_temp=0
 for tz in /sys/class/thermal/thermal_zone*/temp; do
   [ -r "$tz" ] || continue
   t=$(($(cat "$tz" 2>/dev/null || echo 0) / 1000))
-  [ "$t" -gt 99 ] && continue
-  cpu_temp=$t; break
-done
-[ "$cpu_temp" -eq 0 ] && for hw in /sys/class/hwmon/hwmon*/temp1_input; do
-  [ -r "$hw" ] || continue
-  t=$(($(cat "$hw" 2>/dev/null || echo 0) / 1000))
-  [ "$t" -gt 0 ] && [ "$t" -lt 99 ] && { cpu_temp=$t; break; }
+  if [ "$t" -gt 0 ] && [ "$t" -lt 99 ]; then
+    cpu_temp=$t; break
+  fi
 done
 
-pct_color() {
-  if [ "$1" -ge 90 ]; then echo "#f38ba8"
-  elif [ "$1" -ge 70 ]; then echo "#f9e2af"
-  elif [ "$1" -ge 40 ]; then echo "#b4befe"
-  else echo "#45475a"; fi
-}
-temp_color() {
-  if [ "$1" -ge 90 ]; then echo "#f38ba8"
-  elif [ "$1" -ge 80 ]; then echo "#fab387"
-  elif [ "$1" -ge 70 ]; then echo "#f9e2af"
-  else echo "#a6e3a1"; fi
-}
+# Temp color
+if [ "$cpu_temp" -gt 0 ]; then
+  if   [ "$cpu_temp" -ge 80 ]; then tcol="#f38ba8"
+  elif [ "$cpu_temp" -ge 70 ]; then tcol="#fab387"
+  else                             tcol="#6c7086"; fi
+  line2=$(printf "<span fgcolor='#89b4fa' size='large'><b>%d%%</b></span> <span fgcolor='%s' size='medium'>%d°C</span>" "$avg" "$tcol" "$cpu_temp")
+else
+  line2=$(printf "<span fgcolor='#89b4fa' size='large'><b>%d%%</b></span>" "$avg")
+fi
 
-pc=$(pct_color "$overall"); tc=$(temp_color "$cpu_temp")
+cls="good"
+[ "$avg" -ge 50 ] && cls="medium"
+[ "$avg" -ge 75 ] && cls="warning"
+[ "$avg" -ge 90 ] && cls="critical"
 
-summary=$(printf "<span fgcolor='%s'><b>%s%%</b></span>  <span fgcolor='%s'><b>%s°C</b></span>" \
-  "$pc" "$overall" "$tc" "$cpu_temp")
-
-text=$(printf "%s\n%s\n%s\n%s\n%s" "$summary" "$row1" "$row2" "$row3" "$row4")
-
-jq -nc --arg text "$text" --arg cls "info" '{text:$text,class:$cls}'
+text=$(printf "%s\n%s" "$line1" "$line2")
+jq -nc --arg text "$text" --arg cls "$cls" '{text:$text,class:$cls}'

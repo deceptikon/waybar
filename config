@@ -24,6 +24,7 @@
     "layer": "top",
     "position": "top",
     "height": 17,
+    "output": "NONEXISTENT_OUTPUT",
     "modules-left": [
       "group/qwen-network",
       "group/qwen-cpu",

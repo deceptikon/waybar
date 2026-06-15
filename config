@@ -44,10 +44,10 @@
     "modules-left": [
       "custom/powerbtn",
       "custom/temp-fan",
-      "custom/cpu-indicator-vertical",
-      "custom/ram-indicator-vertical",
-      "custom/io-speed",
-      "group/network-combined"
+      "group/qwen-cpu",
+      "group/qwen-ram",
+      "group/qwen-ssd",
+      "group/qwen-network"
     ],
     "modules-center": [
       "sway/window"
@@ -70,6 +70,7 @@
       "device": "intel_backlight"
     },
     "include": [
+      "/home/lexx/.config/waybar/qwen-modules.json",
       "/home/lexx/.config/waybar/default-modules-v2.json",
       "/home/lexx/.config/waybar/default-modules.json"
     ]

@@ -1,0 +1,1 @@
+- [Session workflow — read STATUS.md at start, update at end](feedback_session_workflow.md) — Always read STATUS.md at session start for current state, update at task end

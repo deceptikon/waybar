@@ -43,12 +43,7 @@
     "position": "top",
     "height": 17,
     "modules-left": [
-      "custom/powerbtn",
-      "custom/temp-fan",
-      "group/qwen-cpu",
-      "group/qwen-ram",
-      "group/qwen-ssd",
-      "group/qwen-network"
+      "sway/workspaces"
     ],
     "modules-center": [
       "sway/window"
@@ -57,7 +52,8 @@
       "group/audio",
       "group/bright",
       "custom/bt-indicator",
-      "battery"
+      "battery",
+      "custom/powerbtn"
     ],
     "pulseaudio/slider": {
       "min": 0,
@@ -84,12 +80,16 @@
     "width": 50,
     "fixed-center": true,
     "modules-left": [
+      "custom/temp-fan",
       "custom/asus-profile",
-      "sway/workspaces"
+      "group/qwen-cpu",
+      "group/qwen-ram",
+      "group/qwen-ssd",
+      "group/qwen-network"
     ],
     "modules-center": [
       "clock",
-      "tray",
+      "group/tray-h",
       "custom/lang",
       "privacy"
     ],
@@ -104,6 +104,7 @@
       "custom/ext-display"
     ],
     "include": [
+      "/home/lexx/.config/waybar/qwen-modules.json",
       "/home/lexx/.config/waybar/default-modules-v2.json",
       "/home/lexx/.config/waybar/default-modules.json"
     ],

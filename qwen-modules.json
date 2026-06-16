@@ -80,5 +80,11 @@
     "return-type": "json",
     "on-click": "gnome-system-monitor",
     "on-right-click": "free -h"
+  },
+  "group/tray-h": {
+    "orientation": "horizontal",
+    "modules": [
+      "tray"
+    ]
   }
 }

@@ -737,8 +737,8 @@ window.bar-low#window .code-oss * {
 
 /* Icon tile: transparent inside the dark outer box */
 #custom-qwen-wifi-icon {
-  font-size: 18px;
-  min-width: 28px;
+  font-size: 16px;
+  min-width: 24px;
   padding: 2px 4px;
   border: none;
   background: transparent;
@@ -775,8 +775,8 @@ window.bar-low#window .code-oss * {
 }
 
 #custom-qwen-ssd-icon {
-  font-size: 20px;
-  min-width: 32px;
+  font-size: 16px;
+  min-width: 24px;
   padding: 2px 4px;
   border: none;
   background: transparent;
@@ -813,8 +813,8 @@ window.bar-low#window .code-oss * {
 }
 
 #custom-qwen-cpu-icon {
-  font-size: 20px;
-  min-width: 32px;
+  font-size: 16px;
+  min-width: 24px;
   padding: 2px 4px;
   border: none;
   background: transparent;
@@ -851,16 +851,13 @@ window.bar-low#window .code-oss * {
 
 #custom-qwen-ram-icon {
   margin-right: 0px;
-  font-size: 22px;
-  min-width: 24px;
-  font-size: 22px;
-  min-width: 24px;
+  font-size: 16px;
+  min-width: 20px;
   padding: 0 2px;
   border: none;
   background: transparent;
   border-radius: 0;
   color: #89b4fa;
-  margin-right: 0px;
 }
 
 #custom-qwen-ram-info {
@@ -907,3 +904,20 @@ window.bar-low#window .code-oss * {
     color: white;
   }
 }
+
+/* === VERTICAL BAR — unified module alignment === */
+.bar-vert #group-qwen-cpu,
+.bar-vert #group-qwen-ram,
+.bar-vert #group-qwen-ssd,
+.bar-vert #group-qwen-network,
+.bar-vert #custom-temp-fan,
+.bar-vert #custom-asus-profile {
+  min-width: 110px;
+  margin: 4px 0;
+  padding: 4px 6px;
+}
+
+.bar-vert #group-qwen-cpu { border-color: rgba(166, 227, 161, 0.5); }
+.bar-vert #group-qwen-ram { border-color: rgba(137, 180, 250, 0.5); }
+.bar-vert #group-qwen-ssd { border-color: rgba(166, 227, 161, 0.5); }
+.bar-vert #group-qwen-network { border-color: rgba(148, 226, 213, 0.5); }

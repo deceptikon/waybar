@@ -1,4 +1,2 @@
 #!/bin/bash
-# RAM icon ‚Äî nf-md-memory (U+F035B) straight RAM stick
-icon=$(printf '\xf3\xb0\x8d\x9b')
-jq -n --compact-output --arg t "$icon" '{text:$t,class:"icon"}'
+# RAM icon icon=$(printf \xf3∞çõ\\njq -n --compact-output --arg t "$icon" 	ext:\

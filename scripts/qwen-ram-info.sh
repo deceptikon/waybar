@@ -30,24 +30,23 @@ if [ "$pct" -eq 100 ]; then
   for ((i=0; i<seg_total; i++)); do
     bar+=$(printf "<span fgcolor='#89b4fa'>▓</span>")
   done
-  bar+=$(printf "<span fgcolor='#89b4fa'><span size='smaller' rise='-4000'>%dG</span></span>" "$ug")
 else
   # Partial: print used ▓, then inject label at boundary, then empty · + total
   for ((i=0; i<seg_total; i++)); do
-    if [ "$i" -eq "$seg_used" ]; then
-      bar+=$(printf "<span fgcolor='#89b4fa'><span size='smaller' rise='-4000'>%dG</span></span>" "$ug")
-    fi
+    #if [ "$i" -eq "$seg_used" ]; then
+     # bar+=$(printf "<span fgcolor='#89b4fa'><span size='smaller' rise='-4000'>%dG</span></span>" "$ug")
+    #fi
     if [ "$i" -lt "$seg_used" ]; then
       bar+=$(printf "<span fgcolor='#89b4fa'>▓</span>")
     else
-      bar+=$(printf "<span fgcolor='#383838'>·</span>")
+      bar+=$(printf "<span fgcolor='#f8f8f8'>▓</span>")
     fi
   done
-  bar+=$(printf "<span fgcolor='#383838' size='xx-small'> %dG</span>" "$total_gb")
 fi
-
-line1="$bar"
-line2=$(printf "<span fgcolor='#6c7086' size='small'>swap: %sG</span>" "$(awk "BEGIN{printf \"%.1f\", $swap/1024/1024}")")
+bax=$(printf "<span fgcolor='#89b4fa'>%dG</span>" "$ug")
+line1="$bar  "
+line2="$bax"
+line2+=$(printf "<span fgcolor='#6c7086' size='smaller'>swap: %sG</span>" "$(awk "BEGIN{printf \"%.1f\", $swap/1024/1024}")")
 
 text=$(printf "%s\n%s" "$line1" "$line2")
 

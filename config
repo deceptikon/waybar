@@ -56,7 +56,8 @@
     "modules-right": [
       "group/audio",
       "group/bright",
-      "custom/bt-indicator"
+      "custom/bt-indicator",
+      "battery"
     ],
     "pulseaudio/slider": {
       "min": 0,
@@ -83,12 +84,12 @@
     "width": 50,
     "fixed-center": true,
     "modules-left": [
-      "clock",
+      "custom/asus-profile",
       "sway/workspaces"
     ],
     "modules-center": [
-      "battery",
-      "custom/asus-profile",
+      "clock",
+      "tray",
       "custom/lang",
       "privacy"
     ],

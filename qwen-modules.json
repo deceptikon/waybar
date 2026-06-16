@@ -70,10 +70,8 @@
     ]
   },
   "custom/qwen-ram-icon": {
-    "exec": "~/.config/waybar/scripts/qwen-ram-icon.sh",
     "interval": 5,
-    "format": "{}",
-    "return-type": "json"
+    "format": "   {}"
   },
   "custom/qwen-ram-info": {
     "exec": "~/.config/waybar/scripts/qwen-ram-info.sh",

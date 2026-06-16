@@ -158,7 +158,6 @@ window.bar-low#window .code-oss * {
 #bat-group,
 #audio,
 #sub-cpu,
-#tray,
 #user,
 #bright {
   color: teal;
@@ -203,10 +202,15 @@ window.bar-low#window .code-oss * {
   font-size: 14px;
 }
 #battery {
-  font-size: 16px;
-  border-radius: 8px;
+  font-size: 17px;
+  font-weight: bold;
+  color: #94e2d5;
   min-width: 40px;
-  padding: 2px;
+  margin: 0 4px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: rgba(0, 128, 128, 0.3);
+  border: 1px solid rgba(148, 226, 213, 0.6);
 }
 #battery.warning {
   animation: blinkwarn 0.3s linear alternate 3s infinite;
@@ -377,7 +381,6 @@ window.bar-low#window .code-oss * {
 #bright,
 #switches,
 #music,
-#tray,
 #user,
 #temp-group {
   border-top: 4px double rgba(0, 158, 208, 0.9);
@@ -388,38 +391,22 @@ window.bar-low#window .code-oss * {
   border-radius: 25px;
 }
 
+/* Tray in vertical bar — unstyled */
+.bar-vert #tray {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  min-width: 0;
+}
 #tray {
   padding: 0 10px;
   min-width: 120px;
 }
-#tray > .passive {
-  background: rgba(100, 100, 100, 0.3);
-  border-radius: 4px;
-}
-#tray > .active {
-  background: rgba(0, 128, 128, 0.2);
-  border-radius: 4px;
-}
+#tray > .passive,
+#tray > .active,
 #tray > .needs-attention {
-  background: rgba(200, 50, 50, 0.4);
-  border-radius: 4px;
-}
-#tray.lite {
-  border: none;
-  padding: 0;
-  margin: 0;
-  background: transparent;
-}
-#tray.lite > .passive {
-  background: rgba(80, 80, 80, 0.2);
-  border-radius: 4px;
-}
-#tray.lite > .active {
-  background: rgba(0, 128, 128, 0.15);
-  border-radius: 4px;
-}
-#tray.lite > .needs-attention {
-  background: rgba(200, 50, 50, 0.3);
   border-radius: 4px;
 }
 #bat-group,
@@ -837,7 +824,7 @@ window.bar-low#window .code-oss * {
 }
 
 #custom-qwen-cpu-info {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 500;
   min-width: 0;
   padding: 1px 4px 1px 4px;
@@ -877,10 +864,9 @@ window.bar-low#window .code-oss * {
 }
 
 #custom-qwen-ram-info {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
-  min-width: 0;
-  padding: 1px 4px 1px 4px;
+  padding: 1px 2px 1px 2px;
   border-radius: 6px;
   border: 1px solid rgba(137, 180, 250, 0.4);
   background: rgba(30, 30, 42, 0.85);

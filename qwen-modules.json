@@ -1,16 +1,23 @@
 {
+  "network#qwi": {
+    "format-wifi": " {icon} ",
+    "format-ethernet": "",
+    "format-disconnected": "",
+    "format-icons": [
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
+    "tooltip": false,
+    "max-length": 1
+  },
   "group/qwen-network": {
     "orientation": "horizontal",
     "modules": [
-      "custom/qwen-wifi-icon",
+      "network#qwi",
       "custom/qwen-wifi-info"
     ]
-  },
-  "custom/qwen-wifi-icon": {
-    "exec": "~/.config/waybar/scripts/wifi-big-icon.sh",
-    "interval": 8,
-    "format": "{}",
-    "return-type": "json"
   },
   "custom/qwen-wifi-info": {
     "exec": "~/.config/waybar/scripts/qwen-wifi-info.sh",
@@ -28,10 +35,8 @@
     ]
   },
   "custom/qwen-ssd-icon": {
-    "exec": "~/.config/waybar/scripts/qwen-ssd-icon.sh",
-    "interval": 30,
-    "format": "{}",
-    "return-type": "json"
+    "format": " 󰋊 ",
+    "tooltip": false
   },
   "custom/qwen-ssd-info": {
     "exec": "~/.config/waybar/scripts/qwen-ssd-info.sh",
@@ -49,10 +54,8 @@
     ]
   },
   "custom/qwen-cpu-icon": {
-    "exec": "~/.config/waybar/scripts/qwen-cpu-icon.sh",
-    "interval": 5,
-    "format": "{}",
-    "return-type": "json"
+    "format": "  ",
+    "tooltip": false
   },
   "custom/qwen-cpu-info": {
     "exec": "~/.config/waybar/scripts/qwen-cpu-info.sh refresh",
@@ -70,8 +73,8 @@
     ]
   },
   "custom/qwen-ram-icon": {
-    "interval": 5,
-    "format": "   {}"
+    "format": "  ",
+    "tooltip": false
   },
   "custom/qwen-ram-info": {
     "exec": "~/.config/waybar/scripts/qwen-ram-info.sh",
@@ -80,6 +83,41 @@
     "return-type": "json",
     "on-click": "gnome-system-monitor",
     "on-right-click": "free -h"
+  },
+  "group/qwen-temp": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-temp-icon",
+      "custom/qwen-temp-info"
+    ]
+  },
+  "custom/qwen-temp-icon": {
+    "format": " \uf2cb ",
+    "tooltip": false
+  },
+  "custom/qwen-temp-info": {
+    "exec": "~/.config/waybar/scripts/qwen-temp-info.sh",
+    "interval": 3,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "group/qwen-asus": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-asus-icon",
+      "custom/qwen-asus-info"
+    ]
+  },
+  "custom/qwen-asus-icon": {
+    "format": " \uf06c ",
+    "tooltip": false
+  },
+  "custom/qwen-asus-info": {
+    "exec": "~/.config/waybar/scripts/qwen-asus-info.sh",
+    "interval": 2,
+    "return-type": "json",
+    "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
+    "signal": 10
   },
   "group/tray-h": {
     "orientation": "horizontal",

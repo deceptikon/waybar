@@ -7,9 +7,10 @@ This is a **Waybar** (Wayland status bar) configuration for a Sway WM setup on a
 
 | Action | Command |
 |---|---|
-| Reload Waybar | `pkill -SIGUSR2 waybar` |
-| Restart Waybar | `pkill waybar && waybar &` |
-| Validate JSON | `jq . config && jq . default-modules.json && jq . default-modules-v2.json` |
+| Reload both Waybars (sway hotkey) | `$mod+Shift+w` (runs `$waybar-start` in sway config) |
+| Restart both Waybars | `pkill waybar 2>/dev/null && (waybar &) && (waybar -c ~/.config/waybar/config-vertical -s ~/.config/waybar/style-new.css &)` |
+| Run vertical bar only (alias) | `waybar-vert` |
+| Validate JSON | `jq . config && jq . config-vertical && jq . default-modules.json && jq . default-modules-v2.json` |
 | Validate CSS | `gtk-launch waybar` (check stderr for CSS warnings) |
 | Run a script manually | `~/.config/waybar/scripts/<script>.sh` |
 | Check script syntax | `bash -n ~/.config/waybar/scripts/<script>.sh` |
@@ -17,13 +18,18 @@ This is a **Waybar** (Wayland status bar) configuration for a Sway WM setup on a
 ## File Structure
 
 ```
-config                  # Main bar definitions (3 bars: bar-low, bar-horiz, bar-vert)
+config                  # Horizontal bars (bar-low, bar-horiz-dev, bar-horiz)
+config-vertical         # Vertical bar only (bar-vert), uses style-new.css
 default-modules.json    # Module definitions (primary, 374 lines)
 default-modules-v2.json # Module definitions (secondary, 88 lines)
-style.css               # GTK CSS styling
+style.css               # GTK CSS for horizontal bars
+style-new.css           # GTK CSS for vertical bar
 STRUCT.md               # Module hierarchy documentation
 scripts/                # Custom module scripts (bash)
 ```
+
+Both configs are loaded as separate waybar instances via sway's `$waybar-start` variable (`~/.config/sway/config:495`).
+Reload both at once with `$mod+Shift+w`.
 
 ## JSON Config Conventions
 
@@ -73,7 +79,7 @@ Both `default-modules-v2.json` and `default-modules.json` are included in every 
 ## Adding a New Module
 
 1. Define the module in `default-modules.json` or `default-modules-v2.json`
-2. Add it to a bar's `modules-left/center/right` array in `config`
+2. Add it to a bar's `modules-left/center/right` array in `config` or `config-vertical`
 3. Add CSS rules to `style.css` using `#<module-id>` selector
 4. If using a script, place it in `scripts/` and make executable (`chmod +x`)
 5. Update `STRUCT.md` to document the new module

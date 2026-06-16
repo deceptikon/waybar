@@ -1,0 +1,484 @@
+* {
+  border: none;
+  border-radius: 8px;
+  font-family:
+    "JetBrainsMono Nerd Font", "MesloLGS Nerd Font", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 0;
+}
+
+window#waybar {
+  background: transparent;
+  color: #ffffff;
+}
+
+window.bar-vert {
+  background: rgba(10, 10, 16, 0.85);
+  border-left: 1px solid rgba(0, 128, 128, 0.25);
+  padding: 16px 8px;
+}
+
+tooltip {
+  background: rgba(20, 20, 28, 0.95);
+  border: 1px solid rgba(148, 226, 213, 0.3);
+  border-radius: 8px;
+}
+tooltip label {
+  color: #cdd6f4;
+  font-size: 12px;
+}
+
+/* ── VERTICAL BAR LAYOUT ── */
+.bar-vert .modules-left,
+.bar-vert .modules-center,
+.bar-vert .modules-right {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* ── WORKSPACES ── */
+#workspaces button {
+  margin: 4px 0;
+  padding: 8px 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  color: #6c7086;
+  font-size: 16px;
+  min-width: 40px;
+  min-height: 26px;
+}
+
+#workspaces button.focused {
+  color: #94e2d5;
+  background: rgba(0, 128, 128, 0.15);
+  border: 1px solid rgba(148, 226, 213, 0.4);
+}
+
+#workspaces button.urgent {
+  color: #f38ba8;
+  background: rgba(243, 139, 168, 0.15);
+  border: 1px solid rgba(243, 139, 168, 0.4);
+}
+
+#workspaces button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cdd6f4;
+}
+
+/* ════════════════════════════════════════════
+   QWEN MODULES — icon + info groups
+   ════════════════════════════════════════════ */
+
+/* ── NETWORK group — teal accent ── */
+#group-qwen-network {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(148, 226, 213, 0.4);
+  border-radius: 8px;
+  padding: 2px 4px 2px 6px;
+  margin: 0 4px;
+}
+
+#network-qwi {
+  font-size: 16px;
+  min-width: 28px;
+  padding: 2px 6px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #94e2d5;
+  margin: 0 4px 0 6px;
+}
+#network-qwi.disconnected {
+  color: #666;
+}
+
+#custom-qwen-wifi-info {
+  font-size: 12px;
+  font-weight: 500;
+  min-height: 32px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 226, 213, 0.4);
+  background: rgba(30, 30, 42, 0.85);
+  color: #94e2d5;
+}
+
+#custom-qwen-wifi-info.medium  { background: rgba(249, 226, 175, 0.15); border-color: rgba(249, 226, 175, 0.45); color: #f9e2af; }
+#custom-qwen-wifi-info.warning { background: rgba(250, 179, 135, 0.2);   border-color: rgba(250, 179, 135, 0.55); color: #fab387; }
+#custom-qwen-wifi-info.critical { background: rgba(243, 139, 168, 0.2);  border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
+#custom-qwen-wifi-info.disconnected { background: rgba(100, 100, 100, 0.2); border-color: rgba(120, 120, 120, 0.4); color: #aaa; }
+
+/* ── SSD group — green accent ── */
+#group-qwen-ssd {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(166, 227, 161, 0.4);
+  border-radius: 8px;
+  padding: 2px 4px 2px 6px;
+  margin: 0 4px;
+}
+
+#custom-qwen-ssd-icon {
+  font-size: 16px;
+  min-width: 24px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #a6e3a1;
+  margin-right: 2px;
+}
+#custom-qwen-ssd-icon.critical { color: #f38ba8; }
+#custom-qwen-ssd-icon.warning  { color: #fab387; }
+#custom-qwen-ssd-icon.medium   { color: #f9e2af; }
+
+#custom-qwen-ssd-info {
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 100px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(166, 227, 161, 0.4);
+  background: rgba(30, 30, 42, 0.85);
+  color: #a6e3a1;
+}
+
+#custom-qwen-ssd-info.medium  { background: rgba(249, 226, 175, 0.15); border-color: rgba(249, 226, 175, 0.45); color: #f9e2af; }
+#custom-qwen-ssd-info.warning { background: rgba(250, 179, 135, 0.2);   border-color: rgba(250, 179, 135, 0.55); color: #fab387; }
+#custom-qwen-ssd-info.critical { background: rgba(243, 139, 168, 0.2);  border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
+
+/* ── CPU group — green accent, per-core ── */
+#group-qwen-cpu {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(166, 227, 161, 0.4);
+  border-radius: 8px;
+  padding: 2px 4px 2px 6px;
+  margin: 0 4px;
+}
+
+#custom-qwen-cpu-icon {
+  font-size: 16px;
+  min-width: 24px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #a6e3a1;
+  margin-right: 2px;
+}
+
+#custom-qwen-cpu-info {
+  font-size: 11px;
+  font-weight: 500;
+  min-width: 100px;
+  padding: 1px 4px 1px 4px;
+  border-radius: 6px;
+  border: 1px solid rgba(166, 227, 161, 0.4);
+  background: rgba(30, 30, 42, 0.85);
+  color: #a6e3a1;
+}
+
+#custom-qwen-cpu-info.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); }
+#custom-qwen-cpu-info.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); }
+#custom-qwen-cpu-info.critical { background: rgba(243, 139, 168, 0.18); border-color: rgba(243, 139, 168, 0.55); }
+
+/* ── RAM group — blue accent ── */
+#group-qwen-ram {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(137, 180, 250, 0.4);
+  border-radius: 8px;
+  padding: 2px 4px 2px 6px;
+  margin: 0 4px;
+}
+
+#custom-qwen-ram-icon {
+  margin-right: 2px;
+  font-size: 16px;
+  min-width: 24px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #89b4fa;
+}
+
+#custom-qwen-ram-info {
+  font-size: 10px;
+  font-weight: 500;
+  min-width: 100px;
+  padding: 1px 2px 1px 2px;
+  border-radius: 6px;
+  border: 1px solid rgba(137, 180, 250, 0.4);
+  background: rgba(30, 30, 42, 0.85);
+  color: #89b4fa;
+}
+
+#custom-qwen-ram-info.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); }
+#custom-qwen-ram-info.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); }
+#custom-qwen-ram-info.critical { background: rgba(243, 139, 168, 0.18); border-color: rgba(243, 139, 168, 0.55); }
+#custom-qwen-ram-info.disconnected { background: rgba(100, 100, 100, 0.2); border-color: rgba(120, 120, 120, 0.4); }
+
+/* ── TEMP group — red/pink accent ── */
+#group-qwen-temp {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(243, 139, 168, 0.4);
+  border-radius: 8px;
+  padding: 2px 4px 2px 6px;
+  margin: 0 4px;
+}
+
+#custom-qwen-temp-icon {
+  font-size: 16px;
+  min-width: 24px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #f38ba8;
+  margin-right: 2px;
+}
+
+#custom-qwen-temp-info {
+  font-size: 11px;
+  font-weight: 500;
+  min-height: 32px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(243, 139, 168, 0.4);
+  background: rgba(30, 30, 42, 0.85);
+  color: #f38ba8;
+}
+#custom-qwen-temp-info.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); color: #f9e2af; }
+#custom-qwen-temp-info.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); color: #fab387; }
+#custom-qwen-temp-info.critical { background: rgba(243, 139, 168, 0.18); border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
+
+/* ── ASUS group — teal/green accent ── */
+#group-qwen-asus {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(148, 226, 213, 0.4);
+  border-radius: 8px;
+  padding: 2px 4px 2px 6px;
+  margin: 0 4px;
+}
+
+#custom-qwen-asus-icon {
+  font-size: 16px;
+  min-width: 24px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #94e2d5;
+  margin-right: 2px;
+}
+
+#custom-qwen-asus-info {
+  font-size: 11px;
+  font-weight: 500;
+  min-width: 100px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 226, 213, 0.4);
+  background: rgba(30, 30, 42, 0.85);
+  color: #94e2d5;
+}
+#custom-qwen-asus-info.medium  { background: rgba(137, 180, 250, 0.12); border-color: rgba(137, 180, 250, 0.4); color: #89b4fa; }
+#custom-qwen-asus-info.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); color: #fab387; }
+
+/* ── Unified group alignment for vertical bar ── */
+.bar-vert #group-qwen-temp,
+.bar-vert #group-qwen-cpu,
+.bar-vert #group-qwen-ram,
+.bar-vert #group-qwen-ssd,
+.bar-vert #group-qwen-network,
+.bar-vert #group-qwen-asus {
+  min-width: 60px;
+  margin: 12px 4px 2px;
+  padding: 4px 2px;
+}
+
+/* ── Info box uniform sizing ── */
+#custom-qwen-cpu-info,
+#custom-qwen-ram-info,
+#custom-qwen-ssd-info,
+#custom-qwen-temp-info,
+#custom-qwen-wifi-info,
+#custom-qwen-asus-info {
+  font-size: 11px;
+  font-weight: 500;
+  min-height: 32px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  min-width: 60px;
+}
+
+/* ── Icon vertical alignment ── */
+#network-qwi,
+#custom-qwen-cpu-icon,
+#custom-qwen-ram-icon,
+#custom-qwen-ssd-icon,
+#custom-qwen-temp-icon,
+#custom-qwen-asus-icon {
+  padding-top: 4px;
+  min-width: 22px;
+}
+
+/* ── Per-group border overrides for vertical bar ── */
+.bar-vert #group-qwen-temp { border-color: rgba(243, 139, 168, 0.5); }
+.bar-vert #group-qwen-cpu { border-color: rgba(166, 227, 161, 0.5); }
+.bar-vert #group-qwen-ram { border-color: rgba(137, 180, 250, 0.5); }
+.bar-vert #group-qwen-ssd { border-color: rgba(166, 227, 161, 0.5); }
+.bar-vert #group-qwen-network { border-color: rgba(148, 226, 213, 0.5); }
+.bar-vert #group-qwen-asus { border-color: rgba(148, 226, 213, 0.5); }
+
+/* ════════════════════════════════════════════
+   CENTER MODULES — clock, tray, lang, privacy
+   ════════════════════════════════════════════ */
+
+#clock {
+  font-size: 14px;
+  font-weight: 600;
+  color: #cba6f7;
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(203, 166, 247, 0.3);
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin: 12px 4px 4px;
+}
+
+#custom-lang {
+  font-size: 12px;
+  font-weight: 600;
+  color: #89dceb;
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(137, 220, 235, 0.3);
+  border-radius: 8px;
+  padding: 4px 10px;
+  margin: 2px 4px;
+  min-width: 40px;
+}
+
+#privacy {
+  font-size: 11px;
+  color: #a6e3a1;
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(166, 227, 161, 0.25);
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin: 2px 4px;
+}
+#privacy.screenshare { color: #f38ba8; }
+#privacy.audio-in { color: #89b4fa; }
+
+/* Tray in vertical bar */
+.bar-vert #tray {
+  border: none;
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin: 4px;
+  min-height: 24px;
+}
+
+/* ════════════════════════════════════════════
+   RIGHT MODULES — compact button bar
+   ════════════════════════════════════════════ */
+
+#idle_inhibitor,
+#power-profiles-daemon,
+#custom-dunst,
+#custom-recorder,
+#custom-checkupdates,
+#custom-fnlock,
+#custom-backlight,
+#custom-ext-display {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  margin: 2px 4px;
+  padding: 6px 8px;
+  min-height: 28px;
+  min-width: 36px;
+  font-size: 18px;
+  color: #6c7086;
+}
+
+/* Active / highlighted states */
+#idle_inhibitor.activated,
+#custom-dunst.paused,
+#custom-checkupdates.notify,
+#custom-fnlock.active,
+#custom-backlight.active {
+  border-color: rgba(148, 226, 213, 0.5);
+  background: rgba(0, 128, 128, 0.15);
+  color: #94e2d5;
+}
+
+#custom-recorder.recording {
+  border-color: rgba(243, 139, 168, 0.5);
+  background: rgba(243, 139, 168, 0.15);
+  color: #f38ba8;
+}
+
+#custom-checkupdates.active {
+  border-color: rgba(166, 227, 161, 0.5);
+  background: rgba(166, 227, 161, 0.12);
+  color: #a6e3a1;
+}
+
+#custom-ext-display.off {
+  color: #45475a;
+}
+#custom-ext-display.disconnected {
+  color: #313244;
+  opacity: 0.5;
+}
+
+#power-profiles-daemon {
+  font-size: 14px;
+}
+#power-profiles-daemon.power-saver {
+  color: #a6e3a1;
+  border-color: rgba(166, 227, 161, 0.3);
+}
+#power-profiles-daemon.balanced {
+  color: #f9e2af;
+  border-color: rgba(249, 226, 175, 0.3);
+}
+#power-profiles-daemon.performance {
+  color: #f38ba8;
+  border-color: rgba(243, 139, 168, 0.3);
+}
+
+/* ════════════════════════════════════════════
+   ANIMATIONS
+   ════════════════════════════════════════════ */
+@keyframes blink {
+  to {
+    background-color: rgba(98, 159, 173, 0.3);
+    color: black;
+  }
+}
+@keyframes blinkred {
+  to {
+    background-color: firebrick;
+    color: white;
+  }
+}
+@keyframes blinkwarn {
+  to {
+    color: #ff5500;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 20px;
+  }
+}
+@keyframes wait {
+  to {
+    text-decoration: underline;
+  }
+}

@@ -3,17 +3,29 @@
     "name": "bar-low",
     "layer": "top",
     "position": "bottom",
-    "height": 10,
-    "background": "red",
+    "height": 6,
     "modules-left": [
-      "custom/uptime"
+      "sway/workspaces#bottom"
     ],
     "modules-right": [
       "custom/ollama"
     ],
     "modules-center": [
-      "sway/mode"
+      "sway/mode",
+      "custom/uptime"
     ],
+    "sway/workspaces#bottom": {
+      "disable-scroll": true,
+      "all-outputs": true,
+      "format": " ",
+      "persistent-workspaces": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": []
+      }
+    },
     "include": [
       "/home/lexx/.config/waybar/default-modules-v2.json",
       "/home/lexx/.config/waybar/default-modules.json"
@@ -72,66 +84,5 @@
       "/home/lexx/.config/waybar/default-modules-v2.json",
       "/home/lexx/.config/waybar/default-modules.json"
     ]
-  },
-  {
-    "name": "bar-vert",
-    "layer": "top",
-    "position": "right",
-    "width": 50,
-    "fixed-center": true,
-    "modules-left": [
-      "custom/temp-fan",
-      "custom/asus-profile",
-      "group/qwen-cpu",
-      "group/qwen-ram",
-      "group/qwen-ssd",
-      "group/qwen-network"
-    ],
-    "modules-center": [
-      "clock",
-      "group/tray-h",
-      "custom/lang",
-      "privacy"
-    ],
-    "modules-right": [
-      "idle_inhibitor",
-      "power-profiles-daemon",
-      "custom/dunst",
-      "custom/recorder",
-      "custom/checkupdates",
-      "custom/fnlock",
-      "custom/backlight",
-      "custom/ext-display"
-    ],
-    "include": [
-      "/home/lexx/.config/waybar/qwen-modules.json",
-      "/home/lexx/.config/waybar/default-modules-v2.json",
-      "/home/lexx/.config/waybar/default-modules.json"
-    ],
-    "custom/fnlock": {
-      "exec": "~/.config/waybar/scripts/toggle_fn_lock.sh refresh",
-      "return-type": "json",
-      "signal": 10,
-      "on-click": "/usr/local/bin/toggle_fn_lock.sh"
-    },
-    "custom/backlight": {
-      "exec": "~/.config/waybar/scripts/zenbook-keylight/kbd_status_json.sh",
-      "return-type": "json",
-      "format": "{}",
-      "format-icons": {
-        "0": "\udb81\udee8",
-        "1": "\udb81\udee9"
-      },
-      "on-click": "~/.config/waybar/scripts/zenbook-keylight/toggler.sh",
-      "signal": 8
-    },
-    "custom/ext-display": {
-      "exec": "~/.config/waybar/scripts/toggle-ext-display.sh refresh",
-      "return-type": "json",
-      "format": "{}",
-      "interval": 1000,
-      "on-click": "swaymsg exec ~/.config/waybar/scripts/toggle-ext-display.sh",
-      "signal": 11
-    }
   }
 ]

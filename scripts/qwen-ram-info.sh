@@ -22,13 +22,13 @@ swap=$((st - sf))
 total_gb=$((mt / 1048576))
 ug=$((used / 1048576))
 
-seg_total=12; seg_used=$((pct * seg_total / 100))
+seg_total=10; seg_used=$((pct * seg_total / 100))
 
 bar=""
 if [ "$pct" -eq 100 ]; then
   # At 100%%: all filled, label after the last ▓
   for ((i=0; i<seg_total; i++)); do
-    bar+=$(printf "<span fgcolor='#89b4fa'>▓</span>")
+    bar+=$(printf "<span fgcolor='#89b4fa'>●</span>")
   done
 else
   # Partial: print used ▓, then inject label at boundary, then empty · + total
@@ -37,9 +37,9 @@ else
      # bar+=$(printf "<span fgcolor='#89b4fa'><span size='smaller' rise='-4000'>%dG</span></span>" "$ug")
     #fi
     if [ "$i" -lt "$seg_used" ]; then
-      bar+=$(printf "<span fgcolor='#89b4fa'>▓</span>")
+      bar+=$(printf "<span fgcolor='#89b4fa'>●</span>")
     else
-      bar+=$(printf "<span fgcolor='#f8f8f8'>▓</span>")
+      bar+=$(printf "<span fgcolor='#f8f8f8'>●</span>")
     fi
   done
 fi

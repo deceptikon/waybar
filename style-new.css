@@ -138,7 +138,11 @@ tooltip label {
 #custom-qwen-ssd-info {
   font-size: 12px;
   font-weight: 500;
+<<<<<<< HEAD
   min-width: 100px;
+=======
+  /* min-width: 100px; */
+>>>>>>> a4e4e84 (split styles, bar adjustment)
   padding: 2px 8px;
   border-radius: 6px;
   border: 1px solid rgba(166, 227, 161, 0.4);
@@ -173,7 +177,11 @@ tooltip label {
 #custom-qwen-cpu-info {
   font-size: 11px;
   font-weight: 500;
+<<<<<<< HEAD
   min-width: 100px;
+=======
+  /* min-width: 100px; */
+>>>>>>> a4e4e84 (split styles, bar adjustment)
   padding: 1px 4px 1px 4px;
   border-radius: 6px;
   border: 1px solid rgba(166, 227, 161, 0.4);
@@ -208,7 +216,11 @@ tooltip label {
 #custom-qwen-ram-info {
   font-size: 10px;
   font-weight: 500;
+<<<<<<< HEAD
   min-width: 100px;
+=======
+  /* min-width: 100px; */
+>>>>>>> a4e4e84 (split styles, bar adjustment)
   padding: 1px 2px 1px 2px;
   border-radius: 6px;
   border: 1px solid rgba(137, 180, 250, 0.4);
@@ -278,7 +290,10 @@ tooltip label {
 #custom-qwen-asus-info {
   font-size: 11px;
   font-weight: 500;
+<<<<<<< HEAD
   min-width: 100px;
+=======
+>>>>>>> a4e4e84 (split styles, bar adjustment)
   padding: 2px 8px;
   border-radius: 6px;
   border: 1px solid rgba(148, 226, 213, 0.4);
@@ -312,7 +327,11 @@ tooltip label {
   min-height: 32px;
   padding: 2px 6px;
   border-radius: 6px;
+<<<<<<< HEAD
   min-width: 60px;
+=======
+  min-width: 80px;
+>>>>>>> a4e4e84 (split styles, bar adjustment)
 }
 
 /* ── Icon vertical alignment ── */

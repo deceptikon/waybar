@@ -19,12 +19,18 @@ st=${m[st]:-0}; sf=${m[sf]:-0}
 used=$((mt - ma)); pct=$((used * 100 / mt))
 swap=$((st - sf))
 
-total_gb=$((mt / 1048576))
 ug=$((used / 1048576))
+free_gb=$((ma / 1048576))
 
+<<<<<<< HEAD
 seg_total=10; seg_used=$((pct * seg_total / 100))
+=======
+seg_total=9; seg_used=$((pct * seg_total / 100))
 
-bar=""
+# bar=""
+bax=$(printf "<span fgcolor='#89b4fa'>%dG</span> <span fgcolor='#f8f8f8'>/ %dG</span>" "$ug" "$free_gb")
+>>>>>>> a4e4e84 (split styles, bar adjustment)
+
 if [ "$pct" -eq 100 ]; then
   # At 100%%: all filled, label after the last ▓
   for ((i=0; i<seg_total; i++)); do
@@ -43,12 +49,11 @@ else
     fi
   done
 fi
-bax=$(printf "<span fgcolor='#89b4fa'>%dG</span>" "$ug")
-line1="$bar  "
-line2="$bax"
-line2+=$(printf "<span fgcolor='#6c7086' size='smaller'>swap: %sG</span>" "$(awk "BEGIN{printf \"%.1f\", $swap/1024/1024}")")
+line1=$(printf "<span font_size='larger'>%s</span>" "$bax")
+line2=$(printf "<span rise='8000'>%s</span>" "$bar")
+line3=$(printf "<span fgcolor='#6c7086'>swp: %sG</span>" "$(awk "BEGIN{printf \"%.1f\", $swap/1024/1024}")")
 
-text=$(printf "%s\n%s" "$line1" "$line2")
+text=$(printf "%s\n%s\n%s" "$line1" "$line2" "$line3")
 
 cls="good"
 [ "$pct" -ge 50 ] && cls="medium"

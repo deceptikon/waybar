@@ -15,7 +15,11 @@
     ],
     "modules-center": [
       "clock",
+<<<<<<< HEAD
       "group/tray-h",
+=======
+      "tray",
+>>>>>>> a4e4e84 (split styles, bar adjustment)
       "custom/lang",
       "privacy"
     ],

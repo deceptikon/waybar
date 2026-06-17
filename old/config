@@ -1,0 +1,88 @@
+[
+  {
+    "name": "bar-low",
+    "layer": "top",
+    "position": "bottom",
+    "height": 6,
+    "modules-left": [
+      "sway/workspaces#bottom"
+    ],
+    "modules-right": [
+      "custom/ollama"
+    ],
+    "modules-center": [
+      "sway/mode",
+      "custom/uptime"
+    ],
+    "sway/workspaces#bottom": {
+      "disable-scroll": true,
+      "all-outputs": true,
+      "format": " ",
+      "persistent-workspaces": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": []
+      }
+    },
+    "include": [
+      "/home/lexx/.config/waybar/default-modules-v2.json",
+      "/home/lexx/.config/waybar/default-modules.json"
+    ]
+  },
+  {
+    "name": "bar-horiz-dev",
+    "layer": "top",
+    "position": "top",
+    "height": 17,
+    "output": "NONEXISTENT_OUTPUT",
+    "modules-left": [
+      "group/qwen-network",
+      "group/qwen-cpu",
+      "group/qwen-ram",
+      "group/qwen-ssd"
+    ],
+    "modules-center": [],
+    "modules-right": [],
+    "include": [
+      "/home/lexx/.config/waybar/qwen-modules.json"
+    ]
+  },
+  {
+    "name": "bar-horiz",
+    "layer": "top",
+    "position": "top",
+    "height": 17,
+    "modules-left": [
+      "sway/workspaces"
+    ],
+    "modules-center": [
+      "sway/window"
+    ],
+    "modules-right": [
+      "group/audio",
+      "group/bright",
+      "custom/bt-indicator",
+      "battery",
+      "custom/powerbtn"
+    ],
+    "pulseaudio/slider": {
+      "min": 0,
+      "max": 90,
+      "orientation": "horizontal",
+      "format": "SUSU {}"
+    },
+    "backlight/slider": {
+      "min": 9,
+      "max": 100,
+      "orientation": "horizontal",
+      "device": "intel_backlight"
+    },
+    "include": [
+      "/home/lexx/.config/waybar/qwen-modules.json",
+      "/home/lexx/.config/waybar/default-modules-v2.json",
+      "/home/lexx/.config/waybar/default-modules.json"
+    ]
+  }
+]

@@ -1,0 +1,17 @@
+@import "old/style.css";
+
+.bar-top .modules-left,
+.bar-top .modules-center,
+.bar-top .modules-right {
+  background: rgba(30, 30, 46, 0.9);
+  margin: 2px 3px;
+  padding: 2px 8px;
+  border-radius: 0 0 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.bar-top .modules-right {
+  border-radius: 0 0 0 12px;
+}
+.bar-top .modules-left {
+  border-radius: 0 0 12px 0;
+}

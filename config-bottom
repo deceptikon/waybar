@@ -1,0 +1,53 @@
+[
+  {
+    "name": "bar-bottom",
+    "layer": "top",
+    "position": "bottom",
+    "height": 6,
+    "modules-left": [
+      "sway/workspaces#bottom"
+    ],
+    "modules-center": [
+      "sway/mode",
+      "custom/uptime"
+    ],
+    "modules-right": [
+      "tray",
+      "custom/ollama",
+      "custom/llama"
+    ],
+    "include": [
+      "/home/lexx/.config/waybar/modules-ux-group.json"
+    ],
+    "sway/workspaces#bottom": {
+      "disable-scroll": true,
+      "all-outputs": true,
+      "format": " ",
+      "persistent-workspaces": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": []
+      }
+    },
+    "sway/mode": {
+      "format": "<span style=\"italic\">{}</span>"
+    },
+    "custom/uptime": {
+      "exec": "uptime -p | sed 's/up //'",
+      "interval": 60,
+      "format": "\udb81\udeab {}"
+    },
+    "tray": {
+      "icon-size": 20,
+      "spacing": 10
+    },
+    "custom/ollama": {
+      "exec": "if curl -s http://localhost:11111/api/tags > /dev/null 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps 2>/dev/null | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -n --arg m \"$models\" --compact-output '{text:(\"\udb85\udea3 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -n --compact-output '{text:\"\udb85\udea3 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -n --compact-output '{text:\"\udb85\udea3 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
+      "interval": 5,
+      "format": "{}",
+      "return-type": "json"
+    }
+  }
+]

@@ -1,0 +1,122 @@
+{
+  "network#qwi": {
+    "format-wifi": " {icon} ",
+    "format-ethernet": "",
+    "format-disconnected": "",
+    "format-icons": [
+      "\udb80\udf5f",
+      "\udb80\udf62",
+      "\udb80\udf65",
+      "\udb80\udf68"
+    ],
+    "tooltip": false,
+    "max-length": 1
+  },
+  "group/qwen-network": {
+    "orientation": "horizontal",
+    "modules": [
+      "network#qwi",
+      "custom/qwen-wifi-info"
+    ]
+  },
+  "custom/qwen-wifi-info": {
+    "exec": "~/.config/waybar/scripts/qwen-wifi-info.sh",
+    "interval": 10,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "nm-connection-editor",
+    "on-right-click": "nm-applet --indicator"
+  },
+  "group/qwen-ssd": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-ssd-icon",
+      "custom/qwen-ssd-info"
+    ]
+  },
+  "custom/qwen-ssd-icon": {
+    "format": " \udb80\udeca ",
+    "tooltip": false
+  },
+  "custom/qwen-ssd-info": {
+    "exec": "~/.config/waybar/scripts/qwen-ssd-info.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "gnome-disks",
+    "on-right-click": "lsblk"
+  },
+  "group/qwen-cpu": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-cpu-icon",
+      "custom/qwen-cpu-info"
+    ]
+  },
+  "custom/qwen-cpu-icon": {
+    "format": " \uf2db ",
+    "tooltip": false
+  },
+  "custom/qwen-cpu-info": {
+    "exec": "~/.config/waybar/scripts/qwen-cpu-info.sh refresh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "htop",
+    "on-right-click": "gnome-system-monitor"
+  },
+  "group/qwen-ram": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-ram-icon",
+      "custom/qwen-ram-info"
+    ]
+  },
+  "custom/qwen-ram-icon": {
+    "format": " \uefc5 ",
+    "tooltip": false
+  },
+  "custom/qwen-ram-info": {
+    "exec": "~/.config/waybar/scripts/qwen-ram-info.sh",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "gnome-system-monitor",
+    "on-right-click": "free -h"
+  },
+  "group/qwen-temp": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-temp-icon",
+      "custom/qwen-temp-info"
+    ]
+  },
+  "custom/qwen-temp-icon": {
+    "format": " \uf2cb ",
+    "tooltip": false
+  },
+  "custom/qwen-temp-info": {
+    "exec": "~/.config/waybar/scripts/qwen-temp-info.sh",
+    "interval": 3,
+    "format": "{}",
+    "return-type": "json"
+  },
+  "group/qwen-asus": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-asus-icon",
+      "custom/qwen-asus-info"
+    ]
+  },
+  "custom/qwen-asus-icon": {
+    "format": " \uf06c ",
+    "tooltip": false
+  },
+  "custom/qwen-asus-info": {
+    "exec": "~/.config/waybar/scripts/qwen-asus-info.sh",
+    "interval": 2,
+    "return-type": "json",
+    "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
+    "signal": 10
+  }
+}

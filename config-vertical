@@ -30,34 +30,55 @@
       "custom/ext-display"
     ],
     "include": [
-      "/home/lexx/.config/waybar/qwen-modules.json",
-      "/home/lexx/.config/waybar/default-modules-v2.json",
-      "/home/lexx/.config/waybar/default-modules.json"
+      "/home/lexx/.config/waybar/modules-monitor-group.json",
+      "/home/lexx/.config/waybar/modules-ux-group.json"
     ],
-    "custom/fnlock": {
-      "exec": "~/.config/waybar/scripts/toggle_fn_lock.sh refresh",
-      "return-type": "json",
-      "signal": 10,
-      "on-click": "/usr/local/bin/toggle_fn_lock.sh"
+    "clock": {
+      "format": "\uf017 {:%H:%M\n%d.%m.%y}",
+      "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+      "on-click": "yad --name=yad-calendar --calendar --undecorated",
+      "actions": {
+        "on-scroll-up": "shift_up",
+        "on-scroll-down": "shift_down"
+      }
     },
-    "custom/backlight": {
-      "exec": "~/.config/waybar/scripts/zenbook-keylight/kbd_status_json.sh",
-      "return-type": "json",
-      "format": "{}",
-      "format-icons": {
-        "0": "\udb81\udee8",
-        "1": "\udb81\udee9"
-      },
-      "on-click": "~/.config/waybar/scripts/zenbook-keylight/toggler.sh",
-      "signal": 8
+    "custom/lang": {
+      "exec": "swaymsg -t get_inputs | grep layout_name | grep -v En | awk 'END{if(NR == 0){print \"EN\"}else{print toupper(substr($2,2,2))}}'",
+      "interval": 1,
+      "format": "{}"
     },
-    "custom/ext-display": {
-      "exec": "~/.config/waybar/scripts/toggle-ext-display.sh refresh",
-      "return-type": "json",
-      "format": "{}",
-      "interval": 1000,
-      "on-click": "swaymsg exec ~/.config/waybar/scripts/toggle-ext-display.sh",
-      "signal": 11
+    "privacy": {
+      "icon-spacing": 4,
+      "icon-size": 18,
+      "transition-duration": 250,
+      "modules": [
+        {
+          "type": "screenshare",
+          "tooltip": true,
+          "tooltip-icon-size": 24
+        },
+        {
+          "type": "audio-out",
+          "tooltip": true,
+          "tooltip-icon-size": 24
+        },
+        {
+          "type": "audio-in",
+          "tooltip": true,
+          "tooltip-icon-size": 24
+        }
+      ],
+      "ignore-monitor": true,
+      "ignore": [
+        {
+          "type": "audio-in",
+          "name": "cava"
+        },
+        {
+          "type": "screenshare",
+          "name": "obs"
+        }
+      ]
     }
   }
 ]

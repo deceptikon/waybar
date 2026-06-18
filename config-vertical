@@ -15,7 +15,7 @@
     ],
     "modules-center": [
       "clock",
-      "tray",
+      "group/tray",
       "custom/lang",
       "privacy"
     ],
@@ -40,6 +40,21 @@
       "actions": {
         "on-scroll-up": "shift_up",
         "on-scroll-down": "shift_down"
+      }
+    },
+    	"group/tray": {
+		"orientation": "horizontal",
+		"modules": [
+			"tray"
+		]
+	},
+    "tray": {
+      "icon-size": 15,
+      "spacing": 11,
+      "reverse-direction": true,
+      "icons": {
+        "blueman": "bluetooth",
+        "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png"
       }
     },
     "custom/lang": {

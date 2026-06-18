@@ -1,16 +1,21 @@
 {
   "network#qwi": {
-    "format-wifi": " {icon} ",
-    "format-ethernet": "",
-    "format-disconnected": "",
+    "format": "   ",
+
+    "tooltip-format": "{ifname} via {gwaddr} 󰊗",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+    "tooltip-format-ethernet": "{ifname} ",
+    "tooltip-format-disconnected": "Disconnected",
+    "max-length": 5,
+    "min-length": 5,
     "format-icons": [
       "\udb80\udf5f",
       "\udb80\udf62",
       "\udb80\udf65",
-      "\udb80\udf68"
-    ],
-    "tooltip": false,
-    "max-length": 1
+      "\udb80\udf68",
+      "\udb80\udf6b",
+      "\udb80\udf6e"
+    ]
   },
   "group/qwen-network": {
     "orientation": "horizontal",

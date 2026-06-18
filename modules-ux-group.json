@@ -65,7 +65,7 @@
     "return-type": "json",
     "format": "{}",
     "interval": 1000,
-    "on-click": "swaymsg exec ~/.config/waybar/scripts/toggle-ext-display.sh",
+    "on-click": "~/.config/waybar/scripts/toggle-ext-display.sh",
     "signal": 11
   },
   "custom/llama": {

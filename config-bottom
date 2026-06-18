@@ -21,8 +21,19 @@
     ],
     "sway/workspaces#bottom": {
       "disable-scroll": true,
-      "all-outputs": true,
-      "format": " ",
+      "all-outputs": false,
+      "format": "{icon} ",
+      "active-only": true,
+      "format-icons": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "urgent": "",
+        "active": "",
+        "default": ""
+      },
       "persistent-workspaces": {
         "1": [],
         "2": [],

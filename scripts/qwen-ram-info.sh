@@ -19,13 +19,13 @@ st=${m[st]:-0}; sf=${m[sf]:-0}
 used=$((mt - ma)); pct=$((used * 100 / mt))
 swap=$((st - sf))
 
-//ug=$((used / 1048576))
+ug=$((used / 1048576))
 free_gb=$((ma / 1048576))
 
 seg_total=8; seg_used=$((pct * seg_total / 100))
 
 # bar=""
-bax=$(printf "<span fgcolor='#89b4fa'>%dG</span> <span fgcolor='#f8f8f8'>/ %dG</span>" "$pct" "$free_gb")
+bax=$(printf "<span fgcolor='#89b4fa'>%dG</span> <span fgcolor='#f8f8f8'>/ %dG</span>" "$ug" "$free_gb")
 
 if [ "$pct" -eq 100 ]; then
   # At 100%%: all filled, label after the last ▓

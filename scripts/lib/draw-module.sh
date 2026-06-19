@@ -1,13 +1,13 @@
-# draw-module.sh — Base template for two-row module info boxes
+# draw-module.sh — Template for up to three-row module info boxes
 #
-# Provides: draw_module <icon> <row1> <row2> <color_hex> [class]
+# Provides: draw_module <icon> <row1> <row2> <color_hex> [class] [row3]
 #
-# Renders a Unicode box with icon in left column (merged vertical cells)
-# and data text in right column (one cell per row).
+# When icon is empty: plain Pango text lines separated by newlines.
+# When icon is set: draws a Unicode box with icon in left column
+# (vertically centered) and data rows in right column.
 #
-#   icon      Nerd Font glyph (e.g. "󰢮")
-#   row1      Top row content (may contain Pango markup)
-#   row2      Bottom row content (may contain Pango markup)
+#   icon      Nerd Font glyph (e.g. "󰢮") — empty for plain text
+#   row1/2/3  Row content (may contain Pango markup)
 #   color_hex Accent color e.g. "#fab387"
 #   class     Waybar state class: good|medium|warning|critical
 #
@@ -19,24 +19,32 @@ draw_module() {
   local row2="$3"
   local color="$4"
   local cls="${5:-good}"
+  local row3="${6:-}"
 
   if [ -z "$icon" ]; then
-    text=$(printf "<span fgcolor='%s'>%s\n%s</span>" "$color" "$row1" "$row2")
+    if [ -n "$row3" ]; then
+      text=$(printf "<span fgcolor='%s'>%s\n%s\n%s</span>" "$color" "$row1" "$row2" "$row3")
+    else
+      text=$(printf "<span fgcolor='%s'>%s\n%s</span>" "$color" "$row1" "$row2")
+    fi
     jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'
     return
   fi
 
   local r1p=$(echo "$row1" | sed 's/<[^>]*>//g')
   local r2p=$(echo "$row2" | sed 's/<[^>]*>//g')
+  local r3p=""
+  [ -n "$row3" ] && r3p=$(echo "$row3" | sed 's/<[^>]*>//g')
 
-  local w1=${#r1p}
-  local w2=${#r2p}
-  [ "$w2" -gt "$w1" ] && w1=$w2
+  local w1=${#r1p} w2=${#r2p} w3=${#r3p}
+  local nrows=2; [ -n "$row3" ] && nrows=3
+  for w in "$w2" "$w3"; do [ "$w" -gt "$w1" ] && w1=$w; done
 
-  local ic=3        # icon col inner width: " 󰢮 "
-  local dw=$((w1 + 2))   # data col inner width: " text"
+  local ic=3
+  local dw=$((w1 + 2))
   local p1=$((dw - 1 - w1))
   local p2=$((dw - 1 - w2))
+  local p3=$((dw - 1 - w3))
 
   local h=$(printf '%*s' "$dw" ''); h="${h// /─}"
   local ic_line=$(printf '%*s' "$ic" ''); ic_line="${ic_line// /─}"
@@ -46,9 +54,15 @@ draw_module() {
 
   local line1=$(printf '│%s│ %s%*s│' " ${icon} " "$row1" "$p1" '')
   local line2=$(printf '│%*s│ %s%*s│' "$ic" '' "$row2" "$p2" '')
+  local line3=$(printf '│%*s│ %s%*s│' "$ic" '' "$row3" "$p3" '')
 
-  local text=$(printf "<span fgcolor='%s'>%s\n%s\n%s\n%s\n%s</span>" \
-    "$color" "$top" "$line1" "$mid" "$line2" "$bot")
+  if [ "$nrows" -eq 3 ]; then
+    local text=$(printf "<span fgcolor='%s'>%s\n%s\n%s\n%s\n%s\n%s\n%s</span>" \
+      "$color" "$top" "$line1" "$mid" "$line2" "$mid" "$line3" "$bot")
+  else
+    local text=$(printf "<span fgcolor='%s'>%s\n%s\n%s\n%s\n%s</span>" \
+      "$color" "$top" "$line1" "$mid" "$line2" "$bot")
+  fi
 
   jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'
 }

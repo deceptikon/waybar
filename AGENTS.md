@@ -87,7 +87,7 @@ Each variant gets its own CSS selector (`#custom-sysmon_frame-gpu`) with colored
 | `temp` | 󰔐 | `#f38ba8` red | `#custom-sysmon_frame-temp` |
 | `asus` |  | `#94e2d5` teal | `#custom-sysmon_frame-asus` |
 
-`draw_module` wraps output in `<span fgcolor='$accent'>`, CSS draws the box (border + bg).
+`draw_module` draws a unicode box table with icon in left column (merged rows) and data in right column. Pango markup inside cells preserves formatting. CSS is transparent — the box is entirely Pango-drawn.
 
 ## Sysmon JSON Schema
 

@@ -6,17 +6,12 @@
     "width": 50,
     "fixed-center": true,
     "modules-left": [
-      "group/qwen-temp",
-      "group/qwen-temp-v2",
-      "group/qwen-asus",
-      "group/qwen-asus-v2",
-      "group/qwen-cpu",
-      "group/qwen-cpu-v2",
-      "group/qwen-ram",
-      "group/qwen-ram-v2",
-      "group/qwen-ssd",
-      "group/qwen-ssd-v2",
-      "group/qwen-gpu",
+      "custom/sysmon_frame#temp",
+      "custom/sysmon_frame#asus",
+      "custom/sysmon_frame#cpu",
+      "custom/sysmon_frame#ram",
+      "custom/sysmon_frame#ssd",
+      "custom/sysmon_frame#gpu",
       "group/qwen-network"
     ],
     "modules-center": [

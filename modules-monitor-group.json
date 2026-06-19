@@ -32,176 +32,49 @@
     "on-click": "nm-connection-editor",
     "on-right-click": "nm-applet --indicator"
   },
-  "group/qwen-ssd-v2": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-ssd-info-v2"
-    ]
-  },
-  "custom/qwen-ssd-info-v2": {
-    "exec": "~/.config/waybar/scripts/qwen-ssd-info-v2.sh",
-    "interval": 5,
-    "format": "{}",
-    "return-type": "json"
-  },
-  "group/qwen-ssd": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-ssd-icon",
-      "custom/qwen-ssd-info"
-    ]
-  },
-  "custom/qwen-ssd-icon": {
-    "format": " \udb80\udeca ",
-    "tooltip": false
-  },
-  "custom/qwen-ssd-info": {
-    "exec": "~/.config/waybar/scripts/qwen-ssd-info.sh",
-    "interval": 5,
+  "custom/sysmon_frame#gpu": {
+    "exec": "~/.config/waybar/scripts/sysmon-frame.sh gpu",
+    "interval": 2,
     "format": "{}",
     "return-type": "json",
-    "on-click": "gnome-disks",
-    "on-right-click": "lsblk"
+    "on-click": "nvtop"
   },
-  "group/qwen-cpu-v2": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-cpu-info-v2"
-    ]
-  },
-  "custom/qwen-cpu-info-v2": {
-    "exec": "~/.config/waybar/scripts/qwen-cpu-info-v2.sh",
-    "interval": 5,
-    "format": "{}",
-    "return-type": "json"
-  },
-  "group/qwen-cpu": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-cpu-icon",
-      "custom/qwen-cpu-info"
-    ]
-  },
-  "custom/qwen-cpu-icon": {
-    "format": " \uf2db ",
-    "tooltip": false
-  },
-  "custom/qwen-cpu-info": {
-    "exec": "~/.config/waybar/scripts/qwen-cpu-info.sh refresh",
+  "custom/sysmon_frame#cpu": {
+    "exec": "~/.config/waybar/scripts/sysmon-frame.sh cpu",
     "interval": 5,
     "format": "{}",
     "return-type": "json",
     "on-click": "htop",
     "on-right-click": "gnome-system-monitor"
   },
-  "group/qwen-ram-v2": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-ram-info-v2"
-    ]
-  },
-  "custom/qwen-ram-info-v2": {
-    "exec": "~/.config/waybar/scripts/qwen-ram-info-v2.sh",
-    "interval": 5,
-    "format": "{}",
-    "return-type": "json"
-  },
-  "group/qwen-ram": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-ram-icon",
-      "custom/qwen-ram-info"
-    ]
-  },
-  "custom/qwen-ram-icon": {
-    "format": " \uefc5 ",
-    "tooltip": false
-  },
-  "custom/qwen-ram-info": {
-    "exec": "~/.config/waybar/scripts/qwen-ram-info.sh",
+  "custom/sysmon_frame#ram": {
+    "exec": "~/.config/waybar/scripts/sysmon-frame.sh ram",
     "interval": 5,
     "format": "{}",
     "return-type": "json",
     "on-click": "gnome-system-monitor",
     "on-right-click": "free -h"
   },
-  "group/qwen-temp-v2": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-temp-info-v2"
-    ]
+  "custom/sysmon_frame#ssd": {
+    "exec": "~/.config/waybar/scripts/sysmon-frame.sh ssd",
+    "interval": 5,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "gnome-disks",
+    "on-right-click": "lsblk"
   },
-  "custom/qwen-temp-info-v2": {
-    "exec": "~/.config/waybar/scripts/qwen-temp-info-v2.sh",
+  "custom/sysmon_frame#temp": {
+    "exec": "~/.config/waybar/scripts/sysmon-frame.sh temp",
     "interval": 3,
     "format": "{}",
     "return-type": "json"
   },
-  "group/qwen-temp": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-temp-icon",
-      "custom/qwen-temp-info"
-    ]
-  },
-  "custom/qwen-temp-icon": {
-    "format": " \uf2cb ",
-    "tooltip": false
-  },
-  "custom/qwen-temp-info": {
-    "exec": "~/.config/waybar/scripts/qwen-temp-info.sh",
-    "interval": 3,
-    "format": "{}",
-    "return-type": "json"
-  },
-  "group/qwen-asus-v2": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-asus-info-v2"
-    ]
-  },
-  "custom/qwen-asus-info-v2": {
-    "exec": "~/.config/waybar/scripts/qwen-asus-info-v2.sh",
+  "custom/sysmon_frame#asus": {
+    "exec": "~/.config/waybar/scripts/sysmon-frame.sh asus",
     "interval": 5,
     "format": "{}",
     "return-type": "json",
     "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
     "signal": 10
-  },
-  "group/qwen-asus": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-asus-icon",
-      "custom/qwen-asus-info"
-    ]
-  },
-  "custom/qwen-asus-icon": {
-    "format": " \uf06c ",
-    "tooltip": false
-  },
-  "custom/qwen-asus-info": {
-    "exec": "~/.config/waybar/scripts/qwen-asus-info.sh",
-    "interval": 2,
-    "return-type": "json",
-    "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
-    "signal": 10
-  },
-  "group/qwen-gpu": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-gpu-icon",
-      "custom/qwen-gpu-info"
-    ]
-  },
-  "custom/qwen-gpu-icon": {
-    "format": " \uef94 ",
-    "tooltip": false
-  },
-  "custom/qwen-gpu-info": {
-    "exec": "~/.config/waybar/scripts/gpu-info.sh",
-    "interval": 2,
-    "format": "{}",
-    "return-type": "json",
-    "on-click": "nvtop"
   }
 }

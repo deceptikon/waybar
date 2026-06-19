@@ -22,10 +22,10 @@ draw_module() {
   local cls="${5:-good}"
 
   if [ -n "$icon" ]; then
-    text=$(printf "<span font_size='larger'>%s</span>\n<span fgcolor='%s'>%s</span>\n%s" \
-      "$icon" "$color" "$row1" "$row2")
+    text=$(printf "<span fgcolor='%s'><span font_size='larger'>%s</span>\n%s\n%s</span>" \
+      "$color" "$icon" "$row1" "$row2")
   else
-    text=$(printf "<span fgcolor='%s'>%s</span>\n%s" "$color" "$row1" "$row2")
+    text=$(printf "<span fgcolor='%s'>%s\n%s</span>" "$color" "$row1" "$row2")
   fi
 
   jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'

@@ -50,7 +50,7 @@ case "$metric" in
       else bar2+="<span fgcolor=\"$col\">▓</span>"; fi
     done
     tc_fmt=$(printf "%.0f" "$tc")
-    draw_module "" "${bar1}"$'\n'"   ${bar2}" "<span fgcolor=\"#a6e3a1\"><b>AVG ${avg}%</b></span>  󰔐 ${tc_fmt}°C" "$ACCENT" "$cls"
+    draw_module "" "${bar1}"$'\n'"${bar2}" "<span fgcolor=\"#a6e3a1\"><b>AVG ${avg}%</b></span>  󰔐 ${tc_fmt}°C" "$ACCENT" "$cls"
     ;;
   ram)
     ACCENT="#89b4fa"

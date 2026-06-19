@@ -3,7 +3,7 @@
   border-radius: 8px;
   font-family:
     "JetBrainsMono Nerd Font", "MesloLGS Nerd Font", monospace;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   min-height: 0;
 }
@@ -26,7 +26,7 @@ tooltip {
 }
 tooltip label {
   color: #cdd6f4;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 /* ── VERTICAL BAR LAYOUT ── */
@@ -80,7 +80,7 @@ tooltip label {
 #group-qwen-asus {
   background: rgba(20, 20, 28, 0.92);
   border-radius: 8px;
-  padding: 2px 3px 2px 3px;
+  padding: 2px 2px 2px 2px;
   margin: 2px 4px;
 }
 
@@ -92,12 +92,12 @@ tooltip label {
 #custom-qwen-temp-icon,
 #custom-qwen-asus-icon {
   font-size: 16px;
-  min-width: 14px;
-  padding: 0 2px;
+  min-width: 11px;
+  padding: 0 1px;
   border: none;
   background: transparent;
   border-radius: 0;
-  margin: 0 1px 0 2px;
+  margin: 0 0 0 1px;
 }
 #custom-qwen-gpu-icon { color: #fab387; }
 #custom-qwen-cpu-icon { color: #a6e3a1; }
@@ -115,16 +115,16 @@ tooltip label {
 #custom-qwen-asus {
   font-weight: 500;
   border-radius: 6px;
-  padding: 2px 3px;
+  padding: 2px 2px;
   margin: 0;
-  min-width: 115px;
+  min-width: 108px;
   background: rgba(30, 30, 42, 0.85);
 }
 
 /* ─ Network info card: match other cards for uniform column width ── */
 #custom-qwen-wifi-info {
-  min-width: 115px;
-  padding: 2px 3px;
+  min-width: 108px;
+  padding: 2px 2px;
 }
 
 /* GPU — peach */
@@ -172,18 +172,18 @@ tooltip label {
   background: rgba(20, 20, 28, 0.92);
   border: 1px solid rgba(148, 226, 213, 0.4);
   border-radius: 8px;
-  padding: 2px 3px 2px 3px;
+  padding: 2px 2px 2px 2px;
   margin: 0 4px;
 }
 #network-qwi {
   font-size: 16px;
-  min-width: 14px;
-  padding: 0 2px;
+  min-width: 11px;
+  padding: 0 1px;
   border: none;
   background: transparent;
   border-radius: 0;
   color: #94e2d5;
-  margin: 0 1px 0 2px;
+  margin: 0 0 0 1px;
 }
 #network-qwi.disconnected { color: #666; }
 #custom-qwen-wifi-info {
@@ -212,7 +212,7 @@ tooltip label {
 }
 
 #custom-lang {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: #89dceb;
   background: rgba(20, 20, 28, 0.92);

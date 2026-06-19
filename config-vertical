@@ -3,7 +3,7 @@
     "name": "bar-vert",
     "layer": "top",
     "position": "right",
-    "width": 200,
+    "width": 150,
     "fixed-center": true,
     "modules-left": [
       "group/qwen-gpu",

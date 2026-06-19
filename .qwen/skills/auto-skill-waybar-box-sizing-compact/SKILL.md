@@ -1,33 +1,43 @@
 ---
 name: waybar-box-sizing-compact
-description: Shrink icon+info box sizes for tight vertical bar; icon 18px, info 110px, bar width 200
+description: Tighten vertical bar to 150px; icon 14px, info 115px, 4-seg GPU bar on row 1, MHz+temp on row 2
 source: auto-skill
-extracted_at: '2026-06-20T08:10:00.000Z'
+extracted_at: '2026-06-20T11:00:00.000Z'
 tested_at: '2026-06-20'
 ---
 
 ## Summary
 
-When Waybar's right (vertical) bar is too wide — content occupies ~160px of a 250px bar — shrink icon tiles, info-card widths, and the bar's own `width` property in `config-vertical` so the bar hugs its content tightly.
+Waybar right bar starts too wide (~250px config for ~160px content). Apply progressive tightening. Result: bar hugs content at ~150px with 7 compact monitor groups.
 
-Applied and verified on: `reliable` branch, `style-new.css` + `config-vertical` (2026-06-20).
+Applied and verified on: `reliable-qwen` branch, `style-new.css` + `config-vertical` + `frame.sh` (2026-06-20).
 
-## Sizing Table (Verified)
+## Sizing Table (Final)
 
-| Selector                    | Property        | Before     | After      |
-|-----------------------------|-----------------|------------|------------|
-| `*/*/*-icon`, `#network-qwi` | `min-width`     | 28px       | **18px**   |
-| same                        | `padding`       | 2px 6px    | **2px 2px**|
-| same                        | `margin`        | 0 4px 0 6px| **0 2px 0 4px** |
-| `*/*/*-info`, `#custom-*`   | `min-width`     | 126px      | **110px**  |
-| same                        | `padding`       | 2px 6px    | **2px 4px**|
-| `#group/*`                  | `padding`       | 2px 4px 2px 6px | **2px 4px 2px 4px** |
-| `config-vertical`           | `width`         | 250        | **200**    |
+| Selector                              | Property  | v1     | v2 (final) |
+|---------------------------------------|-----------|--------|------------|
+| `#custom/*-icon`, `#network-qwi`      | min-width | 28px→18px | **14px**   |
+| same                                  | padding   | 2px 6px→2px 2px | **0 2px** |
+| same                                  | margin    | 0 4px 0 6px→0 2px 0 4px | **0 1px 0 2px** |
+| `#custom/*`, `#custom/*-info`         | min-width | 126px→110px | **115px** |
+| same                                  | padding   | 2px 4px | **2px 3px** |
+| `#group/*`                            | padding   | 2px 4px 2px 4px | **2px 3px 2px 3px** |
+| `config-vertical`                     | width     | 250→200 | **150**  |
 
 ## Files to Edit
 
-1. **`style-new.css`** — icon/info/group rules (all monitor + network groups)
-2. **`config-vertical`** — top-level `width: 200`
+1. **`scripts/sysmon/frame.sh`** — GPU section: split bar+pct onto row 1, MHz+temp onto row 2
+2. **`style-new.css`** — icon/info/group rules (all monitor + network groups)
+3. **`config-vertical`** — top-level `width: 150`
+
+## frame.sh GPU Section
+
+```bash
+# Row1 = bar+pct (compact), Row2 = MHz+temp
+draw_module "" "${bar} ${pct}%" "${freq}MHz  ${temp}°C" "$ACCENT" "$cls"
+```
+
+This makes GPU content fit in ~105px max (instead of 130px), so all info cards share the `min-width: 115px` floor.
 
 ## CSS Rules
 
@@ -37,27 +47,27 @@ Applied and verified on: `reliable` branch, `style-new.css` + `config-vertical` 
 #custom-qwen-ssd-icon, #custom-qwen-temp-icon, #custom-qwen-asus-icon,
 #network-qwi {
   font-size: 16px;
-  min-width: 18px;
-  padding: 2px 2px;
-  margin: 0 2px 0 4px;
+  min-width: 11px;
+  padding: 0 1px;
+  margin: 0 0 0 1px;
 }
 
-/* Info cards — same width, tight padding */
+/* Info cards — uniform 115px floor, content stretches wider when needed */
 #custom-qwen-gpu, #custom-qwen-cpu, #custom-qwen-ram,
 #custom-qwen-ssd, #custom-qwen-temp, #custom-qwen-asus,
 #custom-qwen-wifi-info {
   font-weight: 500;
   border-radius: 6px;
-  padding: 2px 4px;
-  min-width: 110px;
+  padding: 2px 2px;
+  min-width: 108px;
   background: rgba(30, 30, 42, 0.85);
 }
 
-/* Group wrappers — symmetric padding */
+/* Group wrappers — symmetric tight padding */
 #group-qwen-gpu, #group-qwen-cpu, #group-qwen-ram,
 #group-qwen-ssd, #group-qwen-temp, #group-qwen-asus,
 #group-qwen-network {
-  padding: 2px 4px 2px 4px;
+  padding: 2px 2px 2px 2px;
   margin: 2px 4px;
 }
 ```
@@ -65,12 +75,17 @@ Applied and verified on: `reliable` branch, `style-new.css` + `config-vertical` 
 ## config-vertical
 
 ```json
-{
-  "name": "bar-vert",
-  "width": 200,
-  ...
-}
+{ "name": "bar-vert", "width": 150, ... }
 ```
+
+## Layout Math
+
+- GPU bar+pct = 9 chars × 7px ≈ 55px (row 1)
+- GPU MHz+temp = 15 chars × 7px ≈ 97px (row 2) → widest content
+- Info card = max(115px min-width, 105px content) + 6px padding = **114px**
+- Icon box = 14 + 0+2 + 1+2 = **16px**
+- Full module = group-margin(8) + group-padding(6) + group-border(2) + icon(19) + icon-gap(1) + info(121) = **142px**
+- Bar width 150 → **~6px total margin** (3px each side)
 
 ## Critical Warning
 
@@ -91,7 +106,13 @@ pkill waybar && sleep 1 && ~/.config/waybar/scripts/waybar-start.sh
 
 ## Verification
 
-- Bar width shrinks to ~200px, hugging content
-- Icon column and info column form a straight vertical edge
-- All 7 monitor groups match in width
-- `way-bar --log-level=error` shows no CSS errors
+- Bar fits at ~150px, hugs all content
+- All 7 info cards uniform at ~121px
+- GPU split onto 2 compact rows
+- No waybar CSS parse errors
+
+## Git Commit Message
+
+```
+style: compact bar v2 — split GPU 2 rows, icon 14/info 115/bar 150
+```

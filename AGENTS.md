@@ -34,20 +34,20 @@ scripts/lib/            # Shared libraries (draw-module.sh)
 Single-pass data collection pipeline for all monitoring modules.
 
 ```
-sysmon-raw3.sh          # Collector: reads /proc/* + sensors + sysfs
+sysmon-raw3.sh          # Collector: reads /proc/* + sensors + sysfs (two CPU snaps)
         │ pipe
         ▼
-sysmon-mapper.sh        # Parser: labeled sections → unified JSON tree
+sysmon-mapper.sh        # Parser: labeled sections → unified JSON tree (+ CPU delta)
         │ pipe
         ▼
-module scripts          # e.g. gpu-info.sh: jq extract + draw_module
+sysmon-format.sh        # Formatter: JSON → 5 Waybar-ready JSON lines (GPU/CPU/RAM/SSD/TEMP)
 ```
 
 | Command | Description |
 |---|---|
-| `bash scripts/sysmon-collect.sh` | One-shot: raw3 → mapper → JSON to stdout |
-| `watch -n 2 bash scripts/sysmon-collect.sh` | Live refresh |
-| `bash scripts/sysmon-raw3.sh \| bash scripts/sysmon-mapper.sh` | Step by step |
+| `bash scripts/sysmon-collect.sh \| bash scripts/sysmon-mapper.sh` | Full pipeline to JSON |
+| `bash scripts/sysmon-collect.sh \| bash scripts/sysmon-mapper.sh \| bash scripts/sysmon-format.sh` | Full to formatted output |
+| `watch -n 2 'bash scripts/sysmon-collect.sh \| bash scripts/sysmon-mapper.sh \| bash scripts/sysmon-format.sh'` | Live refresh |
 
 ## draw-module.sh Library
 
@@ -59,6 +59,34 @@ draw_module <icon> <row1> <row2> <color_hex> [class]
 ```
 
 Produces 3-line Pango text (icon + two data rows) with accent color and Waybar state class.
+
+## v2 Pipeline-based Modules
+
+| Script | Source | Module |
+|---|---|---|
+| `scripts/gpu-info.sh` | `collect \| mapper → jq` | `custom/qwen-gpu-info` (fixed) |
+| `scripts/qwen-cpu-info-v2.sh` | `collect \| mapper \| format → grep CPU` | `custom/qwen-cpu-info-v2` |
+| `scripts/qwen-ram-info-v2.sh` | `collect \| mapper \| format → grep RAM` | `custom/qwen-ram-info-v2` |
+| `scripts/qwen-ssd-info-v2.sh` | `collect \| mapper \| format → grep SSD` | `custom/qwen-ssd-info-v2` |
+| `scripts/qwen-temp-info-v2.sh` | `collect \| mapper \| format → grep TEMP` | `custom/qwen-temp-info-v2` |
+| `scripts/qwen-asus-info-v2.sh` | `collect \| mapper → jq .asus.profile` | `custom/qwen-asus-info-v2` |
+
+Each v2 script runs `sysmon-collect.sh | sysmon-mapper.sh` (once per call) and formats via `draw_module` or custom jq. CSS selectors are `#group-qwen-*-v2` and `#custom-qwen-*-info-v2`.
+
+## Sysmon JSON Schema
+
+```json
+{
+  "ts": 1718000000,
+  "cpu":    { "avg": 12, "per_core": [12,3,16,...] },
+  "ram":    { "used_kb": 25371204, "total_kb": 31940168, "avail_kb": 6568964, "used_pct": 79, "swap_used_kb": 1979732, "swap_total_kb": 33554428, "swap_pct": 5 },
+  "disk":   { "read_sectors": 49513460, "write_sectors": 5475401 },
+  "net":    { "rx_bytes": 557506264, "tx_bytes": 63097053 },
+  "gpu":    { "busy_pct": 9, "mem_used": 496103424, "mem_total": 536870912, "temp_c": 48, "freq": 679, "power_w": 5.001 },
+  "temp":   { "cpu_c": 50.125, "fan1": 2300, "fan2": 0 },
+  "asus":   { "profile": "Quiet" }
+}
+```
 
 Both configs are loaded as separate waybar instances via sway's `$waybar-start` variable (`~/.config/sway/config:495`).
 Reload both at once with `$mod+Shift+w`.

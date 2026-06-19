@@ -6,12 +6,7 @@
     "width": 50,
     "fixed-center": true,
     "modules-left": [
-      "custom/sysmon_frame#temp",
-      "custom/sysmon_frame#asus",
-      "custom/sysmon_frame#cpu",
-      "custom/sysmon_frame#ram",
-      "custom/sysmon_frame#ssd",
-      "custom/sysmon_frame#gpu",
+      "group/sysmon-all",
       "group/qwen-network"
     ],
     "modules-center": [

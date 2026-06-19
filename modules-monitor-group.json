@@ -32,49 +32,16 @@
     "on-click": "nm-connection-editor",
     "on-right-click": "nm-applet --indicator"
   },
-  "custom/sysmon_frame#gpu": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh gpu",
+  "group/sysmon-all": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/sysmon_frame"
+    ]
+  },
+  "custom/sysmon_frame": {
+    "exec": "~/.config/waybar/scripts/sysmon-frame.sh all",
     "interval": 2,
     "format": "{}",
-    "return-type": "json",
-    "on-click": "nvtop"
-  },
-  "custom/sysmon_frame#cpu": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh cpu",
-    "interval": 5,
-    "format": "{}",
-    "return-type": "json",
-    "on-click": "htop",
-    "on-right-click": "gnome-system-monitor"
-  },
-  "custom/sysmon_frame#ram": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh ram",
-    "interval": 5,
-    "format": "{}",
-    "return-type": "json",
-    "on-click": "gnome-system-monitor",
-    "on-right-click": "free -h"
-  },
-  "custom/sysmon_frame#ssd": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh ssd",
-    "interval": 5,
-    "format": "{}",
-    "return-type": "json",
-    "on-click": "gnome-disks",
-    "on-right-click": "lsblk"
-  },
-  "custom/sysmon_frame#temp": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh temp",
-    "interval": 3,
-    "format": "{}",
     "return-type": "json"
-  },
-  "custom/sysmon_frame#asus": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh asus",
-    "interval": 5,
-    "format": "{}",
-    "return-type": "json",
-    "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
-    "signal": 10
   }
 }

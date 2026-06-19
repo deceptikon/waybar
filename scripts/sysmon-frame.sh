@@ -40,8 +40,7 @@ case "$metric" in
       elif [ "$p" -ge 40 ]; then col="#f9e2af"
       elif [ "$p" -ge 15 ]; then col="#89b4fa"
       elif [ "$p" -ge 0 ]; then col="#383838"
-      else col="#2a2a2a"; fi
-      [ "$c" -eq 8 ] && bar+=$'\n'
+      else col="#1e1e2a"; fi
       bar+="<span fgcolor=\"$col\">▓</span>"
     done
     draw_module "$ICON" "$bar" "<span fgcolor=\"#a6e3a1\"><b>AVG ${avg}%</b></span>" "$ACCENT" "$cls"

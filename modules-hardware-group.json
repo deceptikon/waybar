@@ -127,7 +127,7 @@
     "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%"
   },
   "custom/bt-indicator": {
-    "exec": "~/.config/waybar/scripts/bt-indicator.sh",
+    "exec": "~/.config/waybar/scripts/utils/bt-indicator.sh",
     "interval": 5,
     "format": "{}",
     "return-type": "json",
@@ -139,6 +139,6 @@
     "format": "{}",
     "tooltip": "true",
     "return-type": "json",
-    "on-click": "exec ~/.config/waybar/scripts/shutdown-dmenu.sh"
+    "on-click": "exec ~/.config/waybar/scripts/utils/shutdown-dmenu.sh"
   }
 }

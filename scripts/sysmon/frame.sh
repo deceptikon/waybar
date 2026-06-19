@@ -5,7 +5,7 @@ set -euo pipefail
 #   Reads /tmp/sysmon.json (written by sysmon-poller.sh).
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
-source "$DIR/lib/draw-module.sh"
+source "$DIR/../lib/draw-module.sh"
 
 metric="${1:-gpu}"
 CACHE="/tmp/sysmon.json"

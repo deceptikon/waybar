@@ -9,7 +9,7 @@ CACHE="/tmp/sysmon.json"
 
 while true; do
   tmp=$(mktemp /tmp/sysmon.XXXXXX.json)
-  "$DIR/sysmon-collect.sh" | "$DIR/sysmon-mapper.sh" > "$tmp"
+  "$DIR/collect.sh" | "$DIR/mapper.sh" > "$tmp"
   mv "$tmp" "$CACHE"
   sleep 2
 done

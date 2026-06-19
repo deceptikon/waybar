@@ -24,7 +24,7 @@
     ]
   },
   "custom/qwen-wifi-info": {
-    "exec": "~/.config/waybar/scripts/qwen-wifi-info.sh",
+    "exec": "~/.config/waybar/scripts/network/wifi-info.sh",
     "interval": 10,
     "format": "{}",
     "return-type": "json",
@@ -32,7 +32,7 @@
     "on-right-click": "nm-applet --indicator"
   },
   "custom/qwen-gpu-icon": {
-    "exec": "~/.config/waybar/scripts/sysmon-icon.sh gpu",
+    "exec": "~/.config/waybar/scripts/sysmon/icon.sh gpu",
     "interval": "once",
     "format": "{}",
     "return-type": "json"
@@ -45,7 +45,7 @@
     ]
   },
   "custom/qwen-gpu": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh gpu",
+    "exec": "~/.config/waybar/scripts/sysmon/frame.sh gpu",
     "interval": 2,
     "format": "{}",
     "return-type": "json",
@@ -53,7 +53,7 @@
     "on-right-click": "nvtop"
   },
   "custom/qwen-cpu-icon": {
-    "exec": "~/.config/waybar/scripts/sysmon-icon.sh cpu",
+    "exec": "~/.config/waybar/scripts/sysmon/icon.sh cpu",
     "interval": "once",
     "format": "{}",
     "return-type": "json"
@@ -66,7 +66,7 @@
     ]
   },
   "custom/qwen-cpu": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh cpu",
+    "exec": "~/.config/waybar/scripts/sysmon/frame.sh cpu",
     "interval": 2,
     "format": "{}",
     "return-type": "json",
@@ -74,7 +74,7 @@
     "on-right-click": "gnome-system-monitor"
   },
   "custom/qwen-ram-icon": {
-    "exec": "~/.config/waybar/scripts/sysmon-icon.sh ram",
+    "exec": "~/.config/waybar/scripts/sysmon/icon.sh ram",
     "interval": "once",
     "format": "{}",
     "return-type": "json"
@@ -87,7 +87,7 @@
     ]
   },
   "custom/qwen-ram": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh ram",
+    "exec": "~/.config/waybar/scripts/sysmon/frame.sh ram",
     "interval": 2,
     "format": "{}",
     "return-type": "json",
@@ -95,7 +95,7 @@
     "on-right-click": "free -h"
   },
   "custom/qwen-ssd-icon": {
-    "exec": "~/.config/waybar/scripts/sysmon-icon.sh ssd",
+    "exec": "~/.config/waybar/scripts/sysmon/icon.sh ssd",
     "interval": "once",
     "format": "{}",
     "return-type": "json"
@@ -108,7 +108,7 @@
     ]
   },
   "custom/qwen-ssd": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh ssd",
+    "exec": "~/.config/waybar/scripts/sysmon/frame.sh ssd",
     "interval": 2,
     "format": "{}",
     "return-type": "json",
@@ -116,7 +116,7 @@
     "on-right-click": "lsblk"
   },
   "custom/qwen-temp-icon": {
-    "exec": "~/.config/waybar/scripts/sysmon-icon.sh temp",
+    "exec": "~/.config/waybar/scripts/sysmon/icon.sh temp",
     "interval": "once",
     "format": "{}",
     "return-type": "json"
@@ -129,13 +129,13 @@
     ]
   },
   "custom/qwen-temp": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh temp",
+    "exec": "~/.config/waybar/scripts/sysmon/frame.sh temp",
     "interval": 2,
     "format": "{}",
     "return-type": "json"
   },
   "custom/qwen-asus-icon": {
-    "exec": "~/.config/waybar/scripts/sysmon-icon.sh asus",
+    "exec": "~/.config/waybar/scripts/sysmon/icon.sh asus",
     "interval": "once",
     "format": "{}",
     "return-type": "json"
@@ -148,7 +148,7 @@
     ]
   },
   "custom/qwen-asus": {
-    "exec": "~/.config/waybar/scripts/sysmon-frame.sh asus",
+    "exec": "~/.config/waybar/scripts/sysmon/frame.sh asus",
     "interval": 2,
     "format": "{}",
     "return-type": "json",

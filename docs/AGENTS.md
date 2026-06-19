@@ -32,23 +32,24 @@ scripts/lib/            # Shared libraries (draw-module.sh)
 ## Data Flow — sysmon Pipeline
 
 ```
-sysmon-poller.sh (background daemon, wakes every 2s)
+scripts/sysmon/poller.sh (background daemon, wakes every 2s)
   │
-  ├─ sysmon-collect.sh     # reads /proc/* + /sys/* + sensors-j — labeled lines to stdout
+  ├─ scripts/sysmon/collect.sh     # reads /proc/* + /sys/* + sensors-j — labeled lines
   │        │ pipe
   │        ▼
-  └─ sysmon-mapper.sh      # parses labeled sections → unified JSON → /tmp/sysmon.json
+  └─ scripts/sysmon/mapper.sh      # parses labeled sections → unified JSON → /tmp/sysmon.json
 
-/tmp/sysmon.json ← written atomically every 2s by poller
+/tmp/sysmon.json ← written atomically every 2s by poller (write tmp + mv)
 
   6 waybar modules (each interval: 2, return-type: json):
-    custom/qwen-<metric> → sysmon-frame.sh <metric>
+    custom/qwen-<metric> → scripts/sysmon/frame.sh <metric>
       │ cat /tmp/sysmon.json
       │ jq .<metric>
       │ draw_module "" "$row1" "$row2" $accent $class
       │ → Waybar JSON {text: "<span fgcolor='accent'>row1\nrow2</span>", class: "good"}
       │
-      └─ wrapped in group/qwen-<metric> — CSS provides visual box (border bg radius)
+      └─ in group/qwen-<metric> with icon sibling:
+           custom/qwen-*-icon → scripts/sysmon/icon.sh <metric>
 ```
 
 | Source | Read by | → JSON key |

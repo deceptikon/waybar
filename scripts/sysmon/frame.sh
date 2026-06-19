@@ -29,9 +29,9 @@ case "$metric" in
     temp=$(jq -r '.gpu.temp_c // 0' <<< "$data")
     freq=$(jq -r '.gpu.freq // 0' <<< "$data")
     cls="good"; [ "$pct" -ge 40 ] && cls="medium"; [ "$pct" -ge 70 ] && cls="warning"; [ "$pct" -ge 90 ] && cls="critical"
-    seg=4; fil=$((pct*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
+    seg=6; fil=$((pct*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
     bar=""; for ((i=0; i<fil; i++)); do bar+="▐"; done; for ((i=0; i<emp; i++)); do bar+="░"; done
-    draw_module "" "${bar} ${pct}% ${freq}MHz" "󰢮 ${temp}°C" "$ACCENT" "$cls"
+    draw_module "" "${bar} ${pct}%" "${freq}MHz  ${temp}°C" "$ACCENT" "$cls"
     ;;
   cpu)
     ACCENT="#a6e3a1"
@@ -67,7 +67,7 @@ case "$metric" in
     up=$(df / | awk 'END{print $5}' | tr -d '%')
     drs=$(jq -r '.disk.read_sectors // 0' <<< "$data"); dws=$(jq -r '.disk.write_sectors // 0' <<< "$data")
     cls="good"; [ "$up" -ge 70 ] && cls="medium"; [ "$up" -ge 85 ] && cls="warning"; [ "$up" -ge 95 ] && cls="critical"
-    seg=4; fil=$((up*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
+    seg=6; fil=$((up*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
     fill=""; for ((i=0; i<fil; i++)); do fill+="▓"; done; for ((i=0; i<emp; i++)); do fill+="░"; done
     rf=$(fmt_io $((drs * 512))); wf=$(fmt_io $((dws * 512)))
     draw_module "" "<b>${fill}</b> <b>${up}%</b>" "<span fgcolor='#94e2d5'>↑${rf}  ↓${wf}</span>" "$ACCENT" "$cls"

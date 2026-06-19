@@ -3,7 +3,7 @@
   border-radius: 8px;
   font-family:
     "JetBrainsMono Nerd Font", "MesloLGS Nerd Font", monospace;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   min-height: 0;
 }
@@ -80,7 +80,7 @@ tooltip label {
 #group-qwen-asus {
   background: rgba(20, 20, 28, 0.92);
   border-radius: 8px;
-  padding: 2px 4px 2px 4px;
+  padding: 2px 3px 2px 3px;
   margin: 2px 4px;
 }
 
@@ -92,12 +92,12 @@ tooltip label {
 #custom-qwen-temp-icon,
 #custom-qwen-asus-icon {
   font-size: 16px;
-  min-width: 18px;
-  padding: 2px 2px;
+  min-width: 14px;
+  padding: 0 2px;
   border: none;
   background: transparent;
   border-radius: 0;
-  margin: 0 2px 0 4px;
+  margin: 0 1px 0 2px;
 }
 #custom-qwen-gpu-icon { color: #fab387; }
 #custom-qwen-cpu-icon { color: #a6e3a1; }
@@ -115,15 +115,16 @@ tooltip label {
 #custom-qwen-asus {
   font-weight: 500;
   border-radius: 6px;
-  padding: 2px 4px;
+  padding: 2px 3px;
   margin: 0;
-  min-width: 110px;
+  min-width: 115px;
   background: rgba(30, 30, 42, 0.85);
 }
 
 /* ─ Network info card: match other cards for uniform column width ── */
 #custom-qwen-wifi-info {
-  min-width: 110px;
+  min-width: 115px;
+  padding: 2px 3px;
 }
 
 /* GPU — peach */
@@ -171,18 +172,18 @@ tooltip label {
   background: rgba(20, 20, 28, 0.92);
   border: 1px solid rgba(148, 226, 213, 0.4);
   border-radius: 8px;
-  padding: 2px 4px 2px 4px;
+  padding: 2px 3px 2px 3px;
   margin: 0 4px;
 }
 #network-qwi {
   font-size: 16px;
-  min-width: 18px;
-  padding: 2px 2px;
+  min-width: 14px;
+  padding: 0 2px;
   border: none;
   background: transparent;
   border-radius: 0;
   color: #94e2d5;
-  margin: 0 2px 0 4px;
+  margin: 0 1px 0 2px;
 }
 #network-qwi.disconnected { color: #666; }
 #custom-qwen-wifi-info {

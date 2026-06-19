@@ -7,10 +7,15 @@
     "fixed-center": true,
     "modules-left": [
       "group/qwen-temp",
+      "group/qwen-temp-v2",
       "group/qwen-asus",
+      "group/qwen-asus-v2",
       "group/qwen-cpu",
+      "group/qwen-cpu-v2",
       "group/qwen-ram",
+      "group/qwen-ram-v2",
       "group/qwen-ssd",
+      "group/qwen-ssd-v2",
       "group/qwen-gpu",
       "group/qwen-network"
     ],

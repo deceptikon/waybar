@@ -118,14 +118,12 @@ tooltip label {
   padding: 2px 6px;
   margin: 0;
   min-width: 126px;
-  text-align: left;
   background: rgba(30, 30, 42, 0.85);
 }
 
 /* ─ Network info card: match other cards for uniform column width ── */
 #custom-qwen-wifi-info {
   min-width: 126px;
-  text-align: left;
 }
 
 /* GPU — peach */

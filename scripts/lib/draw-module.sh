@@ -1,7 +1,8 @@
 # draw-module.sh — Base template for two-row module info boxes
 #
-# Provides: draw_module <row1> <row2> <color_hex> [class]
+# Provides: draw_module <icon> <row1> <row2> <color_hex> [class]
 #
+#   icon      Glyph or emoji (e.g. "󰢮"). Rendered larger, on its own line.
 #   row1      Primary stat line (rendered in accent color)
 #   row2      Secondary stat line (default color)
 #   color_hex Accent color e.g. "#fab387"
@@ -11,15 +12,21 @@
 #
 # Usage:
 #   source "$(dirname "$0")/lib/draw-module.sh"
-#   draw_module "GPU 6%" "MEM 0.5G/15.7G" "#fab387" "good"
+#   draw_module "󰢮" "GPU 6%" "MEM 0.5G/15.7G" "#fab387" "good"
 
 draw_module() {
-  local row1="$1"
-  local row2="$2"
-  local color="$3"
-  local cls="${4:-good}"
+  local icon="$1"
+  local row1="$2"
+  local row2="$3"
+  local color="$4"
+  local cls="${5:-good}"
 
-  text=$(printf "<span fgcolor='%s'>%s</span>\n%s" "$color" "$row1" "$row2")
+  if [ -n "$icon" ]; then
+    text=$(printf "<span font_size='larger'>%s</span>\n<span fgcolor='%s'>%s</span>\n%s" \
+      "$icon" "$color" "$row1" "$row2")
+  else
+    text=$(printf "<span fgcolor='%s'>%s</span>\n%s" "$color" "$row1" "$row2")
+  fi
 
   jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'
 }

@@ -3,7 +3,10 @@ set -euo pipefail
 
 echo "TIMESTAMP $(date -Iseconds)"
 
-echo "CPU_RAW"
+echo "CPU_SNAP_1"
+cat /proc/stat
+sleep 0.3
+echo "CPU_SNAP_2"
 cat /proc/stat
 
 echo "MEM_RAW"

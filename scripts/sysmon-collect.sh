@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# sysmon-collect.sh — Run raw3 + mapper in one shot, emit JSON to stdout
-# Usage: bash scripts/sysmon-collect.sh        # one-shot
-#        watch -n 2 bash scripts/sysmon-collect.sh   # live
+# sysmon-collect.sh — Collect raw system data, emit labeled sections to stdout
+# Usage: bash scripts/sysmon-collect.sh | bash scripts/sysmon-mapper.sh
 
-DIR="$(cd "$(dirname "$0")" && pwd)"
-"$DIR/sysmon-raw3.sh" | "$DIR/sysmon-mapper.sh"
+exec "$(dirname "$0")/sysmon-raw3.sh"

@@ -4,7 +4,8 @@ set -euo pipefail
 # Usage: bash scripts/sysmon-raw3.sh | bash scripts/sysmon-mapper.sh
 
 section=""
-cpu_lines=""
+cpu1_lines=""
+cpu2_lines=""
 mem_lines=""
 disk_lines=""
 net_lines=""
@@ -15,17 +16,19 @@ fan_lines=""
 
 while IFS= read -r line; do
   case "$line" in
-    "CPU_RAW")   section="cpu";    continue ;;
-    "MEM_RAW")   section="mem";    continue ;;
-    "DISK_RAW")  section="disk";   continue ;;
-    "NET_RAW")   section="net";    continue ;;
+    "CPU_SNAP_1") section="cpu1";   continue ;;
+    "CPU_SNAP_2") section="cpu2";   continue ;;
+    "MEM_RAW")    section="mem";    continue ;;
+    "DISK_RAW")   section="disk";   continue ;;
+    "NET_RAW")    section="net";    continue ;;
     "SENSORS_JSON") section="sensors"; continue ;;
-    "GPU_RAW")   section="gpu";    continue ;;
+    "GPU_RAW")    section="gpu";    continue ;;
     "ASUS_PROFILE") section="asus"; continue ;;
-    "FAN_RAW")   section="fan";    continue ;;
+    "FAN_RAW")    section="fan";    continue ;;
   esac
   case "$section" in
-    cpu)      cpu_lines+="$line"$'\n' ;;
+    cpu1)     cpu1_lines+="$line"$'\n' ;;
+    cpu2)     cpu2_lines+="$line"$'\n' ;;
     mem)      mem_lines+="$line"$'\n' ;;
     disk)     disk_lines+="$line"$'\n' ;;
     net)      net_lines+="$line"$'\n' ;;
@@ -36,31 +39,28 @@ while IFS= read -r line; do
   esac
 done
 
-# ── CPU (/proc/stat) — proportional % from single snapshot ──
+# ── CPU — delta between two /proc/stat snaps ──
 cpu_avg=0; cpu_per_core="[]"
-if [ -n "$cpu_lines" ]; then
-  declare -a per_core=()
-  sum=0; count=0
-  while IFS=' ' read -r name user nice sys idle iowait irq softirq rest; do
-    [[ "$name" != cpu* ]] && continue
-    total=$((user + nice + sys + idle + iowait + irq + softirq))
-    [ "$total" -eq 0 ] && continue
-    used=$((user + nice + sys))
-    pct=$((used * 100 / total))
-    if [ "$name" = "cpu" ]; then
-      cpu_avg=$pct
-    else
-      per_core+=("$pct")
-      sum=$((sum + pct)); count=$((count + 1))
-    fi
-  done <<< "$cpu_lines"
-  [ "$count" -gt 0 ] && cpu_avg=$((sum / count))
-  cpu_per_core=$(printf '%s\n' "${per_core[@]}" | jq -Rs 'split("\n") | map(select(length>0) | tonumber)')
-  [ -z "$cpu_per_core" ] && cpu_per_core="[]"
+if [ -n "$cpu1_lines" ] && [ -n "$cpu2_lines" ]; then
+  data=$(awk '
+    FNR==NR { tot1[$1]=$2+$3+$4+$5+$6+$7+$8; idle1[$1]=$5; next }
+    /^cpu[0-9]+ / {
+      n=$1; dt=$2+$3+$4+$5+$6+$7+$8-tot1[n]; di=$5-idle1[n];
+      if (dt<=0) dt=1;
+      p=int((dt-di)*100/dt);
+      if (p<0) p=0; if (p>100) p=100;
+      printf "core %d\n", p;
+      sum+=p; cnt++;
+    }
+    END { if (cnt>0) printf "avg %d\n", int(sum/cnt); else printf "avg 0\n" }
+  ' <(printf '%s' "$cpu1_lines") <(printf '%s' "$cpu2_lines"))
+  cpu_avg=$(awk '/^avg /{print $2}' <<< "$data")
+  cpu_per_core=$(awk '/^core /{print $2}' <<< "$data" | jq -Rs 'split("\n") | map(select(length>0) | tonumber)')
+  : "${cpu_avg:=0}"; : "${cpu_per_core:=[]}"
 fi
 
 # ── RAM (/proc/meminfo) ──
-ram_used_kb=0; ram_total_kb=0; ram_avail_kb=0; ram_used_pct=0
+ram_used_kb=0; ram_total_kb=0; ram_avail_kb=0; ram_used_pct=0; swap_used_kb=0; swap_total_kb=0; swap_pct=0
 if [ -n "$mem_lines" ]; then
   ram_total_kb=$(awk '/^MemTotal:/{print $2}' <<< "$mem_lines")
   ram_avail_kb=$(awk '/^MemAvailable:/{print $2}' <<< "$mem_lines")
@@ -69,13 +69,13 @@ if [ -n "$mem_lines" ]; then
   swap_total_kb=$(awk '/^SwapTotal:/{print $2}' <<< "$mem_lines")
   swap_free_kb=$(awk '/^SwapFree:/{print $2}' <<< "$mem_lines")
   swap_used_kb=$((swap_total_kb - swap_free_kb))
-  swap_pct=0; [ "$swap_total_kb" -gt 0 ] && swap_pct=$((swap_used_kb * 100 / swap_total_kb))
+  [ "$swap_total_kb" -gt 0 ] && swap_pct=$((swap_used_kb * 100 / swap_total_kb))
 fi
 
 # ── Disk (/proc/diskstats) — cumulative sectors ──
 disk_read_sectors=0; disk_write_sectors=0
 if [ -n "$disk_lines" ]; then
-  read -r disk_read_sectors disk_write_sectors <<< "$(awk '$3 == "nvme0n1" {print $6+0, $12+0}' <<< "$disk_lines")"
+  read -r disk_read_sectors disk_write_sectors <<< "$(awk '$3 == "nvme0n1" {print $6+0, $10+0}' <<< "$disk_lines")"
 fi
 
 # ── Net (/proc/net/dev) — cumulative bytes ──

@@ -29,65 +29,86 @@ scripts/                # Custom module scripts (bash)
 scripts/lib/            # Shared libraries (draw-module.sh)
 ```
 
-## sysmon-collect Pipeline
-
-Single-pass data collection pipeline for all monitoring modules.
+## Data Flow — sysmon Pipeline
 
 ```
-sysmon-raw3.sh          # Collector: reads /proc/* + sensors + sysfs (two CPU snaps)
-        │ pipe
-        ▼
-sysmon-mapper.sh        # Parser: labeled sections → unified JSON tree (+ CPU delta)
-        │ pipe
-        ▼
-sysmon-format.sh        # Formatter: JSON → 5 Waybar-ready JSON lines (GPU/CPU/RAM/SSD/TEMP)
+sysmon-poller.sh (background daemon, wakes every 2s)
+  │
+  ├─ sysmon-collect.sh     # reads /proc/* + /sys/* + sensors-j — labeled lines to stdout
+  │        │ pipe
+  │        ▼
+  └─ sysmon-mapper.sh      # parses labeled sections → unified JSON → /tmp/sysmon.json
+
+/tmp/sysmon.json ← written atomically every 2s by poller
+
+  6 waybar modules (each interval: 2, return-type: json):
+    custom/qwen-<metric> → sysmon-frame.sh <metric>
+      │ cat /tmp/sysmon.json
+      │ jq .<metric>
+      │ draw_module "" "$row1" "$row2" $accent $class
+      │ → Waybar JSON {text: "<span fgcolor='accent'>row1\nrow2</span>", class: "good"}
+      │
+      └─ wrapped in group/qwen-<metric> — CSS provides visual box (border bg radius)
 ```
 
-| Command | Description |
-|---|---|
-| `bash scripts/sysmon-collect.sh \| bash scripts/sysmon-mapper.sh` | Full pipeline to JSON |
-| `bash scripts/sysmon-collect.sh \| bash scripts/sysmon-mapper.sh \| bash scripts/sysmon-format.sh` | Full to formatted output |
-| `watch -n 2 'bash scripts/sysmon-collect.sh \| bash scripts/sysmon-mapper.sh \| bash scripts/sysmon-format.sh'` | Live refresh |
+| Source | Read by | → JSON key |
+|---|---|---|
+| `/proc/stat` (two snaps, 0.3s delta) | `sysmon-collect.sh` | `cpu.avg`, `cpu.per_core[]` |
+| `/proc/meminfo` | `sysmon-collect.sh` | `ram.*` |
+| `/sys/class/drm/card*/device/gpu_busy_percent` | `sysmon-collect.sh` | `gpu.busy_pct` |
+| `/sys/class/drm/card*/device/mem_info_vram_*` | `sysmon-collect.sh` | `gpu.mem_used`, `gpu.mem_total` |
+| `/sys/class/drm/card*/.../pp_dpm_sclk` | `sysmon-collect.sh` | `gpu.freq` |
+| `/sys/class/powercap/intel-rapl:0/power_now` | `sysmon-collect.sh` | `gpu.power_w` |
+| `sensors -j` | `sysmon-collect.sh` | `gpu.temp_c`, `temp.*` |
+| `/sys/block/nvme0n1/stat` | `sysmon-collect.sh` | `disk.*` |
+| `df /` | `sysmon-frame.sh ssd` (live, not cached) | N/A |
+| `/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy` | `sysmon-collect.sh` | `asus.profile` |
 
 ## draw-module.sh Library
 
-Located at `scripts/lib/draw-module.sh`. Called by all info scripts:
+`scripts/lib/draw-module.sh` — two functions:
+
+- **`draw_module <icon> <row1> <row2> <color_hex> [class]`** — Outputs Waybar JSON.
+  When `icon` is empty: plain `<span fgcolor='color'>row1\nrow2</span>` (no box art).
+  When `icon` is set: draws a unicode box table (used by `pango-boxes` branch).
+
+- **`draw_box <line1> [<line2> ...]`** — Wraps lines in a unicode box, returns Pango text only (no JSON). Unused in current branch.
+
+## sysmon-icon.sh — Icon Output
+
+One-liner per metric, outputs Waybar JSON with just the icon glyph:
 
 ```bash
-source "$(dirname "$0")/lib/draw-module.sh"
-draw_module <icon> <row1> <row2> <color_hex> [class]
+~/.config/waybar/scripts/sysmon-icon.sh gpu   # → {"text":" 󰢮 ","class":"good"}
 ```
 
-Produces 3-line Pango text (icon + two data rows) with accent color and Waybar state class.
+Each icon module has `interval: "once"` — Waybar runs it once and never re-polls (icon never changes).
+CSS provides the accent color (`#custom-qwen-gpu-icon { color: #fab387; }`).
 
-## sysmon-frame.sh — Unified Module
+## sysmon-frame.sh — Metric Formatter
 
-A single script replaces all separate monitor modules. Called with metric as arg:
+Reads `/tmp/sysmon.json` and outputs Waybar JSON for one metric.
 
 ```bash
-~/.config/waybar/scripts/sysmon-frame.sh gpu
+~/.config/waybar/scripts/sysmon-frame.sh gpu   # → {text, class}
 ```
 
-Waybar config uses `custom/sysmon_frame#<metric>` variants:
-```json
-"custom/sysmon_frame#gpu": {
-  "exec": "~/.config/waybar/scripts/sysmon-frame.sh gpu",
-  "interval": 2, "return-type": "json"
-}
+Each group contains two modules side by side:
+```
+custom/qwen-<metric>-icon  ← sysmon-icon.sh  (big icon, fixed accent color)
+custom/qwen-<metric>       ← sysmon-frame.sh (stats text, state-dependent card)
 ```
 
-Each variant gets its own CSS selector (`#custom-sysmon_frame-gpu`) with colored border.
+| Metric | Icon | Accent | CSS icon | CSS info |
+|---|---|---|---|---|
+| `gpu` | 󰢮 | `#fab387` peach | `#custom-qwen-gpu-icon` | `#custom-qwen-gpu` |
+| `cpu` | 󰍛 | `#a6e3a1` green | `#custom-qwen-cpu-icon` | `#custom-qwen-cpu` |
+| `ram` |  | `#89b4fa` blue | `#custom-qwen-ram-icon` | `#custom-qwen-ram` |
+| `ssd` | 󰋊 | `#a6e3a1` green | `#custom-qwen-ssd-icon` | `#custom-qwen-ssd` |
+| `temp` | 󰔐 | `#f38ba8` red | `#custom-qwen-temp-icon` | `#custom-qwen-temp` |
+| `asus` |  | `#94e2d5` teal | `#custom-qwen-asus-icon` | `#custom-qwen-asus` |
 
-| Metric | Icon | Accent | CSS selector |
-|---|---|---|---|
-| `gpu` | 󰢮 | `#fab387` peach | `#custom-sysmon_frame-gpu` |
-| `cpu` | 󰍛 | `#a6e3a1` green | `#custom-sysmon_frame-cpu` |
-| `ram` |  | `#89b4fa` blue | `#custom-sysmon_frame-ram` |
-| `ssd` | 󰋊 | `#a6e3a1` green | `#custom-sysmon_frame-ssd` |
-| `temp` | 󰔐 | `#f38ba8` red | `#custom-sysmon_frame-temp` |
-| `asus` |  | `#94e2d5` teal | `#custom-sysmon_frame-asus` |
-
-`draw_module` draws a unicode box table with icon in left column (merged rows) and data in right column. Pango markup inside cells preserves formatting. CSS is transparent — the box is entirely Pango-drawn.
+**Key rule:** modules never read hardware — only the cache file.
 
 ## Sysmon JSON Schema
 

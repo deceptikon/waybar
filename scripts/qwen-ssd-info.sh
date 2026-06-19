@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # SSD info tile — compact visual usage bar + live I/O speeds
 # Layout: [bar 19%] / [↑read ↓write]

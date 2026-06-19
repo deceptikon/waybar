@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Net info — two-row output: SSID (bold large) + speeds (small italic below)
 wifi_info=$(nmcli -t -f active,ssid,signal,device dev wifi 2>/dev/null \

@@ -26,7 +26,39 @@ style.css               # GTK CSS for horizontal bars
 style-new.css           # GTK CSS for vertical bar
 STRUCT.md               # Module hierarchy documentation
 scripts/                # Custom module scripts (bash)
+scripts/lib/            # Shared libraries (draw-module.sh)
 ```
+
+## sysmon-collect Pipeline
+
+Single-pass data collection pipeline for all monitoring modules.
+
+```
+sysmon-raw3.sh          # Collector: reads /proc/* + sensors + sysfs
+        │ pipe
+        ▼
+sysmon-mapper.sh        # Parser: labeled sections → unified JSON tree
+        │ pipe
+        ▼
+module scripts          # e.g. gpu-info.sh: jq extract + draw_module
+```
+
+| Command | Description |
+|---|---|
+| `bash scripts/sysmon-collect.sh` | One-shot: raw3 → mapper → JSON to stdout |
+| `watch -n 2 bash scripts/sysmon-collect.sh` | Live refresh |
+| `bash scripts/sysmon-raw3.sh \| bash scripts/sysmon-mapper.sh` | Step by step |
+
+## draw-module.sh Library
+
+Located at `scripts/lib/draw-module.sh`. Called by all info scripts:
+
+```bash
+source "$(dirname "$0")/lib/draw-module.sh"
+draw_module <icon> <row1> <row2> <color_hex> [class]
+```
+
+Produces 3-line Pango text (icon + two data rows) with accent color and Waybar state class.
 
 Both configs are loaded as separate waybar instances via sway's `$waybar-start` variable (`~/.config/sway/config:495`).
 Reload both at once with `$mod+Shift+w`.

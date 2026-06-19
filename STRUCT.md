@@ -1,290 +1,53 @@
 # Waybar Modules Structure
 
-## Overview
-This document describes the modular structure of Waybar configuration, organized by groups and individual modules.
+## Bars
 
-```yaml
-modules:
-  - name: bar-horiz
-    position: top
-    height: 32px
-    modules:
-      left:
-        - group/hardware
-        - group/temp-group
-        - group/audio
-      center:
-        - sway/window
-        - group/title
-      right:
-        - group/music
-        - group/bright
-        - group/switches
-        - group/bat-group
-        - user
-        - tray
+Only `bar-vert` (vertical, right edge) is active, defined in `config-vertical`.
 
-  - name: bar-vert
-    position: right
-    width: 62px
-    modules:
-      center:
-        - sway/workspaces
-      left:
-        - clock
-        - group/title
-        - power-profiles-daemon
-      right:
-        - custom/powerbtn
-        - custom/vpn
-        - custom/checkupdates
-        - idle_inhibitor
-        - custom/dunst
-        - custom/recorder
-        - custom/kbd-auto
-        - custom/lang
+### bar-vert layout
 
-groups:
-  group/switches:
-    orientation: horizontal
-    modules:
-      - bluetooth#lite
-      - network#lite
+| Position | Modules | Defined In |
+|---|---|---|
+| left | `group/qwen-temp`, `group/qwen-asus`, `group/qwen-cpu`, `group/qwen-ram`, `group/qwen-ssd`, `group/qwen-network` | `modules-monitor-group.json` |
+| center | `clock`, `group/tray`, `custom/lang`, `privacy` | inline in `config-vertical` |
+| right | `idle_inhibitor`, `power-profiles-daemon`, `custom/dunst`, `custom/recorder`, `custom/checkupdates`, `custom/fnlock`, `custom/backlight`, `custom/ext-display` | `modules-ux-group.json` |
 
-  group/base-switches:
-    orientation: horizontal
-    modules:
-      - bluetooth#lite
-      - network#lite
+## Module Groups (modules-monitor-group.json)
 
-  group/hardware:
-    orientation: horizontal
-    modules:
-      - group/subcpu
-      - memory
-      - custom/disk-io
-      - load
+Each monitor group follows an **icon + info** pattern using a horizontal group:
 
-  group/temp-group:
-    orientation: horizontal
-    modules:
-      - group/temperatura
-      - custom/fan
-      - custom/fan2
-      - custom/temp-detailed
-
-  group/temperatura:
-    orientation: horizontal
-    modules:
-      - temperature
-      - custom/fanlabel
-
-  group/power:
-    orientation: horizontal
-    modules:
-      - battery
-      - custom/asus-profile
-
-  group/bat-group:
-    orientation: horizontal
-    modules:
-      - group/power
-      - custom/battery-info
-      - custom/acpi-detailed
-      - custom/power-draw
-
-  group/subcpu:
-    orientation: horizontal
-    modules:
-      - cpu
-      - custom/ram
-
-  group/audio:
-    orientation: horizontal
-    modules:
-      - pulseaudio
-      - pulseaudio/slider
-
-  group/bright:
-    orientation: horizontal
-    modules:
-      - backlight
-      - backlight/slider
-
-  group/music:
-    orientation: horizontal
-    modules:
-      - mpris#cassette
-      - mpris
-
-  tray:
-    orientation: horizontal
-    modules:
-      - tray
-
-  group/title:
-    orientation: vertical
-    modules:
-      - sway/mode
-      - privacy
-
-  clock:
-    format: " {:%H:%M\n%d.%m.%y}"
-
-  user:
-    format: "{user} (up {work_d} days ↑)"
-
-  sway/window:
-    format: " {}"
-
-  sway/workspaces:
-    orientation: horizontal
-    modules:
-      - sway/workspaces
-
-  bluetooth:
-    format: " {icon} {status}"
-
-  bluetooth#lite:
-    format: " {icon} "
-
-  network:
-    format: "󰈀 {ifname}"
-
-  network#lite:
-    format: " 󰈀 {ifname}"
-
-  cpu:
-    format: "  <sub>CPU</sub> {usage}% "
-
-  custom/ram:
-    format: "   {} "
-
-  custom/fanlabel:
-    format: "   "
-
-   memory:
-     format: "free:{avail:0.1f}G used:{used:0.1f}G"
-
-   custom/disk-io:
-     format: " 󰋊 <sub>SSD:</sub> {}"
-
-   custom/cpu-indicator:
-     format: "{}"
-     exec: "~/.config/waybar/scripts/cpu-indicator.sh"
-     interval: 2
-     return-type: "json"
-
-   custom/ram-indicator:
-     format: "{}"
-     exec: "~/.config/waybar/scripts/ram-indicator.sh"
-     interval: 2
-     return-type: "json"
-
-   custom/io-indicator:
-     format: "{}"
-     exec: "~/.config/waybar/scripts/io-indicator.sh"
-     interval: 2
-     return-type: "json"
-
-   custom/network-indicator:
-     format: "{}"
-     exec: "~/.config/waybar/scripts/network-indicator.sh"
-     interval: 2
-     return-type: "json"
-
-  temperature:
-    format: " {icon} {temperatureC}°C "
-
-  custom/fan:
-    format: "{}<sub>RPM</sub> "
-
-  custom/fan2:
-    format: ": 󰈐 {}<sub>RPM</sub> "
-
-  custom/temp-detailed:
-    format: " {} "
-
-  battery:
-    format: " {icon} "
-    format-charging: "  {icon} "
-
-  custom/battery-info:
-    format: " {}"
-
-  custom/acpi-detailed:
-    format: "󰚥 {}"
-
-  custom/power-draw:
-    format: " {}"
-
-  custom/asus-profile:
-    format: " {} "
-
-  pulseaudio:
-    format: " {icon}"
-
-  pulseaudio/slider:
-    format: "SUSU {}"
-
-  backlight:
-    format: " 󰃟"
-
-  backlight/slider:
-    format: " {}"
-
-  mpris:
-    format: " {status_icon} {dynamic}♫  "
-
-  mpris#cassette:
-    format: " 󰧔 <small>{status_icon}</small> {position}"
-
-  custom/powerbtn:
-    format: "󰐥"
-
-  custom/vpn:
-    format: ""
-
-  custom/checkupdates:
-    format: " {}"
-
-  idle_inhibitor:
-    format: "{icon}"
-
-  custom/dunst:
-    format: " {}"
-
-  custom/recorder:
-    format: "{}"
-
-  custom/kbd-auto:
-    format: "{}"
-
-  custom/fn_lock:
-    exec: "cat /tmp/fn_lock_state"
-    return-type: ""
-    format: "{}"
-    format-icons:
-      "0": "󰘶 Fn"
-      "1": "󰘶 Media"
-    exec-if: "test -f /tmp/fn_lock_state"
-    signal: 8
-    on-click: "/usr/local/bin/toggle_fn_lock.sh"
-
-  custom/ext-display:
-    exec: "~/.config/waybar/scripts/toggle-ext-display.sh refresh"
-    return-type: "json"
-    format: "{}"
-    on-click: "~/.config/waybar/scripts/toggle-ext-display.sh"
-    signal: 11
-    tooltip: "Toggles external HDMI-A-1 display on/off"
-
-  custom/lang:
-    format: "{}"
-
-  custom/asus-profile:
-    format: " {} "
-
-  clock:
-    format: " {:%H:%M\n%d.%m.%y}"
 ```
+group/qwen-<name>  (horizontal group)
+  ├── custom/qwen-<name>-icon  (static glyph, no exec, tooltip: false)
+  └── custom/qwen-<name>-info  (script, return-type: json, interval)
+```
+
+| Group | Icon Glyph | Info Script | Interval | Accent Color |
+|---|---|---|---|---|
+| `qwen-temp` |  | `qwen-temp-info.sh` | 3s | pink |
+| `qwen-asus` |  | `qwen-asus-info.sh` | 2s | teal |
+| `qwen-cpu` |  | `qwen-cpu-info.sh` | 5s | green |
+| `qwen-ram` |  | `qwen-ram-info.sh` | 5s | blue |
+| `qwen-ssd` |  | `qwen-ssd-info.sh` | 5s | green |
+| `qwen-network` | `network#qwi` (built-in) | `qwen-wifi-info.sh` | 10s | teal |
+
+The network group is special: it uses Waybar's built-in `network#qwi` as the icon (with signal-based icons and tooltip) plus `custom/qwen-wifi-info` for SSID + speed details.
+
+## UX Modules (modules-ux-group.json)
+
+Right-side toggle/indicator modules — all single-icon with click actions.
+
+## Scripts Directory
+
+| Script | Used by | Description |
+|---|---|---|
+| `qwen-cpu-info.sh` | `custom/qwen-cpu-info` | 16-core sparkline bars + avg% |
+| `qwen-ram-info.sh` | `custom/qwen-ram-info` | Used/total RAM + swap + dots bar |
+| `qwen-ssd-info.sh` | `custom/qwen-ssd-info` | Usage bar + live I/O speeds |
+| `qwen-temp-info.sh` | `custom/qwen-temp-info` | CPU temp + fan RPM |
+| `qwen-wifi-info.sh` | `custom/qwen-wifi-info` | SSID + download/upload speeds |
+| `qwen-asus-info.sh` | `custom/qwen-asus-info` | ASUS profile (Quiet/Balanced/Performance) |
+| `qwen-system-info.sh` | — | Unused (superseded) |
+| `qwen-system-icon.sh` | — | Unused (superseded) |
+| `qwen-ram-icon.sh` | — | Unused (superseded) |
+| `archived/qwen-network.sh` | — | Archived predecessor |

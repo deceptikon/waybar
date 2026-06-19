@@ -39,7 +39,6 @@ fi
 
 # Overall class
 if [ "$temp_class" = "critical" ] || [ "$fan_class" = "critical" ]; then overall_class="critical"
-elif [ "$temp_class" = "hot" ] || [ "$fan_class" = "hot" ]; then overall_class="warning"
 elif [ "$temp_class" = "warning" ] || [ "$fan_class" = "warning" ]; then overall_class="warning"
 elif [ "$temp_class" = "medium" ] || [ "$fan_class" = "medium" ]; then overall_class="medium"
 else overall_class="good"; fi

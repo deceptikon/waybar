@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 # Asus profile info tile
 
 profile=$(asusctl profile get | awk '/Active profile/ {print $NF}')

@@ -11,6 +11,7 @@
       "group/qwen-cpu",
       "group/qwen-ram",
       "group/qwen-ssd",
+      "group/qwen-gpu",
       "group/qwen-network"
     ],
     "modules-center": [

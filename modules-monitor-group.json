@@ -123,5 +123,23 @@
     "return-type": "json",
     "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
     "signal": 10
+  },
+  "group/qwen-gpu": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-gpu-icon",
+      "custom/qwen-gpu-info"
+    ]
+  },
+  "custom/qwen-gpu-icon": {
+    "format": " \uef94 ",
+    "tooltip": false
+  },
+  "custom/qwen-gpu-info": {
+    "exec": "~/.config/waybar/scripts/gpu-info.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json",
+    "on-click": "nvtop"
   }
 }

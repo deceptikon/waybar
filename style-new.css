@@ -97,11 +97,6 @@ tooltip label {
 }
 
 #custom-qwen-wifi-info {
-  font-size: 12px;
-  font-weight: 500;
-  min-height: 32px;
-  padding: 2px 8px;
-  border-radius: 6px;
   border: 1px solid rgba(148, 226, 213, 0.4);
   background: rgba(30, 30, 42, 0.85);
   color: #94e2d5;
@@ -136,11 +131,6 @@ tooltip label {
 #custom-qwen-ssd-icon.medium   { color: #f9e2af; }
 
 #custom-qwen-ssd-info {
-  font-size: 12px;
-  font-weight: 500;
-  /* min-width: 100px; */
-  padding: 2px 8px;
-  border-radius: 6px;
   border: 1px solid rgba(166, 227, 161, 0.4);
   background: rgba(30, 30, 42, 0.85);
   color: #a6e3a1;
@@ -171,11 +161,6 @@ tooltip label {
 }
 
 #custom-qwen-cpu-info {
-  font-size: 11px;
-  font-weight: 500;
-  /* min-width: 100px; */
-  padding: 1px 4px 1px 4px;
-  border-radius: 6px;
   border: 1px solid rgba(166, 227, 161, 0.4);
   background: rgba(30, 30, 42, 0.85);
   color: #a6e3a1;
@@ -206,11 +191,6 @@ tooltip label {
 }
 
 #custom-qwen-ram-info {
-  font-size: 10px;
-  font-weight: 500;
-  /* min-width: 100px; */
-  padding: 1px 2px 1px 2px;
-  border-radius: 6px;
   border: 1px solid rgba(137, 180, 250, 0.4);
   background: rgba(30, 30, 42, 0.85);
   color: #89b4fa;
@@ -242,11 +222,6 @@ tooltip label {
 }
 
 #custom-qwen-temp-info {
-  font-size: 11px;
-  font-weight: 500;
-  min-height: 32px;
-  padding: 2px 8px;
-  border-radius: 6px;
   border: 1px solid rgba(243, 139, 168, 0.4);
   background: rgba(30, 30, 42, 0.85);
   color: #f38ba8;
@@ -254,6 +229,35 @@ tooltip label {
 #custom-qwen-temp-info.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); color: #f9e2af; }
 #custom-qwen-temp-info.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); color: #fab387; }
 #custom-qwen-temp-info.critical { background: rgba(243, 139, 168, 0.18); border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
+
+/* ── GPU group — peach accent ── */
+#group-qwen-gpu {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(250, 179, 135, 0.4);
+  border-radius: 8px;
+  padding: 2px 4px 2px 6px;
+  margin: 0 4px;
+}
+
+#custom-qwen-gpu-icon {
+  font-size: 16px;
+  min-width: 24px;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  color: #fab387;
+  margin-right: 2px;
+}
+
+#custom-qwen-gpu-info {
+  border: 1px solid rgba(250, 179, 135, 0.4);
+  background: rgba(30, 30, 42, 0.85);
+  color: #fab387;
+}
+#custom-qwen-gpu-info.medium  { background: rgba(249, 226, 175, 0.12); border-color: rgba(249, 226, 175, 0.4); color: #f9e2af; }
+#custom-qwen-gpu-info.warning { background: rgba(250, 179, 135, 0.15); border-color: rgba(250, 179, 135, 0.5); color: #fab387; }
+#custom-qwen-gpu-info.critical { background: rgba(243, 139, 168, 0.18); border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
 
 /* ── ASUS group — teal/green accent ── */
 #group-qwen-asus {
@@ -276,10 +280,6 @@ tooltip label {
 }
 
 #custom-qwen-asus-info {
-  font-size: 11px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 6px;
   border: 1px solid rgba(148, 226, 213, 0.4);
   background: rgba(30, 30, 42, 0.85);
   color: #94e2d5;
@@ -292,6 +292,7 @@ tooltip label {
 .bar-vert #group-qwen-cpu,
 .bar-vert #group-qwen-ram,
 .bar-vert #group-qwen-ssd,
+.bar-vert #group-qwen-gpu,
 .bar-vert #group-qwen-network,
 .bar-vert #group-qwen-asus {
   min-width: 60px;
@@ -305,11 +306,12 @@ tooltip label {
 #custom-qwen-ssd-info,
 #custom-qwen-temp-info,
 #custom-qwen-wifi-info,
-#custom-qwen-asus-info {
+#custom-qwen-asus-info,
+#custom-qwen-gpu-info {
   font-size: 11px;
   font-weight: 500;
   min-height: 32px;
-  padding: 2px 6px;
+  padding: 2px 8px;
   border-radius: 6px;
   min-width: 80px;
 }
@@ -320,7 +322,8 @@ tooltip label {
 #custom-qwen-ram-icon,
 #custom-qwen-ssd-icon,
 #custom-qwen-temp-icon,
-#custom-qwen-asus-icon {
+#custom-qwen-asus-icon,
+#custom-qwen-gpu-icon {
   padding-top: 4px;
   min-width: 22px;
 }
@@ -330,6 +333,7 @@ tooltip label {
 .bar-vert #group-qwen-cpu { border-color: rgba(166, 227, 161, 0.5); }
 .bar-vert #group-qwen-ram { border-color: rgba(137, 180, 250, 0.5); }
 .bar-vert #group-qwen-ssd { border-color: rgba(166, 227, 161, 0.5); }
+.bar-vert #group-qwen-gpu { border-color: rgba(250, 179, 135, 0.5); }
 .bar-vert #group-qwen-network { border-color: rgba(148, 226, 213, 0.5); }
 .bar-vert #group-qwen-asus { border-color: rgba(148, 226, 213, 0.5); }
 

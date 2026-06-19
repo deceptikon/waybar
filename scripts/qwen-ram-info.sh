@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 # RAM — inline capacity bar  usedG · · · totalG + swap
 
 read_meminfo() {
@@ -23,6 +24,7 @@ ug=$((used / 1048576))
 free_gb=$((ma / 1048576))
 
 seg_total=8; seg_used=$((pct * seg_total / 100))
+[ "$seg_used" -eq 0 ] && [ "$used" -gt 0 ] && seg_used=1
 
 # bar=""
 bax=$(printf "<span fgcolor='#89b4fa'>%dG</span> <span fgcolor='#f8f8f8'>/ %dG</span>" "$ug" "$free_gb")

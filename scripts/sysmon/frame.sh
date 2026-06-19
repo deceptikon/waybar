@@ -38,7 +38,7 @@ case "$metric" in
     avg=$(jq -r '.cpu.avg // 0' <<< "$data")
     tc=$(jq -r '.temp.cpu_c // 0' <<< "$data")
     cls="good"; [ "$avg" -ge 40 ] && cls="medium"; [ "$avg" -ge 70 ] && cls="warning"; [ "$avg" -ge 90 ] && cls="critical"
-    bar=""; for ((c=0; c<16; c++)); do
+    bar1=""; bar2=""; for ((c=0; c<16; c++)); do
       p=$(jq -r ".cpu.per_core[$c] // -1" <<< "$data")
       if [ "$p" -ge 90 ]; then col="#f38ba8"
       elif [ "$p" -ge 70 ]; then col="#fab387"
@@ -46,10 +46,11 @@ case "$metric" in
       elif [ "$p" -ge 15 ]; then col="#89b4fa"
       elif [ "$p" -ge 0 ]; then col="#383838"
       else col="#1e1e2a"; fi
-      bar+="<span fgcolor=\"$col\">▓</span>"
+      if [ "$c" -lt 8 ]; then bar1+="<span fgcolor=\"$col\">▓</span>"
+      else bar2+="<span fgcolor=\"$col\">▓</span>"; fi
     done
     tc_fmt=$(printf "%.0f" "$tc")
-    draw_module "" "${bar}" "<span fgcolor=\"#a6e3a1\"><b>AVG ${avg}%</b></span>  󰔐 ${tc_fmt}°C" "$ACCENT" "$cls"
+    draw_module "" "${bar1}"$'\n'"   ${bar2}" "<span fgcolor=\"#a6e3a1\"><b>AVG ${avg}%</b></span>  󰔐 ${tc_fmt}°C" "$ACCENT" "$cls"
     ;;
   ram)
     ACCENT="#89b4fa"
@@ -81,8 +82,8 @@ case "$metric" in
     ACCENT="#94e2d5"
     profile=$(jq -r '.asus.profile // "unknown"' <<< "$data")
     f1=$(jq -r '.temp.fan1 // 0' <<< "$data")
-    case "$profile" in Quiet) r1="ECO"; r2="Quiet"; cls="good" ;; Balanced) r1="BAL"; r2="Balanced"; cls="medium" ;; Performance) r1="PERF"; r2="Performance"; cls="warning" ;; *) r1="$profile"; r2=""; cls="good" ;; esac
-    draw_module "" "<b>${r1}</b>" "${r2}  󰈐 ${f1} RPM" "$ACCENT" "$cls"
+    case "$profile" in Quiet) r="Quiet"; cls="good" ;; Balanced) r="Balanced"; cls="medium" ;; Performance) r="Performance"; cls="warning" ;; *) r="$profile"; cls="good" ;; esac
+    draw_module "" "<b>${r}</b>" "󰈐 ${f1} RPM" "$ACCENT" "$cls"
     ;;
   *)
     echo "Unknown metric: $metric" >&2

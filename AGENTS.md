@@ -60,18 +60,34 @@ draw_module <icon> <row1> <row2> <color_hex> [class]
 
 Produces 3-line Pango text (icon + two data rows) with accent color and Waybar state class.
 
-## v2 Pipeline-based Modules
+## sysmon-frame.sh — Unified Module
 
-| Script | Source | Module |
-|---|---|---|
-| `scripts/gpu-info.sh` | `collect \| mapper → jq` | `custom/qwen-gpu-info` (fixed) |
-| `scripts/qwen-cpu-info-v2.sh` | `collect \| mapper \| format → grep CPU` | `custom/qwen-cpu-info-v2` |
-| `scripts/qwen-ram-info-v2.sh` | `collect \| mapper \| format → grep RAM` | `custom/qwen-ram-info-v2` |
-| `scripts/qwen-ssd-info-v2.sh` | `collect \| mapper \| format → grep SSD` | `custom/qwen-ssd-info-v2` |
-| `scripts/qwen-temp-info-v2.sh` | `collect \| mapper \| format → grep TEMP` | `custom/qwen-temp-info-v2` |
-| `scripts/qwen-asus-info-v2.sh` | `collect \| mapper → jq .asus.profile` | `custom/qwen-asus-info-v2` |
+A single script replaces all separate monitor modules. Called with metric as arg:
 
-Each v2 script runs `sysmon-collect.sh | sysmon-mapper.sh` (once per call) and formats via `draw_module` or custom jq. CSS selectors are `#group-qwen-*-v2` and `#custom-qwen-*-info-v2`.
+```bash
+~/.config/waybar/scripts/sysmon-frame.sh gpu
+```
+
+Waybar config uses `custom/sysmon_frame#<metric>` variants:
+```json
+"custom/sysmon_frame#gpu": {
+  "exec": "~/.config/waybar/scripts/sysmon-frame.sh gpu",
+  "interval": 2, "return-type": "json"
+}
+```
+
+Each variant gets its own CSS selector (`#custom-sysmon_frame-gpu`) with colored border.
+
+| Metric | Icon | Accent | CSS selector |
+|---|---|---|---|
+| `gpu` | 󰢮 | `#fab387` peach | `#custom-sysmon_frame-gpu` |
+| `cpu` | 󰍛 | `#a6e3a1` green | `#custom-sysmon_frame-cpu` |
+| `ram` |  | `#89b4fa` blue | `#custom-sysmon_frame-ram` |
+| `ssd` | 󰋊 | `#a6e3a1` green | `#custom-sysmon_frame-ssd` |
+| `temp` | 󰔐 | `#f38ba8` red | `#custom-sysmon_frame-temp` |
+| `asus` |  | `#94e2d5` teal | `#custom-sysmon_frame-asus` |
+
+`draw_module` wraps output in `<span fgcolor='$accent'>`, CSS draws the box (border + bg).
 
 ## Sysmon JSON Schema
 

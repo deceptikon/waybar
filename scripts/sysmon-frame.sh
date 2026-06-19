@@ -15,6 +15,7 @@ fmt_gb() { awk "BEGIN{printf \"%.0f\", $1/1048576}"; }
 fmt_mb() { awk "BEGIN{printf \"%.0f\", $1/1048576}"; }
 fmt_io() { local b=$1; if [ "$b" -ge 1073741824 ]; then awk "BEGIN{printf\"%.1fG\",$b/1073741824}"; elif [ "$b" -ge 1048576 ]; then awk "BEGIN{printf\"%.0fM\",$b/1048576}"; elif [ "$b" -ge 1024 ]; then awk "BEGIN{printf\"%.0fK\",$b/1024}"; else echo "${b}B"; fi; }
 worst_cls() { local a="$1" b="$2"; for c in "critical" "warning" "medium" "good"; do [ "$a" = "$c" ] && { echo "$c"; return; }; [ "$b" = "$c" ] && { echo "$c"; return; }; done; echo "good"; }
+state_color() { case "$1" in critical) echo "#f38ba8" ;; warning) echo "#fab387" ;; medium) echo "#f9e2af" ;; *) echo "$2" ;; esac; }
 
 # ── Single-metric dispatch ──
 single_metric() {
@@ -88,32 +89,25 @@ single_metric() {
 
 # ── All-metrics unified output ──
 all_metrics() {
-  # Extract all data
   local gpu_pct=$(jq -r '.gpu.busy_pct // 0' <<< "$data")
   local gpu_temp=$(jq -r '.gpu.temp_c // 0' <<< "$data")
   local gpu_freq=$(jq -r '.gpu.freq // 0' <<< "$data")
   local gpu_pw=$(jq -r '.gpu.power_w // 0' <<< "$data")
   local gpu_mu=$(jq -r '.gpu.mem_used // 0' <<< "$data")
   local gpu_mt=$(jq -r '.gpu.mem_total // 0' <<< "$data")
-
   local cpu_avg=$(jq -r '.cpu.avg // 0' <<< "$data")
-
   local ram_ukb=$(jq -r '.ram.used_kb // 0' <<< "$data")
   local ram_tkb=$(jq -r '.ram.total_kb // 0' <<< "$data")
   local ram_pct=$(jq -r '.ram.used_pct // 0' <<< "$data")
   local ram_swp=$(jq -r '.ram.swap_used_kb // 0' <<< "$data")
-
   local ssd_up=$(df / | awk 'END{print $5}' | tr -d '%')
   local ssd_drs=$(jq -r '.disk.read_sectors // 0' <<< "$data")
   local ssd_dws=$(jq -r '.disk.write_sectors // 0' <<< "$data")
-
   local temp_tc=$(jq -r '.temp.cpu_c // 0' <<< "$data")
   local temp_f1=$(jq -r '.temp.fan1 // 0' <<< "$data")
-
   local asus_profile=$(jq -r '.asus.profile // "unknown"' <<< "$data")
 
-  # Classes per metric
-  local gpu_cls="good"; [ "$gpu_pct" -ge 70 ] && gpu_cls="warning"; [ "$gpu_pct" -ge 90 ] && gpu_cls="critical"
+  local gpu_cls="good"; [ "$gpu_pct" -ge 40 ] && gpu_cls="medium"; [ "$gpu_pct" -ge 70 ] && gpu_cls="warning"; [ "$gpu_pct" -ge 90 ] && gpu_cls="critical"
   local cpu_cls="good"; [ "$cpu_avg" -ge 40 ] && cpu_cls="medium"; [ "$cpu_avg" -ge 70 ] && cpu_cls="warning"; [ "$cpu_avg" -ge 90 ] && cpu_cls="critical"
   local ram_cls="good"; [ "$ram_pct" -ge 50 ] && ram_cls="medium"; [ "$ram_pct" -ge 75 ] && ram_cls="warning"; [ "$ram_pct" -ge 90 ] && ram_cls="critical"
   local ssd_cls="good"; [ "$ssd_up" -ge 70 ] && ssd_cls="medium"; [ "$ssd_up" -ge 85 ] && ssd_cls="warning"; [ "$ssd_up" -ge 95 ] && ssd_cls="critical"
@@ -125,51 +119,47 @@ all_metrics() {
     overall_cls=$(worst_cls "$overall_cls" "$c")
   done
 
-  # Format each metric as one colored line
-  # GPU
-  local gpu_ms="--"; [ "$gpu_mt" -gt 0 ] && gpu_ms="$(fmt_mb "$gpu_mu")/$(fmt_mb "$gpu_mt")"
-  local gpu=$(printf "<span fgcolor='#fab387'>GPU %s%% %sMHz %s %s°C %.1fW</span>" \
-    "$gpu_pct" "$gpu_freq" "$gpu_ms" "$gpu_temp" "$gpu_pw")
+  local gpu_col=$(state_color "$gpu_cls" "#fab387")
+  local cpu_col=$(state_color "$cpu_cls" "#a6e3a1")
+  local ram_col=$(state_color "$ram_cls" "#89b4fa")
+  local ssd_col=$(state_color "$ssd_cls" "#a6e3a1")
+  local temp_col=$(state_color "$temp_cls" "#f38ba8")
+  local asus_col=$(state_color "$asus_cls" "#94e2d5")
 
-  # CPU — 16 blocks + avg
-  local cpu_bar=""
-  for ((c=0; c<16; c++)); do
-    p=$(jq -r ".cpu.per_core[$c] // -1" <<< "$data")
-    if [ "$p" -ge 90 ]; then col="#f38ba8"
-    elif [ "$p" -ge 70 ]; then col="#fab387"
-    elif [ "$p" -ge 40 ]; then col="#f9e2af"
-    elif [ "$p" -ge 15 ]; then col="#89b4fa"
-    elif [ "$p" -ge 0 ]; then col="#383838"
-    else col="#1e1e2a"; fi
-    cpu_bar+="<span fgcolor=\"$col\">▓</span>"
-  done
-  local cpu=$(printf "<span fgcolor='#a6e3a1'>CPU %s %s%%</span>" "$cpu_bar" "$cpu_avg")
-
-  # RAM
-  local ram_ug=$(fmt_gb "$ram_ukb"); local ram_tg=$(fmt_gb "$ram_tkb"); local ram_sm=$(awk "BEGIN{printf \"%.0f\", $ram_swp/1024}")
-  local ram_seg=8; local ram_su=$((ram_pct*ram_seg/100)); [ "$ram_su" -eq 0 ] && ram_su=1; [ "$ram_su" -gt "$ram_seg" ] && ram_su=$ram_seg
-  local ram_bar=""
-  for ((i=0; i<ram_seg; i++)); do [ "$i" -lt "$ram_su" ] && ram_bar+="●" || ram_bar+="○"; done
-  local ram=$(printf "<span fgcolor='#89b4fa'>RAM %s/%sG %s%% %s SWP %sM</span>" \
-    "$ram_ug" "$ram_tg" "$ram_pct" "$ram_bar" "$ram_sm")
-
-  # SSD
-  local ssd_seg=4; local ssd_fil=$((ssd_up*ssd_seg/100)); [ "$ssd_fil" -gt "$ssd_seg" ] && ssd_fil=$ssd_seg; [ "$ssd_fil" -lt 0 ] && ssd_fil=0; local ssd_emp=$((ssd_seg-ssd_fil))
-  local ssd_fill=""; for ((i=0; i<ssd_fil; i++)); do ssd_fill+="▓"; done; for ((i=0; i<ssd_emp; i++)); do ssd_fill+="░"; done
-  local ssd_rf=$(fmt_io $((ssd_drs * 512))); local ssd_wf=$(fmt_io $((ssd_dws * 512)))
-  local ssd=$(printf "<span fgcolor='#a6e3a1'>SSD %s %s%% %s %s</span>" \
-    "$ssd_fill" "$ssd_up" "$ssd_rf" "$ssd_wf")
-
-  # Temp
+  local gpu_text="GPU ${gpu_pct}%  ${gpu_temp}°C"
+  local cpu_text="CPU ${cpu_avg}%"
+  local ram_ug=$(fmt_gb "$ram_ukb"); local ram_tg=$(fmt_gb "$ram_tkb")
+  local ram_text="RAM ${ram_ug}G/${ram_tg}G  ${ram_pct}%"
+  local ssd_text="SSD ${ssd_up}%"
   local temp_tc_int=$(printf "%.0f" "$temp_tc")
-  local temp=$(printf "<span fgcolor='#f38ba8'>TEMP %s°C FAN %s RPM</span>" "$temp_tc_int" "$temp_f1")
+  local temp_text="TEMP ${temp_tc_int}°C  ${temp_f1}RPM"
+  case "$asus_profile" in Quiet) asus_r1="ECO" ;; Balanced) asus_r1="BAL" ;; Performance) asus_r1="PERF" ;; *) asus_r1="$asus_profile" ;; esac
+  local asus_text="ASUS ${asus_r1}"
 
-  # ASUS
-  local asus_r1=""; local asus_r2=""
-  case "$asus_profile" in Quiet) asus_r1="ECO"; asus_r2="Quiet" ;; Balanced) asus_r1="BAL"; asus_r2="Balanced" ;; Performance) asus_r1="PERF"; asus_r2="Performance" ;; *) asus_r1="$asus_profile" ;; esac
-  local asus=$(printf "<span fgcolor='#94e2d5'>ASUS %s %s</span>" "$asus_r1" "$asus_r2")
+  # Build plain-text array, find max width
+  local -a plains=("$gpu_text" "$cpu_text" "$ram_text" "$ssd_text" "$temp_text" "$asus_text")
+  local maxw=0 p
+  for p in "${plains[@]}"; do
+    [ ${#p} -gt $maxw ] && maxw=${#p}
+  done
 
-  local text=$(printf "%s\n%s\n%s\n%s\n%s\n%s" "$gpu" "$cpu" "$ram" "$ssd" "$temp" "$asus")
+  # Build Pango lines padded to maxw (manual pad avoids printf%s multibyte width bug)
+  local pad=""
+  pad=$(printf '%*s' "$((maxw - ${#gpu_text}))" '')
+  local gpu_line="<span fgcolor='${gpu_col}'>${gpu_text}${pad}</span>"
+  pad=$(printf '%*s' "$((maxw - ${#cpu_text}))" '')
+  local cpu_line="<span fgcolor='${cpu_col}'>${cpu_text}${pad}</span>"
+  pad=$(printf '%*s' "$((maxw - ${#ram_text}))" '')
+  local ram_line="<span fgcolor='${ram_col}'>${ram_text}${pad}</span>"
+  pad=$(printf '%*s' "$((maxw - ${#ssd_text}))" '')
+  local ssd_line="<span fgcolor='${ssd_col}'>${ssd_text}${pad}</span>"
+  pad=$(printf '%*s' "$((maxw - ${#temp_text}))" '')
+  local temp_line="<span fgcolor='${temp_col}'>${temp_text}${pad}</span>"
+  pad=$(printf '%*s' "$((maxw - ${#asus_text}))" '')
+  local asus_line="<span fgcolor='${asus_col}'>${asus_text}${pad}</span>"
+
+  local box_text=$(draw_box "$gpu_line" "$cpu_line" "$ram_line" "$ssd_line" "$temp_line" "$asus_line")
+  local text=$(printf "<span fgcolor='#94e2d5'>%s</span>" "$box_text")
   jq -nc --arg text "$text" --arg cls "$overall_cls" '{text: $text, class: $cls}'
 }
 

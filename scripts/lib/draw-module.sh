@@ -38,10 +38,11 @@ draw_module() {
   local p1=$((dw - 1 - w1))
   local p2=$((dw - 1 - w2))
 
-  local h=$(printf '%*s' "$dw" '' | tr ' ' '─')
-  local top=$(printf '┌%s┬%s┐' "$(printf '%*s' "$ic" '' | tr ' ' '─')" "$h")
-  local mid=$(printf '├%s┼%s┤' "$(printf '%*s' "$ic" '' | tr ' ' '─')" "$h")
-  local bot=$(printf '└%s┴%s┘' "$(printf '%*s' "$ic" '' | tr ' ' '─')" "$h")
+  local h=$(printf '%*s' "$dw" ''); h="${h// /─}"
+  local ic_line=$(printf '%*s' "$ic" ''); ic_line="${ic_line// /─}"
+  local top=$(printf '┌%s┬%s┐' "$ic_line" "$h")
+  local mid=$(printf '├%s┼%s┤' "$ic_line" "$h")
+  local bot=$(printf '└%s┴%s┘' "$ic_line" "$h")
 
   local line1=$(printf '│%s│ %s%*s│' " ${icon} " "$row1" "$p1" '')
   local line2=$(printf '│%*s│ %s%*s│' "$ic" '' "$row2" "$p2" '')
@@ -50,4 +51,27 @@ draw_module() {
     "$color" "$top" "$line1" "$mid" "$line2" "$bot")
 
   jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'
+}
+
+# draw_box <line1> [<line2> ...]
+# Wraps Pango-formatted lines (each padded to same visual width) in a unicode box.
+# Output: Pango text (no JSON wrapper).
+draw_box() {
+  local -a lines=("$@")
+  local maxw=0
+  for line in "${lines[@]}"; do
+    local plain=$(echo "$line" | sed 's/<[^>]*>//g')
+    [ ${#plain} -gt $maxw ] && maxw=${#plain}
+  done
+
+  local bw=$((maxw + 2))
+  local h=$(printf '%*s' "$bw" ''); h="${h// /─}"
+
+  local result="╭${h}╮"
+  for line in "${lines[@]}"; do
+    result+=$'\n'"│ ${line} │"
+  done
+  result+=$'\n'"╰${h}╯"
+
+  echo "$result"
 }

@@ -1,6 +1,6 @@
 ---
 name: waybar-box-sizing-compact
-description: Tighten vertical bar to 150px; icon 14px, info 115px, 4-seg GPU bar on row 1, MHz+temp on row 2
+description: Tighten vertical bar to 150px; icon 11px, info 108px, bars 6-seg GPU bar on row 1, MHz+temp on row 2
 source: auto-skill
 extracted_at: '2026-06-20T11:00:00.000Z'
 tested_at: '2026-06-20'
@@ -16,10 +16,10 @@ Applied and verified on: `reliable-qwen` branch, `style-new.css` + `config-verti
 
 | Selector                              | Property  | v1     | v2 (final) |
 |---------------------------------------|-----------|--------|------------|
-| `#custom/*-icon`, `#network-qwi`      | min-width | 28px→18px | **14px**   |
+| `#custom/*-icon`, `#network-qwi`      | min-width | 28px→18px | **11px**   |
 | same                                  | padding   | 2px 6px→2px 2px | **0 2px** |
 | same                                  | margin    | 0 4px 0 6px→0 2px 0 4px | **0 1px 0 2px** |
-| `#custom/*`, `#custom/*-info`         | min-width | 126px→110px | **115px** |
+| `#custom/*`, `#custom/*-info`         | min-width | 126px→110px | **108px** |
 | same                                  | padding   | 2px 4px | **2px 3px** |
 | `#group/*`                            | padding   | 2px 4px 2px 4px | **2px 3px 2px 3px** |
 | `config-vertical`                     | width     | 250→200 | **150**  |
@@ -114,5 +114,5 @@ pkill waybar && sleep 1 && ~/.config/waybar/scripts/waybar-start.sh
 ## Git Commit Message
 
 ```
-style: compact bar v2 — split GPU 2 rows, icon 14/info 115/bar 150
+style: compact bar v2 — split GPU 2 rows, icon 11/info 108/bar 150
 ```

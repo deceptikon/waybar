@@ -106,7 +106,7 @@ tooltip label {
 #custom-qwen-temp-icon { color: #f38ba8; }
 #custom-qwen-asus-icon { color: #94e2d5; }
 
-/* ── Info cards: bordered card, state-dependent bg+border+color ── */
+/* ── Info cards: bordered card, state-dependent bg+border+color ─ */
 #custom-qwen-gpu,
 #custom-qwen-cpu,
 #custom-qwen-ram,
@@ -117,8 +117,13 @@ tooltip label {
   border-radius: 6px;
   padding: 2px 6px;
   margin: 0;
-  min-width: 80px;
+  min-width: 126px;
   background: rgba(30, 30, 42, 0.85);
+}
+
+/* ─ Network info card: match other cards for uniform column width ── */
+#custom-qwen-wifi-info {
+  min-width: 126px;
 }
 
 /* GPU — peach */

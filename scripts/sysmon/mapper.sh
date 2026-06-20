@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export LC_ALL=C
 # sysmon-mapper.sh — Read sysmon raw data from stdin, emit JSON tree to stdout
 # Usage: bash scripts/sysmon-raw3.sh | bash scripts/sysmon-mapper.sh
 
@@ -13,9 +14,11 @@ sensors_json=""
 gpu_lines=""
 asus_line=""
 fan_lines=""
+timestamp_line=""
 
 while IFS= read -r line; do
   case "$line" in
+    TIMESTAMP*) timestamp_line="$line"; continue ;;
     "CPU_SNAP_1") section="cpu1";   continue ;;
     "CPU_SNAP_2") section="cpu2";   continue ;;
     "MEM_RAW")    section="mem";    continue ;;
@@ -84,6 +87,54 @@ if [ -n "$net_lines" ]; then
   read -r net_rx_bytes net_tx_bytes <<< "$(awk '/wlp98s0:/{print $2+0, $10+0}' <<< "$net_lines")"
 fi
 
+# ── Rate Calculations (SSD & WiFi) ──
+prev_ts=0
+prev_d_read=0
+prev_d_write=0
+prev_n_rx=0
+prev_n_tx=0
+
+if [ -f "/tmp/sysmon.json" ]; then
+  prev_vals=$(jq -r '[.ts // 0, .disk.read_sectors // 0, .disk.write_sectors // 0, .net.rx_bytes // 0, .net.tx_bytes // 0] | join(" ")' /tmp/sysmon.json 2>/dev/null || true)
+  if [ -n "$prev_vals" ]; then
+    read -r prev_ts prev_d_read prev_d_write prev_n_rx prev_n_tx <<< "$prev_vals"
+  fi
+fi
+
+# Parse timestamp from stream or fallback to command
+current_ts=$(echo "${timestamp_line:-}" | awk '{print $2}')
+if [ -z "$current_ts" ] || [ "$current_ts" = "0" ]; then
+  current_ts=$(date +%s.%N)
+fi
+
+delta_t=$(awk "BEGIN {print $current_ts - $prev_ts}")
+
+disk_read_speed=0
+disk_write_speed=0
+net_rx_speed=0
+net_tx_speed=0
+
+: "${disk_read_sectors:=0}"
+: "${prev_d_read:=0}"
+: "${disk_write_sectors:=0}"
+: "${prev_d_write:=0}"
+: "${net_rx_bytes:=0}"
+: "${prev_n_rx:=0}"
+: "${net_tx_bytes:=0}"
+: "${prev_n_tx:=0}"
+
+if (( $(awk "BEGIN {print ($delta_t > 0.05 && $prev_ts > 0) ? 1 : 0}") )); then
+  disk_read_speed=$(awk "BEGIN {printf \"%.0f\", ($disk_read_sectors - $prev_d_read) * 512 / $delta_t}")
+  disk_write_speed=$(awk "BEGIN {printf \"%.0f\", ($disk_write_sectors - $prev_d_write) * 512 / $delta_t}")
+  net_rx_speed=$(awk "BEGIN {printf \"%.0f\", ($net_rx_bytes - $prev_n_rx) / $delta_t}")
+  net_tx_speed=$(awk "BEGIN {printf \"%.0f\", ($net_tx_bytes - $prev_n_tx) / $delta_t}")
+fi
+
+[ "$disk_read_speed" -lt 0 ] 2>/dev/null && disk_read_speed=0
+[ "$disk_write_speed" -lt 0 ] 2>/dev/null && disk_write_speed=0
+[ "$net_rx_speed" -lt 0 ] 2>/dev/null && net_rx_speed=0
+[ "$net_tx_speed" -lt 0 ] 2>/dev/null && net_tx_speed=0
+
 # ── GPU sysfs ──
 gpu_busy_pct=0; gpu_mem_used=0; gpu_mem_total=0
 if [ -n "$gpu_lines" ]; then
@@ -125,7 +176,7 @@ fi
 
 # ── Emit JSON ──
 jq -n \
-  --argjson ts "$(date +%s)" \
+  --argjson ts "${current_ts:-$(date +%s)}" \
   --argjson cpu_avg "${cpu_avg:-0}" \
   --argjson cpu_per_core "${cpu_per_core:-[]}" \
   --argjson ram_used_kb "${ram_used_kb:-0}" \
@@ -137,8 +188,12 @@ jq -n \
   --argjson swap_pct "${swap_pct:-0}" \
   --argjson disk_read_sectors "${disk_read_sectors:-0}" \
   --argjson disk_write_sectors "${disk_write_sectors:-0}" \
+  --argjson disk_read_speed "${disk_read_speed:-0}" \
+  --argjson disk_write_speed "${disk_write_speed:-0}" \
   --argjson net_rx_bytes "${net_rx_bytes:-0}" \
   --argjson net_tx_bytes "${net_tx_bytes:-0}" \
+  --argjson net_rx_speed "${net_rx_speed:-0}" \
+  --argjson net_tx_speed "${net_tx_speed:-0}" \
   --argjson gpu_busy_pct "${gpu_busy_pct:-0}" \
   --argjson gpu_mem_used "${gpu_mem_used:-0}" \
   --argjson gpu_mem_total "${gpu_mem_total:-0}" \
@@ -153,8 +208,8 @@ jq -n \
     ts: $ts,
     cpu: { avg: $cpu_avg, per_core: $cpu_per_core },
     ram: { used_kb: $ram_used_kb, total_kb: $ram_total_kb, avail_kb: $ram_avail_kb, used_pct: $ram_used_pct, swap_used_kb: $swap_used_kb, swap_total_kb: $swap_total_kb, swap_pct: $swap_pct },
-    disk: { read_sectors: $disk_read_sectors, write_sectors: $disk_write_sectors },
-    net: { rx_bytes: $net_rx_bytes, tx_bytes: $net_tx_bytes },
+    disk: { read_sectors: $disk_read_sectors, write_sectors: $disk_write_sectors, read_speed: $disk_read_speed, write_speed: $disk_write_speed },
+    net: { rx_bytes: $net_rx_bytes, tx_bytes: $net_tx_bytes, rx_speed: $net_rx_speed, tx_speed: $net_tx_speed },
     gpu: { busy_pct: $gpu_busy_pct, mem_used: $gpu_mem_used, mem_total: $gpu_mem_total, temp_c: $gpu_temp_c, freq: $gpu_freq, power_w: $gpu_power },
     temp: { cpu_c: $cpu_temp, fan1: $fan1, fan2: $fan2 },
     asus: { profile: $asus_profile }

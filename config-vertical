@@ -14,7 +14,6 @@
       "group/qwen-network"
     ],
     "modules-center": [
-      "clock",
       "group/tray",
       "custom/lang",
       "privacy"
@@ -34,7 +33,7 @@
       "/home/lexx/.config/waybar/modules-ux-group.json"
     ],
     "clock": {
-      "format": "\uf017 {:%H:%M\n%d.%m.%y}",
+      "format": " {:%H:%M}",
       "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
       "on-click": "yad --name=yad-calendar --calendar --undecorated",
       "actions": {

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "TIMESTAMP $(date -Iseconds)"
+echo "TIMESTAMP $(date +%s.%N)"
 
 echo "CPU_SNAP_1"
 cat /proc/stat

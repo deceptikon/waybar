@@ -3,12 +3,12 @@
     "name": "bar-top",
     "layer": "top",
     "position": "top",
-    "height": 17,
+    "height": 32,
     "modules-left": [
       "sway/workspaces"
     ],
     "modules-center": [
-      "sway/window"
+      "group/top-center"
     ],
     "modules-right": [
       "group/audio",
@@ -20,6 +20,29 @@
     "include": [
       "/home/lexx/.config/waybar/modules-hardware-group.json"
     ],
+    "group/top-center": {
+      "orientation": "vertical",
+      "modules": [
+        "clock#date",
+        "group/title-block"
+      ]
+    },
+    "group/title-block": {
+      "orientation": "horizontal",
+      "modules": [
+        "sway/scratchpad",
+        "clock#time",
+        "sway/window"
+      ]
+    },
+    "clock#date": {
+      "format": "{:%A, %d %B %Y}",
+      "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "clock#time": {
+      "format": "{:%H:%M}",
+      "tooltip": false
+    },
     "sway/workspaces": {
       "disable-scroll": false,
       "enable-bar-scroll": true,
@@ -47,13 +70,20 @@
         "5": []
       }
     },
+    "sway/scratchpad": {
+    "format": "{icon} {count}",
+    "show-empty": false,
+    "format-icons": ["", ""],
+    "tooltip": true,
+    "tooltip-format": "{app}: {title}"
+},
     "sway/window": {
       "format": "\uf17c [{title}] {app_id}",
       "max-length": "",
       "all-outputs": true,
       "offscreen-css": true,
-      "offscreen-css-text": "\u0421\u0410\u0421\u042f\u041c\u0411\u0410",
-      "icon-size": 48,
+      "offscreen-css-text": "NO FOCUS",
+      "icon-size": 16,
       "rewrite": {
         "(.*) Mozilla Firefox": "$1 \ud83c\udf0e",
         "(.*) VSCodium": "$1 \udb82\ude1e"

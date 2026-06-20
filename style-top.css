@@ -15,3 +15,71 @@
 .bar-top .modules-left {
   border-radius: 0 0 12px 0;
 }
+
+#group-top-center {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+#group-top-center #clock.date {
+  font-size: 6px;
+  font-weight: normal;
+  color: #a6e3a1;
+  padding: 0;
+  margin: 0;
+}
+
+.title-block {
+  margin-top: 1px;
+  margin-bottom: 0px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  min-width: 350px;
+  padding: 1px 12px;
+}
+
+window#waybar.solo .title-block {
+  color: #eee8d5;
+  background-color: #073642;
+}
+
+window#waybar.floating .title-block {
+  color: #eee8d5;
+  background-color: #b58900;
+}
+
+window#waybar.tiled .title-block {
+  color: #eee8d5;
+  background-color: #334b16;
+}
+
+window#waybar.stacked .title-block {
+  color: #eee8d5;
+  background: #2aa196;
+}
+
+.title-block #clock.time {
+  font-size: 11px;
+  font-weight: bold;
+  color: #cba6f7;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 8px 0 0;
+}
+
+window#waybar .title-block #window {
+  font-size: 10px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.bar-top .modules-center {
+  padding: 1px 6px;
+  margin: 0px 3px;
+}

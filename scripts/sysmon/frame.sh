@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export LC_ALL=C
 # sysmon-frame.sh — Format one metric from cached JSON; output Waybar JSON.
 #   <gpu|cpu|ram|ssd|temp|asus>
 #   Reads /tmp/sysmon.json (written by sysmon-poller.sh).
@@ -35,6 +36,7 @@ case "$metric" in
     ;;
   cpu)
     ACCENT="#a6e3a1"
+    thin_space=$(printf '\xe2\x80\x89')
     avg=$(jq -r '.cpu.avg // 0' <<< "$data")
     tc=$(jq -r '.temp.cpu_c // 0' <<< "$data")
     cls="good"; [ "$avg" -ge 40 ] && cls="medium"; [ "$avg" -ge 70 ] && cls="warning"; [ "$avg" -ge 90 ] && cls="critical"
@@ -47,10 +49,10 @@ case "$metric" in
       elif [ "$p" -ge 0 ]; then col="#383838"
       else col="#1e1e2a"; fi
       if [ "$c" -lt 8 ]; then
-        [ -n "$bar1" ] && bar1+=$'\u2009'
+        [ -n "$bar1" ] && bar1+="$thin_space"
         bar1+="<span fgcolor=\"$col\">▓</span>"
       else
-        [ -n "$bar2" ] && bar2+=$'\u2009'
+        [ -n "$bar2" ] && bar2+="$thin_space"
         bar2+="<span fgcolor=\"$col\">▓</span>"
       fi
     done
@@ -70,12 +72,13 @@ case "$metric" in
   ssd)
     ACCENT="#a6e3a1"
     up=$(df / | awk 'END{print $5}' | tr -d '%')
-    drs=$(jq -r '.disk.read_sectors // 0' <<< "$data"); dws=$(jq -r '.disk.write_sectors // 0' <<< "$data")
+    r_speed=$(jq -r '.disk.read_speed // 0' <<< "$data")
+    w_speed=$(jq -r '.disk.write_speed // 0' <<< "$data")
     cls="good"; [ "$up" -ge 70 ] && cls="medium"; [ "$up" -ge 85 ] && cls="warning"; [ "$up" -ge 95 ] && cls="critical"
     seg=9; fil=$((up*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
     fill=""; for ((i=0; i<fil; i++)); do fill+="▓"; done; for ((i=0; i<emp; i++)); do fill+="░"; done
-    rf=$(fmt_io $((drs * 512))); wf=$(fmt_io $((dws * 512)))
-    draw_module "" "<b>${fill} ${up}%</b>" "<span size='small'><span fgcolor='#94e2d5'>↑${rf} ↓${wf}</span></span>" "$ACCENT" "$cls"
+    rf=$(fmt_io "$r_speed"); wf=$(fmt_io "$w_speed")
+    draw_module "" "<b>${fill} ${up}%</b>" "<span size='small'><span fgcolor='#94e2d5'>↓${rf} ↑${wf}</span></span>" "$ACCENT" "$cls"
     ;;
   temp)
     ACCENT="#f38ba8"

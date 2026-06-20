@@ -53,7 +53,7 @@ eval $(jq -r '
 # 2. CPU
 (
   ACCENT="#a6e3a1"
-  thin_space=$(printf '\xe2\x80\x89')
+  thin_space=$(printf '\xe2\x80\x89\xe2\x80\x89')
   cls="good"; [ "$cpu_avg" -ge 40 ] && cls="medium"; [ "$cpu_avg" -ge 70 ] && cls="warning"; [ "$cpu_avg" -ge 90 ] && cls="critical"
   bar1=""; bar2=""
   
@@ -64,15 +64,16 @@ eval $(jq -r '
     elif [ "$p" -ge 70 ]; then col="#fab387"
     elif [ "$p" -ge 40 ]; then col="#f9e2af"
     elif [ "$p" -ge 15 ]; then col="#89b4fa"
+    elif [ "$p" -ge 1 ]; then col="#484848"
     elif [ "$p" -ge 0 ]; then col="#383838"
     else col="#1e1e2a"; fi
     
     if [ "$c" -lt 8 ]; then
       [ -n "$bar1" ] && bar1+="$thin_space"
-      bar1+="<span fgcolor=\"$col\">▓</span>"
+      bar1+="<span fgcolor=\"$col\">󰘚</span>"
     else
       [ -n "$bar2" ] && bar2+="$thin_space"
-      bar2+="<span fgcolor=\"$col\">▓</span>"
+      bar2+="<span fgcolor=\"$col\">󰘚</span>"
     fi
     c=$((c+1))
   done
@@ -84,6 +85,7 @@ eval $(jq -r '
 # 3. RAM
 (
   ACCENT="#89b4fa"
+  thin_space=$(printf '\xe2\x80\x89')
   cls="good"; [ "$ram_pct" -ge 50 ] && cls="medium"; [ "$ram_pct" -ge 75 ] && cls="warning"; [ "$ram_pct" -ge 90 ] && cls="critical"
   fkb=$((ram_tkb - ram_ukb))
   ug=$(fmt_gb "$ram_ukb"); fg=$(fmt_gb "$fkb")
@@ -91,7 +93,7 @@ eval $(jq -r '
   seg=10; su=$((ram_pct*seg/100)); [ "$su" -eq 0 ] && su=1; [ "$su" -gt "$seg" ] && su=$seg
   row1=$(printf "<b><span fgcolor='%s'>%2sGb</span><span fgcolor='#ffffff'> | %2sGb</span></b>" "$ACCENT" "$ug" "$fg")
   bar=""; for ((i=0; i<seg; i++)); do
-    if [ "$i" -lt "$su" ]; then bar+="●"; else bar+="<span fgcolor='#ffffff'>○</span>"; fi
+    if [ "$i" -lt "$su" ]; then bar+="$thin_space"; else bar+="<span fgcolor='#ffffff'>$thin_space</span>"; fi
   done
   draw_module "" "$row1" "${bar}" "$ACCENT" "$cls" "<span size='small'>swap used: ${swap_gb}Gb</span>"
 ) > "$FEEDS/ram.json.tmp" && mv "$FEEDS/ram.json.tmp" "$FEEDS/ram.json"

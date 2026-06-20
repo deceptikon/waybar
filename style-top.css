@@ -83,3 +83,16 @@ window#waybar .title-block #window {
   padding: 1px 6px;
   margin: 0px 3px;
 }
+
+#custom-ddc-brightness-icon,
+#custom-ddc-contrast-icon {
+  margin-right: 6px;
+  margin-left: 6px;
+}
+
+#custom-ddc-brightness,
+#custom-ddc-contrast {
+  margin-left: 2px;
+  margin-right: 12px;
+  font-size: 8px;
+}

@@ -12,8 +12,7 @@ waybar -c ~/.config/waybar/config-top -s ~/.config/waybar/style-top.css >> ~/.co
 disown
 
 sleep 1
-waybar -c ~/.config/waybar/config-vertical -s ~/.config/waybar/style-new.css >> ~/.config/waybar/logs/waybar-vertical.log 2>&1 &
-disown
+waybar -c ~/.config/waybar/config-vertical -s ~/.config/waybar/style-new.css >> ~/.config/waybar/logs/waybar-vertical.log
 
 sleep 1
 waybar -c ~/.config/waybar/config-bottom -s ~/.config/waybar/style-bottom.css >> ~/.config/waybar/logs/waybar-bottom.log 2>&1 &

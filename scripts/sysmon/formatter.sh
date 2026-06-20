@@ -45,15 +45,15 @@ eval $(jq -r '
 (
   ACCENT="#fab387"
   cls="good"; [ "$gpu_pct" -ge 40 ] && cls="medium"; [ "$gpu_pct" -ge 70 ] && cls="warning"; [ "$gpu_pct" -ge 90 ] && cls="critical"
-  seg=8; fil=$((gpu_pct*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
+  seg=10; fil=$((gpu_pct*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
   bar=""; for ((i=0; i<fil; i++)); do bar+="▐"; done; for ((i=0; i<emp; i++)); do bar+="░"; done
-  draw_module "" "<b>${bar} ${gpu_pct}%</b>" "<span size='small'>${gpu_freq}MHz 󰔐 ${gpu_temp}°C</span>" "$ACCENT" "$cls"
+  draw_module "" "<b><span font='8'>${bar}</span> ${gpu_pct}%</b>" "<span size='small'>${gpu_freq}MHz 󰔐 ${gpu_temp}°C</span>" "$ACCENT" "$cls"
 ) > "$FEEDS/gpu.json.tmp" && mv "$FEEDS/gpu.json.tmp" "$FEEDS/gpu.json"
 
 # 2. CPU
 (
   ACCENT="#a6e3a1"
-  thin_space=$(printf '\xe2\x80\x89\xe2\x80\x89')
+  thin_space=$(printf '\xe2\x80\x89')
   cls="good"; [ "$cpu_avg" -ge 40 ] && cls="medium"; [ "$cpu_avg" -ge 70 ] && cls="warning"; [ "$cpu_avg" -ge 90 ] && cls="critical"
   bar1=""; bar2=""
   
@@ -79,7 +79,7 @@ eval $(jq -r '
   done
   
   tc_fmt=$(printf "%.0f" "$cpu_tc")
-  draw_module "" "${bar1}"$'\n'"${bar2}" "<span size='small'><span fgcolor=\"#a6e3a1\">AVG ${cpu_avg}%</span> 󰔐 ${tc_fmt}°C</span>" "$ACCENT" "$cls"
+  draw_module "" "<span font='11'>${bar1}"$'\n'"${bar2}</span>" "<span size='small'><span fgcolor=\"#a6e3a1\">AVG ${cpu_avg}%</span> 󰔐 ${tc_fmt}°C</span>" "$ACCENT" "$cls"
 ) > "$FEEDS/cpu.json.tmp" && mv "$FEEDS/cpu.json.tmp" "$FEEDS/cpu.json"
 
 # 3. RAM
@@ -90,12 +90,12 @@ eval $(jq -r '
   fkb=$((ram_tkb - ram_ukb))
   ug=$(fmt_gb "$ram_ukb"); fg=$(fmt_gb "$fkb")
   swap_gb=$(awk "BEGIN {printf \"%.1f\", $ram_swp / 1048576}")
-  seg=10; su=$((ram_pct*seg/100)); [ "$su" -eq 0 ] && su=1; [ "$su" -gt "$seg" ] && su=$seg
-  row1=$(printf "<b><span fgcolor='%s'>%2sGb</span><span fgcolor='#ffffff'> | %2sGb</span></b>" "$ACCENT" "$ug" "$fg")
+  seg=7; su=$((ram_pct*seg/100)); [ "$su" -eq 0 ] && su=1; [ "$su" -gt "$seg" ] && su=$seg
+  row1=$(printf "<b><span fgcolor='%s'>%2sGb</span><span fgcolor='#a3a3a3' font='8'>  :: </span><span fgcolor='#ffffff'> %2sGb</span></b>" "$ACCENT" "$ug" "$fg")
   bar=""; for ((i=0; i<seg; i++)); do
     if [ "$i" -lt "$su" ]; then bar+="$thin_space"; else bar+="<span fgcolor='#ffffff'>$thin_space</span>"; fi
   done
-  draw_module "" "$row1" "${bar}" "$ACCENT" "$cls" "<span size='small'>swap used: ${swap_gb}Gb</span>"
+  draw_module "" "<span font='8'>${row1}</span>" "<span font='12'>${bar}</span>" "$ACCENT" "$cls" "<span size='small'>swapped: ${swap_gb}Gb</span>"
 ) > "$FEEDS/ram.json.tmp" && mv "$FEEDS/ram.json.tmp" "$FEEDS/ram.json"
 
 # 4. SSD
@@ -126,7 +126,7 @@ eval $(jq -r '
   row2=$(printf "%s <span fgcolor='#cdd6f4'>read </span> <span fgcolor='#89b4fa'>%s</span>" "$r_icon" "$rf")
   row3=$(printf "%s <span fgcolor='#cdd6f4'>write</span> <span fgcolor='#89b4fa'>%s</span>" "$w_icon" "$wf")
 
-  draw_module "" "$row1" "$row2" "$ACCENT" "$cls" "$row3"
+  draw_module "" "$row1" "<span font='7'>$row2</span>" "$ACCENT" "$cls" "<span font='7'>$row3</span>"
 ) > "$FEEDS/ssd.json.tmp" && mv "$FEEDS/ssd.json.tmp" "$FEEDS/ssd.json"
 
 # 5. TEMP

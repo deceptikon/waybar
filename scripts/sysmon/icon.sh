@@ -7,6 +7,6 @@ case "$metric" in
   ram)  echo '{"text":"  ","class":"good"}' ;;
   ssd)  echo '{"text":" 󰋊 ","class":"good"}' ;;
   temp) echo '{"text":" 󰔐 ","class":"good"}' ;;
-  asus) echo '{"text":"  ","class":"good"}' ;;
+  asus) echo '{"text":"  ","class":"good"}' ;;
   *)    echo '{"text":"?","class":"good"}' ;;
 esac

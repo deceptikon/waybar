@@ -29,9 +29,9 @@ case "$metric" in
     temp=$(jq -r '.gpu.temp_c // 0' <<< "$data")
     freq=$(jq -r '.gpu.freq // 0' <<< "$data")
     cls="good"; [ "$pct" -ge 40 ] && cls="medium"; [ "$pct" -ge 70 ] && cls="warning"; [ "$pct" -ge 90 ] && cls="critical"
-    seg=6; fil=$((pct*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
+    seg=8; fil=$((pct*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
     bar=""; for ((i=0; i<fil; i++)); do bar+="▐"; done; for ((i=0; i<emp; i++)); do bar+="░"; done
-    draw_module "" "${bar} ${pct}%" "${freq}MHz  ${temp}°C" "$ACCENT" "$cls"
+    draw_module "" "<b>${bar} ${pct}%</b>" "<span size='small' style='italic'>${freq}MHz ${temp}°C</span>" "$ACCENT" "$cls"
     ;;
   cpu)
     ACCENT="#a6e3a1"
@@ -46,11 +46,16 @@ case "$metric" in
       elif [ "$p" -ge 15 ]; then col="#89b4fa"
       elif [ "$p" -ge 0 ]; then col="#383838"
       else col="#1e1e2a"; fi
-      if [ "$c" -lt 8 ]; then bar1+="<span fgcolor=\"$col\">▓</span>"
-      else bar2+="<span fgcolor=\"$col\">▓</span>"; fi
+      if [ "$c" -lt 8 ]; then
+        [ -n "$bar1" ] && bar1+=$'\u2009'
+        bar1+="<span fgcolor=\"$col\">▓</span>"
+      else
+        [ -n "$bar2" ] && bar2+=$'\u2009'
+        bar2+="<span fgcolor=\"$col\">▓</span>"
+      fi
     done
     tc_fmt=$(printf "%.0f" "$tc")
-    draw_module "" "${bar1}"$'\n'"${bar2}" "<span fgcolor=\"#a6e3a1\"><b>AVG ${avg}%</b></span>  󰔐 ${tc_fmt}°C" "$ACCENT" "$cls"
+    draw_module "" "${bar1}"$'\n'"${bar2}" "<span size='small' style='italic'><span fgcolor=\"#a6e3a1\">AVG ${avg}%</span> 󰔐 ${tc_fmt}°C</span>" "$ACCENT" "$cls"
     ;;
   ram)
     ACCENT="#89b4fa"
@@ -58,19 +63,19 @@ case "$metric" in
     pct=$(jq -r '.ram.used_pct // 0' <<< "$data"); swp=$(jq -r '.ram.swap_used_kb // 0' <<< "$data")
     cls="good"; [ "$pct" -ge 50 ] && cls="medium"; [ "$pct" -ge 75 ] && cls="warning"; [ "$pct" -ge 90 ] && cls="critical"
     ug=$(fmt_gb "$ukb"); tg=$(fmt_gb "$tkb"); sm=$(awk "BEGIN{printf \"%.0f\", $swp/1024}")
-    seg=8; su=$((pct*seg/100)); [ "$su" -eq 0 ] && su=1; [ "$su" -gt "$seg" ] && su=$seg
+    seg=10; su=$((pct*seg/100)); [ "$su" -eq 0 ] && su=1; [ "$su" -gt "$seg" ] && su=$seg
     bar=""; for ((i=0; i<seg; i++)); do [ "$i" -lt "$su" ] && bar+="●" || bar+="○"; done
-    draw_module "" "<span fgcolor='#89b4fa'>${ug}G</span> <span fgcolor='#f8f8f8'>/ ${tg}G</span>" "${bar}" "$ACCENT" "$cls" "swp ${sm}M"
+    draw_module "" "<b><span fgcolor='#89b4fa'>${ug}G</span> <span fgcolor='#f8f8f8'>/ ${tg}G</span></b>" "${bar}" "$ACCENT" "$cls" "<span size='small' style='italic'>swp ${sm}M</span>"
     ;;
   ssd)
     ACCENT="#a6e3a1"
     up=$(df / | awk 'END{print $5}' | tr -d '%')
     drs=$(jq -r '.disk.read_sectors // 0' <<< "$data"); dws=$(jq -r '.disk.write_sectors // 0' <<< "$data")
     cls="good"; [ "$up" -ge 70 ] && cls="medium"; [ "$up" -ge 85 ] && cls="warning"; [ "$up" -ge 95 ] && cls="critical"
-    seg=6; fil=$((up*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
+    seg=9; fil=$((up*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
     fill=""; for ((i=0; i<fil; i++)); do fill+="▓"; done; for ((i=0; i<emp; i++)); do fill+="░"; done
     rf=$(fmt_io $((drs * 512))); wf=$(fmt_io $((dws * 512)))
-    draw_module "" "<b>${fill}</b> <b>${up}%</b>" "<span fgcolor='#94e2d5'>↑${rf}  ↓${wf}</span>" "$ACCENT" "$cls"
+    draw_module "" "<b>${fill} ${up}%</b>" "<span size='small' style='italic'><span fgcolor='#94e2d5'>↑${rf} ↓${wf}</span></span>" "$ACCENT" "$cls"
     ;;
   temp)
     ACCENT="#f38ba8"
@@ -82,8 +87,13 @@ case "$metric" in
     ACCENT="#94e2d5"
     profile=$(jq -r '.asus.profile // "unknown"' <<< "$data")
     f1=$(jq -r '.temp.fan1 // 0' <<< "$data")
-    case "$profile" in Quiet) r="Quiet"; cls="good" ;; Balanced) r="Balanced"; cls="medium" ;; Performance) r="Performance"; cls="warning" ;; *) r="$profile"; cls="good" ;; esac
-    draw_module "" "<b>${r}</b>" "󰈐 ${f1} RPM" "$ACCENT" "$cls"
+    case "$profile" in
+      Quiet)        r=" Quiet"; cls="good" ;;
+      Balanced)     r=" Balanced"; cls="medium" ;;
+      Performance)  r=" Performance"; cls="warning" ;;
+      *)            r="$profile"; cls="good" ;;
+    esac
+    draw_module "" "<b>${r}</b>" "<span size='small' style='italic'>󰈐 ${f1} RPM</span>" "$ACCENT" "$cls"
     ;;
   *)
     echo "Unknown metric: $metric" >&2

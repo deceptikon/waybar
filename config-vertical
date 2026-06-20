@@ -3,14 +3,13 @@
     "name": "bar-vert",
     "layer": "top",
     "position": "right",
-    "width": 150,
+    "width": 138,
     "fixed-center": true,
     "modules-left": [
       "group/qwen-gpu",
       "group/qwen-cpu",
       "group/qwen-ram",
       "group/qwen-ssd",
-      "group/qwen-temp",
       "group/qwen-asus",
       "group/qwen-network"
     ],

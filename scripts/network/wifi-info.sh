@@ -23,28 +23,74 @@ elif [ "$signal" -ge 40 ] 2>/dev/null; then sig_cls="warning"
 elif [ "$signal" -ge 20 ] 2>/dev/null; then sig_cls="critical"
 else sig_cls="disconnected"; fi
 
-# Speed sampling — 0.5s delta
-rx_fmt="-"; tx_fmt="-"; spd_cls="$sig_cls"
+# Speed sampling — state-based rate calculation (no sleep on subsequent runs)
+rx_fmt="0K"; tx_fmt="0K"; spd_cls="$sig_cls"
 if [ -n "$iface" ] && [ "$iface" != "lo" ]; then
-  rx1=$(cat "/sys/class/net/$iface/statistics/rx_bytes" 2>/dev/null || echo 0)
-  tx1=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo 0)
-  sleep 0.5
-  rx2=$(cat "/sys/class/net/$iface/statistics/rx_bytes" 2>/dev/null || echo 0)
-  tx2=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo 0)
-  rx_kb=$(( (rx2 - rx1) / 1024 / 2 ))
-  tx_kb=$(( (tx2 - tx1) / 1024 / 2 ))
-  [ "$rx_kb" -lt 0 ] && rx_kb=0
-  [ "$tx_kb" -lt 0 ] && tx_kb=0
+  STATE_FILE="/tmp/wifi-info-state-${iface}"
+  
+  current_time=$(date +%s.%N)
+  rx_now=$(cat "/sys/class/net/$iface/statistics/rx_bytes" 2>/dev/null || echo 0)
+  tx_now=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo 0)
+  
+  rx_kb=0
+  tx_kb=0
+  
+  if [ -f "$STATE_FILE" ]; then
+    read -r prev_time prev_rx prev_tx < "$STATE_FILE"
+    delta_t=$(awk "BEGIN {print $current_time - $prev_time}")
+    
+    if (( $(awk "BEGIN {print ($delta_t > 0.05) ? 1 : 0}") )); then
+      rx_bytes_diff=$((rx_now - prev_rx))
+      tx_bytes_diff=$((tx_now - prev_tx))
+      
+      [ "$rx_bytes_diff" -lt 0 ] && rx_bytes_diff=0
+      [ "$tx_bytes_diff" -lt 0 ] && tx_bytes_diff=0
+      
+      rx_kb=$(awk "BEGIN {printf \"%.0f\", ($rx_bytes_diff / $delta_t) / 1024}")
+      tx_kb=$(awk "BEGIN {printf \"%.0f\", ($tx_bytes_diff / $delta_t) / 1024}")
+    fi
+  else
+    # First run fallback: sleep 0.2s to sample
+    sleep 0.2
+    current_time2=$(date +%s.%N)
+    rx_now2=$(cat "/sys/class/net/$iface/statistics/rx_bytes" 2>/dev/null || echo 0)
+    tx_now2=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo 0)
+    
+    delta_t=$(awk "BEGIN {print $current_time2 - $current_time}")
+    if (( $(awk "BEGIN {print ($delta_t > 0.05) ? 1 : 0}") )); then
+      rx_bytes_diff=$((rx_now2 - rx_now))
+      tx_bytes_diff=$((tx_now2 - tx_now))
+      [ "$rx_bytes_diff" -lt 0 ] && rx_bytes_diff=0
+      [ "$tx_bytes_diff" -lt 0 ] && tx_bytes_diff=0
+      
+      rx_kb=$(awk "BEGIN {printf \"%.0f\", ($rx_bytes_diff / $delta_t) / 1024}")
+      tx_kb=$(awk "BEGIN {printf \"%.0f\", ($tx_bytes_diff / $delta_t) / 1024}")
+    fi
+    current_time=$current_time2
+    rx_now=$rx_now2
+    tx_now=$tx_now2
+  fi
+  
+  # Save state
+  echo "$current_time $rx_now $tx_now" > "$STATE_FILE"
+  
+  # Ensure they are valid integers
+  [[ "$rx_kb" =~ ^[0-9]+$ ]] || rx_kb=0
+  [[ "$tx_kb" =~ ^[0-9]+$ ]] || tx_kb=0
+  
   total=$((rx_kb + tx_kb))
   if   [ "$total" -gt 5000 ]; then spd_cls="critical"
   elif [ "$total" -gt 2000 ]; then spd_cls="warning"
   elif [ "$total" -gt 500  ]; then spd_cls="medium"
   else spd_cls="good"; fi
-
+  
   fmt_spd() {
     local k=$1
-    if [ "$k" -ge 1024 ]; then awk "BEGIN{printf\"%.0fM\",$k/1024}"
-    else printf "%dK" "$k"; fi
+    if [ "$k" -ge 1024 ]; then
+      awk "BEGIN {printf \"%.1fM\", $k/1024}"
+    else
+      printf "%dK" "$k"
+    fi
   }
   rx_fmt=$(fmt_spd "$rx_kb")
   tx_fmt=$(fmt_spd "$tx_kb")
@@ -65,7 +111,7 @@ r_sig=$(rank_cls "$sig_cls"); r_spd=$(rank_cls "$spd_cls")
 final_cls=$(unrank_cls $(if [ "$r_sig" -ge "$r_spd" ]; then echo "$r_sig"; else echo "$r_spd"; fi))
 
 # Two-row Pango markup
-text=$(printf "<b>%s</b>\n<span size='small' style='italic'>↓%s  ↑%s</span>" \
+text=$(printf "<b>%s</b>\n<span size='small' style='italic'>↓%s ↑%s</span>" \
   "${ssid^^}" "$rx_fmt" "$tx_fmt")
 
 jq -n --compact-output \

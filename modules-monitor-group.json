@@ -1,12 +1,10 @@
 {
   "network#qwi": {
-    "format": "   ",
+    "format": "  ",
     "tooltip-format": "{ifname} via {gwaddr} 󰊗",
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
     "tooltip-format-ethernet": "{ifname} ",
     "tooltip-format-disconnected": "Disconnected",
-    "max-length": 5,
-    "min-length": 5,
     "format-icons": [
       "\udb80\udf5f",
       "\udb80\udf62",
@@ -25,7 +23,7 @@
   },
   "custom/qwen-wifi-info": {
     "exec": "~/.config/waybar/scripts/network/wifi-info.sh",
-    "interval": 10,
+    "interval": 2,
     "format": "{}",
     "return-type": "json",
     "on-click": "nm-connection-editor",

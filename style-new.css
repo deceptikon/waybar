@@ -16,7 +16,7 @@ window#waybar {
 window.bar-vert {
   background: rgba(10, 10, 16, 0.85);
   border-left: 1px solid rgba(0, 128, 128, 0.25);
-  padding: 16px 8px;
+  padding: 16px 4px;
 }
 
 tooltip {
@@ -71,17 +71,29 @@ tooltip label {
    Each group: [big icon] [stats card with border+bg]
    ════════════════════════════════════════════ */
 
-/* ── Groups: outer container (fixed bg, accent border) ── */
-#group-qwen-gpu,
-#group-qwen-cpu,
-#group-qwen-ram,
-#group-qwen-ssd,
-#group-qwen-temp,
-#group-qwen-asus {
-  background: rgba(20, 20, 28, 0.92);
-  border-radius: 8px;
-  padding: 2px 2px 2px 2px;
-  margin: 2px 4px;
+/* ── Groups: outer container (transparent, borderless) ── */
+#qwen-gpu, #group-qwen-gpu,
+#qwen-cpu, #group-qwen-cpu,
+#qwen-ram, #group-qwen-ram,
+#qwen-ssd, #group-qwen-ssd,
+#qwen-temp, #group-qwen-temp,
+#qwen-asus, #group-qwen-asus {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 2px 0;
+}
+
+/* Eliminate default GTK spacing between widgets inside the group */
+#qwen-gpu > widget, #group-qwen-gpu > widget,
+#qwen-cpu > widget, #group-qwen-cpu > widget,
+#qwen-ram > widget, #group-qwen-ram > widget,
+#qwen-ssd > widget, #group-qwen-ssd > widget,
+#qwen-temp > widget, #group-qwen-temp > widget,
+#qwen-asus > widget, #group-qwen-asus > widget,
+#qwen-network > widget, #group-qwen-network > widget {
+  margin: 0;
+  padding: 0;
 }
 
 /* ── Icons: big, transparent, accent color, fixed width ── */
@@ -90,7 +102,9 @@ tooltip label {
 #custom-qwen-ram-icon,
 #custom-qwen-ssd-icon,
 #custom-qwen-temp-icon,
-#custom-qwen-asus-icon {
+#custom-qwen-asus-icon,
+#network-qwi,
+#network.qwi {
   font-size: 16px;
   min-width: 11px;
   padding: 0 1px;
@@ -112,83 +126,66 @@ tooltip label {
 #custom-qwen-ram,
 #custom-qwen-ssd,
 #custom-qwen-temp,
-#custom-qwen-asus {
+#custom-qwen-asus,
+#custom-qwen-wifi-info {
   font-weight: 500;
   border-radius: 6px;
   padding: 2px 2px;
   margin: 0;
-  min-width: 108px;
+  min-width: 94px;
   background: rgba(30, 30, 42, 0.85);
 }
 
-/* ─ Network info card: match other cards for uniform column width ── */
-#custom-qwen-wifi-info {
-  min-width: 108px;
-  padding: 2px 2px;
-}
-
 /* GPU — peach */
-#group-qwen-gpu { border: 1px solid rgba(250, 179, 135, 0.45); }
 #custom-qwen-gpu { border: 1px solid rgba(250, 179, 135, 0.4); color: #fab387; }
 #custom-qwen-gpu.medium  { background: rgba(249, 226, 175, 0.15); border-color: rgba(249, 226, 175, 0.45); color: #f9e2af; }
 #custom-qwen-gpu.warning { background: rgba(250, 179, 135, 0.2);   border-color: rgba(250, 179, 135, 0.55); color: #fab387; }
 #custom-qwen-gpu.critical { background: rgba(243, 139, 168, 0.2);  border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
 
 /* CPU — green */
-#group-qwen-cpu { border: 1px solid rgba(166, 227, 161, 0.45); }
 #custom-qwen-cpu { border: 1px solid rgba(166, 227, 161, 0.4); color: #a6e3a1; }
 #custom-qwen-cpu.medium  { background: rgba(249, 226, 175, 0.15); border-color: rgba(249, 226, 175, 0.45); color: #f9e2af; }
 #custom-qwen-cpu.warning { background: rgba(250, 179, 135, 0.2);   border-color: rgba(250, 179, 135, 0.55); color: #fab387; }
 #custom-qwen-cpu.critical { background: rgba(243, 139, 168, 0.2);  border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
 
 /* RAM — blue */
-#group-qwen-ram { border: 1px solid rgba(137, 180, 250, 0.45); }
 #custom-qwen-ram { border: 1px solid rgba(137, 180, 250, 0.4); color: #89b4fa; }
 #custom-qwen-ram.medium  { background: rgba(249, 226, 175, 0.15); border-color: rgba(249, 226, 175, 0.45); color: #f9e2af; }
 #custom-qwen-ram.warning { background: rgba(250, 179, 135, 0.2);   border-color: rgba(250, 179, 135, 0.55); color: #fab387; }
 #custom-qwen-ram.critical { background: rgba(243, 139, 168, 0.2);  border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
 
 /* SSD — green */
-#group-qwen-ssd { border: 1px solid rgba(166, 227, 161, 0.45); }
 #custom-qwen-ssd { border: 1px solid rgba(166, 227, 161, 0.4); color: #a6e3a1; }
 #custom-qwen-ssd.medium  { background: rgba(249, 226, 175, 0.15); border-color: rgba(249, 226, 175, 0.45); color: #f9e2af; }
 #custom-qwen-ssd.warning { background: rgba(250, 179, 135, 0.2);   border-color: rgba(250, 179, 135, 0.55); color: #fab387; }
 #custom-qwen-ssd.critical { background: rgba(243, 139, 168, 0.2);  border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
 
 /* TEMP — red */
-#group-qwen-temp { border: 1px solid rgba(243, 139, 168, 0.45); }
 #custom-qwen-temp { border: 1px solid rgba(243, 139, 168, 0.4); color: #f38ba8; }
 #custom-qwen-temp.warning { background: rgba(250, 179, 135, 0.2); border-color: rgba(250, 179, 135, 0.55); color: #fab387; }
 #custom-qwen-temp.critical { background: rgba(243, 139, 168, 0.2); border-color: rgba(243, 139, 168, 0.55); color: #f38ba8; }
 
 /* ASUS — teal */
-#group-qwen-asus { border: 1px solid rgba(148, 226, 213, 0.45); }
 #custom-qwen-asus { border: 1px solid rgba(148, 226, 213, 0.4); color: #94e2d5; }
 #custom-qwen-asus.medium  { background: rgba(137, 180, 250, 0.15); border-color: rgba(137, 180, 250, 0.45); color: #89b4fa; }
 #custom-qwen-asus.warning { background: rgba(250, 179, 135, 0.2);   border-color: rgba(250, 179, 135, 0.55); color: #fab387; }
 
 /* ── NETWORK group — teal accent, icon+info pair ── */
+#qwen-network,
 #group-qwen-network {
-  background: rgba(20, 20, 28, 0.92);
-  border: 1px solid rgba(148, 226, 213, 0.4);
-  border-radius: 8px;
-  padding: 2px 2px 2px 2px;
-  margin: 0 4px;
-}
-#network-qwi {
-  font-size: 16px;
-  min-width: 11px;
-  padding: 0 1px;
-  border: none;
   background: transparent;
-  border-radius: 0;
-  color: #94e2d5;
-  margin: 0 0 0 1px;
+  border: none;
+  padding: 0;
+  margin: 2px 0;
 }
-#network-qwi.disconnected { color: #666; }
+#network-qwi,
+#network.qwi {
+  color: #94e2d5;
+}
+#network-qwi.disconnected,
+#network.qwi.disconnected { color: #666; }
 #custom-qwen-wifi-info {
   border: 1px solid rgba(148, 226, 213, 0.4);
-  background: rgba(30, 30, 42, 0.85);
   color: #94e2d5;
 }
 #custom-qwen-wifi-info.medium  { background: rgba(249, 226, 175, 0.15); border-color: rgba(249, 226, 175, 0.45); color: #f9e2af; }

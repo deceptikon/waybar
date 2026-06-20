@@ -94,11 +94,8 @@ prev_d_write=0
 prev_n_rx=0
 prev_n_tx=0
 
-if [ -f "/tmp/sysmon.json" ]; then
-  prev_vals=$(jq -r '[.ts // 0, .disk.read_sectors // 0, .disk.write_sectors // 0, .net.rx_bytes // 0, .net.tx_bytes // 0] | join(" ")' /tmp/sysmon.json 2>/dev/null || true)
-  if [ -n "$prev_vals" ]; then
-    read -r prev_ts prev_d_read prev_d_write prev_n_rx prev_n_tx <<< "$prev_vals"
-  fi
+if [ -f "/home/lexx/.config/waybar/feeds/.state" ]; then
+  read -r prev_ts prev_d_read prev_d_write prev_n_rx prev_n_tx < "/home/lexx/.config/waybar/feeds/.state"
 fi
 
 # Parse timestamp from stream or fallback to command
@@ -214,3 +211,5 @@ jq -n \
     temp: { cpu_c: $cpu_temp, fan1: $fan1, fan2: $fan2 },
     asus: { profile: $asus_profile }
   }'
+
+echo "$current_ts $disk_read_sectors $disk_write_sectors $net_rx_bytes $net_tx_bytes" > /home/lexx/.config/waybar/feeds/.state

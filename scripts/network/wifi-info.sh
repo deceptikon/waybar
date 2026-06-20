@@ -29,8 +29,8 @@ rx_fmt="0B"; tx_fmt="0B"; spd_cls="$sig_cls"
 if [ -n "$iface" ] && [ "$iface" != "lo" ]; then
   rx_speed=0
   tx_speed=0
-  if [ -f "/tmp/sysmon.json" ]; then
-    read -r rx_speed tx_speed <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0] | @tsv' /tmp/sysmon.json 2>/dev/null || echo "0 0")"
+  if [ -f "$HOME/.config/waybar/feeds/sysmon.json" ]; then
+    read -r rx_speed tx_speed <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0] | @tsv' "$HOME/.config/waybar/feeds/sysmon.json" 2>/dev/null || echo "0 0")"
   fi
 
   total=$((rx_speed + tx_speed))

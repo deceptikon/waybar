@@ -5,11 +5,7 @@ set -euo pipefail
 #   Start once via sway exec_always or systemd user service.
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
-CACHE="/tmp/sysmon.json"
-
 while true; do
-  tmp=$(mktemp /tmp/sysmon.XXXXXX.json)
-  "$DIR/collect.sh" | "$DIR/mapper.sh" > "$tmp"
-  mv "$tmp" "$CACHE"
+  "$DIR/collect.sh" | "$DIR/mapper.sh" | bash "$DIR/formatter.sh"
   sleep 2
 done

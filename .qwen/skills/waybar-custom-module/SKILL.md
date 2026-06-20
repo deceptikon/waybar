@@ -98,6 +98,8 @@ chmod +x scripts/<name>.sh
   "interval": 5,
   "format": "{}",
   "return-type": "json",
+  "justify": "center",       // Options: "left", "center", "right" (alternative to CSS text-align)
+  "align": 0.5,              // Float: 0.0 (left) to 1.0 (right), 0.5 is centered
   "on-click": "some-launcher",
   "on-right-click": "other-launcher"
 }
@@ -175,7 +177,11 @@ The following are **invalid** in Waybar's GTK CSS. Using any of them causes a st
 ❌ min-width: auto;      (must be numeric px)
 ❌ any value of `auto` for sizing props
 ❌ font-style: italic;    (use Pango <i> instead)
+❌ max-width: 104px;      (unsupported property name in Waybar GTK CSS)
 ```
+
+> [!IMPORTANT]
+> **Consistent Box Widths**: Since `max-width` is unsupported, to keep all module card boxes the same width, set a larger `min-width` in CSS that accommodates the widest module. Center the text inside the boxes using `"justify": "center"` and `"align": 0.5` in the JSON config rather than CSS alignment.
 
 ### Nested-box pattern (single outer border, inner tile has its own border)
 

@@ -111,7 +111,7 @@ r_sig=$(rank_cls "$sig_cls"); r_spd=$(rank_cls "$spd_cls")
 final_cls=$(unrank_cls $(if [ "$r_sig" -ge "$r_spd" ]; then echo "$r_sig"; else echo "$r_spd"; fi))
 
 # Two-row Pango markup
-text=$(printf "<b>%s</b>\n<span size='small' style='italic'>↓%s ↑%s</span>" \
+text=$(printf "<b>%s</b>\n<span size='small'>↓%s ↑%s</span>" \
   "${ssid^^}" "$rx_fmt" "$tx_fmt")
 
 jq -n --compact-output \

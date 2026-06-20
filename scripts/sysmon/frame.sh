@@ -31,7 +31,7 @@ case "$metric" in
     cls="good"; [ "$pct" -ge 40 ] && cls="medium"; [ "$pct" -ge 70 ] && cls="warning"; [ "$pct" -ge 90 ] && cls="critical"
     seg=8; fil=$((pct*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
     bar=""; for ((i=0; i<fil; i++)); do bar+="▐"; done; for ((i=0; i<emp; i++)); do bar+="░"; done
-    draw_module "" "<b>${bar} ${pct}%</b>" "<span size='small' style='italic'>${freq}MHz ${temp}°C</span>" "$ACCENT" "$cls"
+    draw_module "" "<b>${bar} ${pct}%</b>" "<span size='small'>${freq}MHz ${temp}°C</span>" "$ACCENT" "$cls"
     ;;
   cpu)
     ACCENT="#a6e3a1"
@@ -55,7 +55,7 @@ case "$metric" in
       fi
     done
     tc_fmt=$(printf "%.0f" "$tc")
-    draw_module "" "${bar1}"$'\n'"${bar2}" "<span size='small' style='italic'><span fgcolor=\"#a6e3a1\">AVG ${avg}%</span> 󰔐 ${tc_fmt}°C</span>" "$ACCENT" "$cls"
+    draw_module "" "${bar1}"$'\n'"${bar2}" "<span size='small'><span fgcolor=\"#a6e3a1\">AVG ${avg}%</span> 󰔐 ${tc_fmt}°C</span>" "$ACCENT" "$cls"
     ;;
   ram)
     ACCENT="#89b4fa"
@@ -65,7 +65,7 @@ case "$metric" in
     ug=$(fmt_gb "$ukb"); tg=$(fmt_gb "$tkb"); sm=$(awk "BEGIN{printf \"%.0f\", $swp/1024}")
     seg=10; su=$((pct*seg/100)); [ "$su" -eq 0 ] && su=1; [ "$su" -gt "$seg" ] && su=$seg
     bar=""; for ((i=0; i<seg; i++)); do [ "$i" -lt "$su" ] && bar+="●" || bar+="○"; done
-    draw_module "" "<b><span fgcolor='#89b4fa'>${ug}G</span> <span fgcolor='#f8f8f8'>/ ${tg}G</span></b>" "${bar}" "$ACCENT" "$cls" "<span size='small' style='italic'>swp ${sm}M</span>"
+    draw_module "" "<b><span fgcolor='#89b4fa'>${ug}G</span> <span fgcolor='#f8f8f8'>/ ${tg}G</span></b>" "${bar}" "$ACCENT" "$cls" "<span size='small'>swp ${sm}M</span>"
     ;;
   ssd)
     ACCENT="#a6e3a1"
@@ -75,7 +75,7 @@ case "$metric" in
     seg=9; fil=$((up*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
     fill=""; for ((i=0; i<fil; i++)); do fill+="▓"; done; for ((i=0; i<emp; i++)); do fill+="░"; done
     rf=$(fmt_io $((drs * 512))); wf=$(fmt_io $((dws * 512)))
-    draw_module "" "<b>${fill} ${up}%</b>" "<span size='small' style='italic'><span fgcolor='#94e2d5'>↑${rf} ↓${wf}</span></span>" "$ACCENT" "$cls"
+    draw_module "" "<b>${fill} ${up}%</b>" "<span size='small'><span fgcolor='#94e2d5'>↑${rf} ↓${wf}</span></span>" "$ACCENT" "$cls"
     ;;
   temp)
     ACCENT="#f38ba8"
@@ -93,7 +93,7 @@ case "$metric" in
       Performance)  r=" Performance"; cls="warning" ;;
       *)            r="$profile"; cls="good" ;;
     esac
-    draw_module "" "<b>${r}</b>" "<span size='small' style='italic'>󰈐 ${f1} RPM</span>" "$ACCENT" "$cls"
+    draw_module "" "<b>${r}</b>" "<span size='small'>󰈐 ${f1} RPM</span>" "$ACCENT" "$cls"
     ;;
   *)
     echo "Unknown metric: $metric" >&2

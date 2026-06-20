@@ -26,6 +26,8 @@
     "interval": 2,
     "format": "{}",
     "return-type": "json",
+    "justify": "center",
+    "align": 0.5,
     "on-click": "nm-connection-editor",
     "on-right-click": "nm-applet --indicator"
   },
@@ -47,6 +49,8 @@
     "interval": 2,
     "format": "{}",
     "return-type": "json",
+    "justify": "center",
+    "align": 0.5,
     "on-click": "gpustat",
     "on-right-click": "nvtop"
   },
@@ -68,6 +72,8 @@
     "interval": 2,
     "format": "{}",
     "return-type": "json",
+    "justify": "center",
+    "align": 0.5,
     "on-click": "htop",
     "on-right-click": "gnome-system-monitor"
   },
@@ -89,6 +95,8 @@
     "interval": 2,
     "format": "{}",
     "return-type": "json",
+    "justify": "center",
+    "align": 0.5,
     "on-click": "gnome-system-monitor",
     "on-right-click": "free -h"
   },
@@ -110,6 +118,8 @@
     "interval": 2,
     "format": "{}",
     "return-type": "json",
+    "justify": "center",
+    "align": 0.5,
     "on-click": "gnome-disks",
     "on-right-click": "lsblk"
   },
@@ -130,7 +140,9 @@
     "exec": "~/.config/waybar/scripts/sysmon/frame.sh temp",
     "interval": 2,
     "format": "{}",
-    "return-type": "json"
+    "return-type": "json",
+    "justify": "center",
+    "align": 0.5
   },
   "custom/qwen-asus-icon": {
     "exec": "~/.config/waybar/scripts/sysmon/icon.sh asus",
@@ -150,6 +162,8 @@
     "interval": 2,
     "format": "{}",
     "return-type": "json",
+    "justify": "center",
+    "align": 0.5,
     "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
     "signal": 10
   }

@@ -248,6 +248,7 @@ tooltip label {
 
 #idle_inhibitor,
 #power-profiles-daemon,
+#bluetooth,
 #custom-dunst,
 #custom-recorder,
 #custom-checkupdates,
@@ -269,7 +270,8 @@ tooltip label {
 #custom-dunst.paused,
 #custom-checkupdates.notify,
 #custom-fnlock.active,
-#custom-backlight.active {
+#custom-backlight.active,
+#bluetooth.connected {
   border-color: rgba(148, 226, 213, 0.5);
   background: rgba(0, 128, 128, 0.15);
   color: #94e2d5;

@@ -143,9 +143,10 @@
       "enabled": "\uf293",
       "disabled": "\udb80\udcb2"
     },
-    "on-click": "blueman-manager",
-    "format-connected": "\uf294 {device_alias}",
-    "format-connected-battery": "\uf294 {device_alias} {device_battery_percentage}%",
+    "on-click": "~/.config/waybar/scripts/utils/bt-toggle.sh",
+    "on-click-right": "blueman-manager",
+    "format-connected": "\uf294",
+    "format-connected-battery": "\uf294<sub>{device_battery_percentage}%</sub>",
     "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
     "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
@@ -157,7 +158,8 @@
       "enabled": "\udb80\udcaf",
       "disabled": "\udb80\udcb2"
     },
-    "on-click": "blueman-manager",
+    "on-click": "rfkill toggle bluetooth",
+    "on-click-right": "blueman-manager",
     "format-connected": "\uf294 {device_alias}",
     "format-connected-battery": "\uf294 {device_alias} {device_battery_percentage}%",
     "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",

@@ -13,7 +13,7 @@
     "modules-right": [
       "group/audio",
       "group/bright",
-      "custom/bt-indicator",
+      "bluetooth#lite",
       "battery",
       "custom/powerbtn"
     ],
@@ -122,7 +122,7 @@
     "modules-right": [
       "group/audio",
       "group/ddc",
-      "custom/bt-indicator",
+      "bluetooth#lite",
       "battery",
       "custom/powerbtn"
     ],

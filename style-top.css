@@ -96,3 +96,34 @@ window#waybar .title-block #window {
   margin-right: 12px;
   font-size: 8px;
 }
+
+/* Bluetooth Native Module 3 States */
+#bluetooth {
+  margin: 0 4px;
+  min-width: 32px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+/* 1. Off state: dimmed */
+#bluetooth.disabled, #bluetooth.off {
+  color: #585b70;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+/* 2. On state (not connected): brighter color, no highlight box */
+#bluetooth.discoverable, #bluetooth.on, #bluetooth:not(.disabled):not(.connected) {
+  color: #cdd6f4;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+/* 3. Connected state: active highlight */
+#bluetooth.connected {
+  color: #94e2d5;
+  background: rgba(0, 128, 128, 0.45);
+  border: 1px solid rgba(148, 226, 213, 0.9);
+}

@@ -1,6 +1,6 @@
 #!/bin/bash
 KBD_LED="/sys/class/leds/asus::kbd_backlight/brightness"
-TIMEOUT=10
+TIMEOUT=3
 KBD_DEV="/dev/input/by-path/platform-i8042-serio-0-event-kbd"
 LAST_ACTION="/tmp/kbd_last_action"
 PID_FILE="/tmp/keywatcher.pid"
@@ -25,11 +25,11 @@ turn_off() {
                 fi
             fi
         fi
-        sleep 1
+        sleep 0.5
     done
 ) &
 
-evtest "$KBD_DEV" | grep --line-buffered "value 1" | while read -r line; do
+stdbuf -oL evtest "$KBD_DEV" | grep --line-buffered "value 1" | while read -r line; do
     if [ "$(cat $KBD_LED)" -eq 0 ]; then
         echo 2 > "$KBD_LED"
     fi

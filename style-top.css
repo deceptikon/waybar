@@ -125,8 +125,6 @@ label#custom-ws-color.ws10 { background-color: #eba0ac; color: #1e1e2e; }
   padding: 0px 6px;
   font-size: 10px;
   min-width: 130px;
-  background: #45475a; /* track */
-  border-radius: 10px;
 }
 
 /* Bluetooth Native Module 3 States */

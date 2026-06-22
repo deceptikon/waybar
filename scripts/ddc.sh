@@ -10,13 +10,23 @@ mkdir -p "$CACHE_DIR"
 
 draw_slider() {
     local val=$1
-    local width=14
+    local width=12
     local filled=$(( val * width / 100 ))
     local empty=$(( width - filled ))
-    local bar=""
-    for i in $(seq 1 $filled); do bar="${bar}█"; done
-    for i in $(seq 1 $empty); do bar="${bar}█"; done
-    echo "<span><span color='$COLOR'>${bar:0:$filled}</span><span color='#45475a'>${bar:$filled}</span></span>"
+    local body=""
+    for i in $(seq 1 $filled); do body="${body}█"; done
+    for i in $(seq 1 $empty); do body="${body}░"; done
+    if [ $filled -gt 0 ]; then
+        local filled_part="${body:0:$filled}"
+        local empty_part="${body:$filled}"
+        if [ $empty -gt 0 ]; then
+            echo "<span color='$COLOR'>◖$filled_part</span><span color='#45475a'>${empty_part}◗</span>"
+        else
+            echo "<span color='$COLOR'>◖$filled_part◗</span>"
+        fi
+    else
+        echo "<span color='#45475a'>◖${body}◗</span>"
+    fi
 }
 
 apply_vcp() {

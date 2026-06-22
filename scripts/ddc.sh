@@ -16,17 +16,16 @@ draw_slider() {
     local body=""
     for i in $(seq 1 $filled); do body="${body}█"; done
     for i in $(seq 1 $empty); do body="${body}░"; done
-    local cap_size='font_size="120%"'
     if [ $filled -gt 0 ]; then
         local filled_part="${body:0:$filled}"
         local empty_part="${body:$filled}"
         if [ $empty -gt 0 ]; then
-            echo "<span letter_spacing='-2'><span color='$COLOR'><span $cap_size>◖</span>$filled_part</span><span color='#45475a'>${empty_part}<span $cap_size>◗</span></span></span>"
+            echo "<span color='$COLOR'>◖$filled_part</span><span color='#45475a'>${empty_part}◗</span>"
         else
-            echo "<span letter_spacing='-2'><span color='$COLOR'><span $cap_size>◖</span>$filled_part<span $cap_size>◗</span></span></span>"
+            echo "<span color='$COLOR'>◖$filled_part◗</span>"
         fi
     else
-        echo "<span letter_spacing='-2'><span color='#45475a'><span $cap_size>◖</span>${body}<span $cap_size>◗</span></span></span>"
+        echo "<span color='#45475a'>◖${body}◗</span>"
     fi
 }
 

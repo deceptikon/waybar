@@ -74,13 +74,12 @@ if [ "$FEATURE" = "combo" ]; then
     # Linear: brightness 0 → contrast 25, brightness 100 → contrast 100
     CONTRAST=$(( 25 + CURRENT * 75 / 100 ))
 
-    echo "$CURRENT" > "$BRIGHTNESS_CACHE"
-    echo "$CURRENT" > "$BRIGHTNESS_TARGET"
-
     SLIDER=$(draw_slider "$CURRENT")
     echo "{\"text\": \"<span color='$COLOR'>$SLIDER</span>\", \"tooltip\": \"brightness: $CURRENT%  contrast: $CONTRAST%\", \"percentage\": $CURRENT}"
 
     if [ "$ACTION" = "up" ] || [ "$ACTION" = "down" ] || [ "$ACTION" = "set" ]; then
+        echo "$CURRENT" > "$BRIGHTNESS_CACHE"
+        echo "$CURRENT" > "$BRIGHTNESS_TARGET"
         apply_vcp 10 "$BRIGHTNESS_LOCK" "$BRIGHTNESS_TARGET"
         # Apply derived contrast in its own background worker
         echo "$CONTRAST" > "$CACHE_DIR/contrast.target"

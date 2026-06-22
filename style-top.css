@@ -122,11 +122,9 @@ label#custom-ws-color.ws10 { background-color: #eba0ac; color: #1e1e2e; }
 
 #custom-ddc {
   margin: 0 4px;
-  padding: 2px 8px;
+  padding: 0 4px;
   font-size: 9px;
-  background: rgba(30, 30, 46, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  min-width: 100px;
 }
 
 /* Bluetooth Native Module 3 States */

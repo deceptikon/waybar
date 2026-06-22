@@ -16,7 +16,7 @@ draw_slider() {
     local bar_filled=""
     local bar_empty=""
     for i in $(seq 1 $filled); do bar_filled="${bar_filled}█"; done
-    for i in $(seq 1 $empty); do bar_empty="${bar_empty}█"; done
+    for i in $(seq 1 $empty); do bar_empty="${bar_empty}░"; done
     echo "<span color='$COLOR'>$bar_filled</span><span color='#45475a'>$bar_empty</span>"
 }
 
@@ -86,12 +86,22 @@ if [ "$FEATURE" = "combo" ]; then
         echo "$CURRENT" > "$BRIGHTNESS_TARGET"
         echo "$CONTRAST" > "$CONTRAST_CACHE"
         echo "$CONTRAST" > "$CONTRAST_TARGET"
+    elif [ "$ACTION" = "set" ]; then
+        CURRENT=${3:-50}
+        [ $CURRENT -gt 100 ] && CURRENT=100
+        [ $CURRENT -lt 0 ] && CURRENT=0
+        CONTRAST=$((CURRENT - 10))
+        [ $CONTRAST -lt 20 ] && CONTRAST=20
+        echo "$CURRENT" > "$BRIGHTNESS_CACHE"
+        echo "$CURRENT" > "$BRIGHTNESS_TARGET"
+        echo "$CONTRAST" > "$CONTRAST_CACHE"
+        echo "$CONTRAST" > "$CONTRAST_TARGET"
     fi
 
     SLIDER=$(draw_slider "$CURRENT")
     echo "{\"text\": \"<span color='$COLOR'>$SLIDER</span>\", \"tooltip\": \"brightness: $CURRENT%  contrast: $CONTRAST%\", \"percentage\": $CURRENT}"
 
-    if [ "$ACTION" = "up" ] || [ "$ACTION" = "down" ]; then
+    if [ "$ACTION" = "up" ] || [ "$ACTION" = "down" ] || [ "$ACTION" = "set" ]; then
         apply_vcp 10 "$BRIGHTNESS_LOCK" "$BRIGHTNESS_TARGET"
         apply_vcp 12 "$CONTRAST_LOCK" "$CONTRAST_TARGET"
     fi

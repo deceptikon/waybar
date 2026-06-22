@@ -45,7 +45,7 @@
     "modules-center": ["group/top-center"],
     "modules-right": [
       "group/audio",
-      "group/ddc",
+      "custom/ddc",
       "idle_inhibitor",
       "custom/keylight",
       "bluetooth#lite",

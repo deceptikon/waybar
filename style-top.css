@@ -120,17 +120,13 @@ label#custom-ws-color.ws10 { background-color: #eba0ac; color: #1e1e2e; }
   margin: 0px 3px;
 }
 
-#custom-ddc-brightness-icon,
-#custom-ddc-contrast-icon {
-  margin-right: 6px;
-  margin-left: 6px;
-}
-
-#custom-ddc-brightness,
-#custom-ddc-contrast {
-  margin-left: 2px;
-  margin-right: 12px;
-  font-size: 8px;
+#custom-ddc {
+  margin: 0 4px;
+  padding: 2px 8px;
+  font-size: 9px;
+  background: rgba(30, 30, 46, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
 }
 
 /* Bluetooth Native Module 3 States */

@@ -8,4 +8,4 @@ WS_NUM=$(swaymsg -t get_workspaces 2>/dev/null \
     || echo 1)
 WS_NUM=${WS_NUM:-1}
 
-printf '{"text":"","class":"ws%s","tooltip":""}\n' "$WS_NUM"
+printf '{"text":" %s ","class":"ws%s","tooltip":"Workspace %s"}\n' "$WS_NUM" "$WS_NUM" "$WS_NUM"

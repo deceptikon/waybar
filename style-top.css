@@ -51,62 +51,22 @@ window#waybar.solo {
   margin: 0;
 }
 
-#dynamic-row {
-  background: transparent;
-  padding: 0;
-  margin: 0;
-}
-
 #clock.date {
   font-size: 8px;
   font-weight: bold;
   color: #a6e3a1;
   padding: 0;
-  margin: 2px 0;
+  margin: 1px 0;
 }
 
-/* ── Titlebox pill ─────────────────────────────────────────── */
-window#waybar #titlebox {
-  padding: 2px 16px;
+/* ── Titlebox row (time, title, scratchpad, privacy) ────────── */
+window#waybar #titlebox-row {
+  padding: 0 12px;
   margin: 0px 4px;
-  border-radius: 12px;
-}
-
-window#waybar #titlebox * {
-  color: #1e1e2e;
-  border-radius: 0;
-}
-
-window#waybar #titlebox #clock.time {
-  font-size: 11px;
-  font-weight: bold;
-  margin: 0 12px 0 0;
-}
-
-window#waybar #titlebox #window {
-  font-size: 10px;
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0 32px 0 0;
-  min-width: 0;
-}
-
-window#waybar #titlebox #custom-separator {
-  color: rgba(30, 30, 46, 0.4);
-  margin: 0 12px;
-}
-
-window#waybar #titlebox #scratchpad,
-window#waybar #titlebox #privacy {
-  margin-left: 8px;
-}
-
-/* ── Hide titlebox on non-default sway mode (pure CSS, no script) ─ */
-window#waybar #titlebox {
+  border-radius: 10px;
   transition: opacity 0.25s ease;
 }
-window#waybar:not(.mode-default) #titlebox {
+window#waybar:not(.mode-default) #titlebox-row {
   min-height: 0px;
   min-width: 0px;
   padding: 0px;
@@ -114,16 +74,34 @@ window#waybar:not(.mode-default) #titlebox {
   opacity: 0;
 }
 
-/* ── Workspace color badge (custom/ws-color) ──────────────────────── */
-/* Class changes on workspace switch → GTK animates the transition    */
-/* No SIGUSR2, no reloads, no flicker                                  */
-label#custom-ws-color {
+window#waybar #titlebox-row #clock.time {
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0 10px 0 4px;
+}
+
+window#waybar #titlebox-row #window {
+  font-size: 10px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 18px 0 0;
   min-width: 0;
-  min-height: 0;
-  padding: 0 6px;
+}
+
+window#waybar #titlebox-row #scratchpad,
+window#waybar #titlebox-row #privacy {
+  margin-left: 6px;
+}
+
+/* ── Workspace color badge ──────────────────────────────────── */
+label#custom-ws-color {
+  min-width: 18px;
+  min-height: 14px;
+  padding: 0 4px;
   font-size: 9px;
   font-weight: bold;
-  border-radius: 6px;
+  border-radius: 5px;
   transition: background-color 0.35s ease, color 0.35s ease;
 }
 label#custom-ws-color.ws1  { background-color: #fab387; color: #1e1e2e; }

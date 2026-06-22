@@ -26,24 +26,16 @@
       "orientation": "vertical",
       "modules": [
         "clock#date",
-        "group/dynamic-row"
-      ]
-    },
-    "group/dynamic-row": {
-      "orientation": "horizontal",
-      "modules": [
         "sway/mode",
-        "group/titlebox"
+        "group/titlebox-row"
       ]
     },
-    "group/titlebox": {
+    "group/titlebox-row": {
       "orientation": "horizontal",
-      "class": "titlebox-container",
       "modules": [
         "custom/ws-color",
         "clock#time",
         "sway/window",
-        "custom/separator",
         "sway/scratchpad",
         "privacy"
       ]
@@ -58,7 +50,7 @@
       "interval": "once",
       "signal": 8,
       "format": "{}",
-      "tooltip": false
+      "tooltip": true
     },
     "custom/separator": {
       "format": "|",
@@ -164,26 +156,27 @@
       "orientation": "vertical",
       "modules": [
         "clock#date",
-        "group/dynamic-row"
-      ]
-    },
-    "group/dynamic-row": {
-      "orientation": "horizontal",
-      "modules": [
         "sway/mode",
-        "group/titlebox"
+        "group/titlebox-row"
       ]
     },
-    "group/titlebox": {
+    "group/titlebox-row": {
       "orientation": "horizontal",
       "modules": [
         "custom/ws-color",
         "clock#time",
         "sway/window",
-        "custom/separator",
         "sway/scratchpad",
         "privacy"
       ]
+    },
+    "custom/ws-color": {
+      "exec": "~/.config/waybar/scripts/ws-color.sh",
+      "return-type": "json",
+      "interval": "once",
+      "signal": 8,
+      "format": "{}",
+      "tooltip": true
     },
     "custom/penguin": {
       "format": "",

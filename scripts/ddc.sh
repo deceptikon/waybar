@@ -13,11 +13,10 @@ draw_slider() {
     local width=14
     local filled=$(( val * width / 100 ))
     local empty=$(( width - filled ))
-    local bar_filled=""
-    local bar_empty=""
-    for i in $(seq 1 $filled); do bar_filled="${bar_filled}█"; done
-    for i in $(seq 1 $empty); do bar_empty="${bar_empty}░"; done
-    echo "<span color='$COLOR'>$bar_filled</span><span color='#45475a'>$bar_empty</span>"
+    local bar=""
+    for i in $(seq 1 $filled); do bar="${bar}█"; done
+    for i in $(seq 1 $empty); do bar="${bar}█"; done
+    echo "<span><span color='$COLOR'>${bar:0:$filled}</span><span color='#45475a'>${bar:$filled}</span></span>"
 }
 
 apply_vcp() {
@@ -139,7 +138,8 @@ fi
 
 SLIDER=$(draw_slider "$CURRENT")
 TEXT="<span color='$COLOR'>$SLIDER</span>"
-echo "{\"text\": \"$TEXT\", \"tooltip\": \"$FEATURE: $CURRENT%\", \"percentage\": $CURRENT}"
+echo "{\"text\": \"$TEXT\", \"class\": \"ddc-slider\", \"tooltip\": \"$FEATURE: $CURRENT%\", \"percentage\": $CURRENT}"
+echo "{\"text\": \"<span color='$COLOR'>$SLIDER</span>\", \"class\": \"ddc-slider\",\"tooltip\": \"brightness: $CURRENT%  contrast: $CONTRAST%\", \"percentage\": $CURRENT}"
 
 if [ "$ACTION" = "up" ] || [ "$ACTION" = "down" ]; then
     apply_vcp "$VCP" "$LOCK_FILE" "$TARGET_FILE"

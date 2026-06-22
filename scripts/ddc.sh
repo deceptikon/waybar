@@ -42,11 +42,11 @@ if [ "$FEATURE" = "combo" ]; then
     BRIGHTNESS_CACHE="$CACHE_DIR/brightness"
     BRIGHTNESS_LOCK="$CACHE_DIR/brightness.lock"
     BRIGHTNESS_TARGET="$CACHE_DIR/brightness.target"
-    CONTRAST_CACHE="$CACHE_DIR/contrast"
-    CONTRAST_LOCK="$CACHE_DIR/contrast.lock"
-    CONTRAST_TARGET="$CACHE_DIR/contrast.target"
 
-    if [ ! -f "$BRIGHTNESS_CACHE" ] || [ "$ACTION" = "get" ]; then
+    # Sync from hardware only when cache missing (first run). Never on 'get',
+    # otherwise a pending apply_vcp worker hasn't flushed yet and we'd re-read
+    # the stale hardware value, overwriting the updated cache.
+    if [ ! -f "$BRIGHTNESS_CACHE" ]; then
         (
             exec 200>"$BRIGHTNESS_LOCK"
             if flock -n 200; then
@@ -55,55 +55,36 @@ if [ "$FEATURE" = "combo" ]; then
             fi
         )
     fi
-    if [ ! -f "$CONTRAST_CACHE" ] || [ "$ACTION" = "get" ]; then
-        (
-            exec 200>"$CONTRAST_LOCK"
-            if flock -n 200; then
-                VAL=$(ddcutil getvcp 12 -t 2>/dev/null | awk '{print $4}')
-                [ -n "$VAL" ] && echo "$VAL" > "$CONTRAST_CACHE"
-            fi
-        )
-    fi
 
     CURRENT=$(cat "$BRIGHTNESS_CACHE" 2>/dev/null || echo 50)
-    CONTRAST=$(cat "$CONTRAST_CACHE" 2>/dev/null || echo 70)
 
     if [ "$ACTION" = "up" ]; then
-        CURRENT=$((CURRENT + 5))
+        CURRENT=$((CURRENT + 1))
         [ $CURRENT -gt 100 ] && CURRENT=100
-        CONTRAST=$((CURRENT - 10))
-        [ $CONTRAST -lt 20 ] && CONTRAST=20
-        echo "$CURRENT" > "$BRIGHTNESS_CACHE"
-        echo "$CURRENT" > "$BRIGHTNESS_TARGET"
-        echo "$CONTRAST" > "$CONTRAST_CACHE"
-        echo "$CONTRAST" > "$CONTRAST_TARGET"
     elif [ "$ACTION" = "down" ]; then
-        CURRENT=$((CURRENT - 5))
+        CURRENT=$((CURRENT - 1))
         [ $CURRENT -lt 0 ] && CURRENT=0
-        CONTRAST=$((CURRENT - 10))
-        [ $CONTRAST -lt 20 ] && CONTRAST=20
-        echo "$CURRENT" > "$BRIGHTNESS_CACHE"
-        echo "$CURRENT" > "$BRIGHTNESS_TARGET"
-        echo "$CONTRAST" > "$CONTRAST_CACHE"
-        echo "$CONTRAST" > "$CONTRAST_TARGET"
     elif [ "$ACTION" = "set" ]; then
         CURRENT=${3:-50}
         [ $CURRENT -gt 100 ] && CURRENT=100
         [ $CURRENT -lt 0 ] && CURRENT=0
-        CONTRAST=$((CURRENT - 10))
-        [ $CONTRAST -lt 20 ] && CONTRAST=20
-        echo "$CURRENT" > "$BRIGHTNESS_CACHE"
-        echo "$CURRENT" > "$BRIGHTNESS_TARGET"
-        echo "$CONTRAST" > "$CONTRAST_CACHE"
-        echo "$CONTRAST" > "$CONTRAST_TARGET"
     fi
+
+    # Contrast is always derived from brightness — never cached independently
+    CONTRAST=$((CURRENT - 10))
+    [ $CONTRAST -lt 20 ] && CONTRAST=20
+
+    echo "$CURRENT" > "$BRIGHTNESS_CACHE"
+    echo "$CURRENT" > "$BRIGHTNESS_TARGET"
 
     SLIDER=$(draw_slider "$CURRENT")
     echo "{\"text\": \"<span color='$COLOR'>$SLIDER</span>\", \"tooltip\": \"brightness: $CURRENT%  contrast: $CONTRAST%\", \"percentage\": $CURRENT}"
 
     if [ "$ACTION" = "up" ] || [ "$ACTION" = "down" ] || [ "$ACTION" = "set" ]; then
         apply_vcp 10 "$BRIGHTNESS_LOCK" "$BRIGHTNESS_TARGET"
-        apply_vcp 12 "$CONTRAST_LOCK" "$CONTRAST_TARGET"
+        # Apply derived contrast in its own background worker
+        echo "$CONTRAST" > "$CACHE_DIR/contrast.target"
+        apply_vcp 12 "$CACHE_DIR/contrast.lock" "$CACHE_DIR/contrast.target"
     fi
     exit 0
 fi

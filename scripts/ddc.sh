@@ -10,12 +10,12 @@ mkdir -p "$CACHE_DIR"
 
 draw_slider() {
     local val=$1
-    local width=12
+    local width=10
     local filled=$(( val * width / 100 ))
     local empty=$(( width - filled ))
     local body=""
-    for i in $(seq 1 $filled); do body="${body}■"; done
-    for i in $(seq 1 $empty); do body="${body}■"; done
+    for i in $(seq 1 $filled); do body="${body}◼"; done
+    for i in $(seq 1 $empty); do body="${body}◼"; done
     if [ $filled -gt 0 ]; then
         local fp="${body:0:$filled}"
         local ep="${body:$filled}"

@@ -19,13 +19,11 @@
       "privacy"
     ],
     "modules-right": [
-      "idle_inhibitor",
       "power-profiles-daemon",
       "custom/dunst",
       "custom/recorder",
       "custom/checkupdates",
       "custom/fnlock",
-      "custom/backlight",
       "custom/ext-display"
     ],
     "include": [

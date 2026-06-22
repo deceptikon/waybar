@@ -1,15 +1,20 @@
 #!/bin/bash
-DAEMON="/usr/local/bin/kbd_auto_monitor.sh"
+DAEMON="$HOME/.config/waybar/scripts/utils/keylight/keywatcher.sh"
 KBD_LED="/sys/class/leds/asus::kbd_backlight/brightness"
+PID_FILE="/tmp/keywatcher.pid"
 
-if pgrep -f "$DAEMON" > /dev/null; then
-    pkill -f "$DAEMON"
-    pkill -f "sleep .* && echo 0 > $KBD_LED"
+if [ -f "$PID_FILE" ] && kill -0 $(cat "$PID_FILE") 2>/dev/null; then
+    kill -9 $(cat "$PID_FILE") 2>/dev/null
+    rm -f "$PID_FILE"
+    pkill -f "evtest.*/platform-i8042"
+    pkill -f "keylight/keywatcher.sh"
     echo 0 > "$KBD_LED"
 else
-    # Запускаем монитор в фоне
+    pkill -f "evtest.*/platform-i8042"
+    pkill -f "keylight/keywatcher.sh"
     $DAEMON &
+    echo $! > "$PID_FILE"
 fi
 
-# Посылаем сигнал Waybar, чтобы он обновил модуль (SIGRTMIN+8)
+sleep 0.2
 pkill -SIGRTMIN+8 waybar

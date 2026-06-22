@@ -1,9 +1,8 @@
 [
   {
-    "name": "bar-top-laptop",
+    "name": "bar-top",
     "layer": "top",
     "position": "top",
-    "height": 32,
     "modules-left": [
       "sway/workspaces"
     ],
@@ -13,30 +12,60 @@
     "modules-right": [
       "group/audio",
       "group/bright",
+      "idle_inhibitor",
+      "custom/keylight",
       "bluetooth#lite",
       "battery",
       "custom/powerbtn"
     ],
     "include": [
-      "/home/lexx/.config/waybar/modules-hardware-group.json"
+      "/home/lexx/.config/waybar/modules-hardware-group.json",
+      "/home/lexx/.config/waybar/modules-ux-group.json"
     ],
     "group/top-center": {
       "orientation": "vertical",
       "modules": [
         "clock#date",
-        "group/title-block"
+        "group/dynamic-row"
       ]
     },
-    "group/title-block": {
+    "group/dynamic-row": {
       "orientation": "horizontal",
       "modules": [
-        "sway/scratchpad",
-        "clock#time",
-        "sway/window"
+        "sway/mode",
+        "group/titlebox"
       ]
     },
+    "group/titlebox": {
+      "orientation": "horizontal",
+      "class": "titlebox-container",
+      "modules": [
+        "custom/ws-color",
+        "clock#time",
+        "sway/window",
+        "custom/separator",
+        "sway/scratchpad",
+        "privacy"
+      ]
+    },
+    "custom/penguin": {
+      "format": "",
+      "tooltip": false
+    },
+    "custom/ws-color": {
+      "exec": "~/.config/waybar/scripts/ws-color.sh",
+      "return-type": "json",
+      "interval": "once",
+      "signal": 8,
+      "format": "{}",
+      "tooltip": false
+    },
+    "custom/separator": {
+      "format": "|",
+      "tooltip": false
+    },
     "clock#date": {
-      "format": "{:%A, %d %B %Y}",
+      "format": "<span text_transform=\"uppercase\">{:%A, %d %B %Y}</span>",
       "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
     "clock#time": {
@@ -109,10 +138,9 @@
     ]
   },
   {
-    "name": "bar-top-ext",
+    "name": "bar-top",
     "layer": "top",
     "position": "top",
-    "height": 32,
     "modules-left": [
       "sway/workspaces"
     ],
@@ -122,30 +150,51 @@
     "modules-right": [
       "group/audio",
       "group/ddc",
+      "idle_inhibitor",
+      "custom/keylight",
       "bluetooth#lite",
       "battery",
       "custom/powerbtn"
     ],
     "include": [
-      "/home/lexx/.config/waybar/modules-hardware-group.json"
+      "/home/lexx/.config/waybar/modules-hardware-group.json",
+      "/home/lexx/.config/waybar/modules-ux-group.json"
     ],
     "group/top-center": {
       "orientation": "vertical",
       "modules": [
         "clock#date",
-        "group/title-block"
+        "group/dynamic-row"
       ]
     },
-    "group/title-block": {
+    "group/dynamic-row": {
       "orientation": "horizontal",
       "modules": [
-        "sway/scratchpad",
-        "clock#time",
-        "sway/window"
+        "sway/mode",
+        "group/titlebox"
       ]
     },
+    "group/titlebox": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/ws-color",
+        "clock#time",
+        "sway/window",
+        "custom/separator",
+        "sway/scratchpad",
+        "privacy"
+      ]
+    },
+    "custom/penguin": {
+      "format": "",
+      "tooltip": false
+    },
+    "custom/separator": {
+      "format": "|",
+      "tooltip": false
+    },
     "clock#date": {
-      "format": "{:%A, %d %B %Y}",
+      "format": "<span text_transform=\"uppercase\">{:%A, %d %B %Y}</span>",
       "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
     "clock#time": {

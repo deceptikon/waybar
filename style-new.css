@@ -33,10 +33,11 @@ tooltip label {
 .bar-vert .modules-left,
 .bar-vert .modules-center,
 .bar-vert .modules-right {
-  background: transparent;
-  margin: 0;
-  padding: 0;
-  border: none;
+  background: rgba(30, 30, 46, 0.85);
+  margin: 4px 2px;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* ── WORKSPACES ── */

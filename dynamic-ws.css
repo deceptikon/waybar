@@ -1,4 +1,0 @@
-/* Per-workspace background for the titlebox row */
-window#waybar #titlebox-row > widget {
-    background-color: #89b4fa;
-}

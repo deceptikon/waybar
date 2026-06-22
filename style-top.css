@@ -228,4 +228,3 @@ window#waybar.tabbed #window {
   min-width: 80px;
 }
 
-/* Titlebox hiding when mode is active is handled by dynamic-titlebox.sh via dynamic-ws.css */

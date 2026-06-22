@@ -44,17 +44,12 @@ fi
 pkill -x waybar 2>/dev/null || true
 
 # Aggressively clean up background bash scripts to prevent duplicates
-pkill -f "sysmon/poller.sh"     2>/dev/null || true
-pkill -f "dynamic-titlebox.sh"  2>/dev/null || true
-pkill -f "keywatcher.sh"        2>/dev/null || true
-pkill -f "wifi-info.sh"         2>/dev/null || true
+pkill -f "sysmon/poller.sh"   2>/dev/null || true
+pkill -f "keywatcher.sh"      2>/dev/null || true
+pkill -f "wifi-info.sh"       2>/dev/null || true
 
 # Start/restart the sysmon data poller (background data collection)
 ~/.config/waybar/scripts/sysmon/poller.sh &
-disown
-
-# Start dynamic titlebox daemon
-~/.config/waybar/scripts/dynamic-titlebox.sh &
 disown
 
 waybar -c "$CFG_DIR/config-top"      -s "$CFG_DIR/style-top.css"    >> "$LOGS_DIR/waybar-top.log"      2>&1 &

@@ -171,6 +171,12 @@ if [ -n "$asus_line" ]; then
   [ -z "$asus_profile" ] && asus_profile="unknown"
 fi
 
+# ── Workspace ──
+ws_num=$(swaymsg -t get_workspaces 2>/dev/null \
+    | jq '.[] | select(.focused==true) | .num' \
+    || echo 1)
+ws_num=${ws_num:-1}
+
 # ── Emit JSON ──
 jq -n \
   --argjson ts "${current_ts:-$(date +%s)}" \
@@ -201,6 +207,7 @@ jq -n \
   --argjson fan1 "${fan1:-0}" \
   --argjson fan2 "${fan2:-0}" \
   --arg asus_profile "${asus_profile:-unknown}" \
+  --argjson ws_num "${ws_num:-1}" \
   '{
     ts: $ts,
     cpu: { avg: $cpu_avg, per_core: $cpu_per_core },
@@ -209,7 +216,8 @@ jq -n \
     net: { rx_bytes: $net_rx_bytes, tx_bytes: $net_tx_bytes, rx_speed: $net_rx_speed, tx_speed: $net_tx_speed },
     gpu: { busy_pct: $gpu_busy_pct, mem_used: $gpu_mem_used, mem_total: $gpu_mem_total, temp_c: $gpu_temp_c, freq: $gpu_freq, power_w: $gpu_power },
     temp: { cpu_c: $cpu_temp, fan1: $fan1, fan2: $fan2 },
-    asus: { profile: $asus_profile }
+    asus: { profile: $asus_profile },
+    workspace: { num: $ws_num }
   }'
 
 echo "$current_ts $disk_read_sectors $disk_write_sectors $net_rx_bytes $net_tx_bytes" > /home/lexx/.config/waybar/feeds/.state

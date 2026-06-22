@@ -45,11 +45,9 @@
       "tooltip": false
     },
     "custom/ws-color": {
-      "exec": "~/.config/waybar/scripts/ws-color.sh",
-      "return-type": "json",
-      "interval": "once",
-      "signal": 8,
+      "exec": "tail -F ~/.config/waybar/feeds/workspace.json 2>/dev/null",
       "format": "{}",
+      "return-type": "json",
       "tooltip": true
     },
     "custom/separator": {
@@ -171,11 +169,9 @@
       ]
     },
     "custom/ws-color": {
-      "exec": "~/.config/waybar/scripts/ws-color.sh",
-      "return-type": "json",
-      "interval": "once",
-      "signal": 8,
+      "exec": "tail -F ~/.config/waybar/feeds/workspace.json 2>/dev/null",
       "format": "{}",
+      "return-type": "json",
       "tooltip": true
     },
     "custom/penguin": {

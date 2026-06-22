@@ -37,8 +37,9 @@ eval $(jq -r '
     (.disk.read_speed // 0),
     (.disk.write_speed // 0),
     (.temp.fan1 // 0),
-    (.asus.profile // "unknown")
-  ] | @sh "gpu_pct=\(.[0]); gpu_temp=\(.[1]); gpu_freq=\(.[2]); cpu_avg=\(.[3]); cpu_tc=\(.[4]); ram_ukb=\(.[5]); ram_tkb=\(.[6]); ram_pct=\(.[7]); ram_swp=\(.[8]); disk_r=\(.[9]); disk_w=\(.[10]); fan1=\(.[11]); asus_prof=\(.[12])"
+    (.asus.profile // "unknown"),
+    (.workspace.num // 1)
+  ] | @sh "gpu_pct=\(.[0]); gpu_temp=\(.[1]); gpu_freq=\(.[2]); cpu_avg=\(.[3]); cpu_tc=\(.[4]); ram_ukb=\(.[5]); ram_tkb=\(.[6]); ram_pct=\(.[7]); ram_swp=\(.[8]); disk_r=\(.[9]); disk_w=\(.[10]); fan1=\(.[11]); asus_prof=\(.[12]); ws_num=\(.[13])"
 ' <<< "$data")
 
 # 1. GPU
@@ -148,3 +149,8 @@ eval $(jq -r '
   esac
   draw_module "" "<b>${r}</b>" "<span size='small'>󰈐 ${fan1} RPM</span>" "$ACCENT" "$cls"
 ) > "$FEEDS/asus.json.tmp" && mv "$FEEDS/asus.json.tmp" "$FEEDS/asus.json"
+
+# 7. WORKSPACE
+printf '{"text":" %s ","class":"ws%s","tooltip":"Workspace %s"}\n' \
+  "$ws_num" "$ws_num" "$ws_num" \
+  > "$FEEDS/workspace.json.tmp" && mv "$FEEDS/workspace.json.tmp" "$FEEDS/workspace.json"

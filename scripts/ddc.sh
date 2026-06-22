@@ -71,8 +71,8 @@ if [ "$FEATURE" = "combo" ]; then
     fi
 
     # Contrast is always derived from brightness — never cached independently
-    CONTRAST=$((CURRENT - 10))
-    [ $CONTRAST -lt 20 ] && CONTRAST=20
+    # Linear: brightness 0 → contrast 25, brightness 100 → contrast 100
+    CONTRAST=$(( 25 + CURRENT * 75 / 100 ))
 
     echo "$CURRENT" > "$BRIGHTNESS_CACHE"
     echo "$CURRENT" > "$BRIGHTNESS_TARGET"

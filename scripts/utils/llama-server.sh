@@ -22,7 +22,7 @@ toggle() {
             --temp 1.0 \
             --top-p 0.95 \
             --top-k 64 \
-            --host 0.0.0.0 \
+            --host 127.0.0.1 \
             --port "$PORT" &>/dev/null &
         echo $! > "$PIDFILE"
     fi

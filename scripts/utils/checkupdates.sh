@@ -1,9 +1,10 @@
 #!/bin/bash
+set -euo pipefail
 
-count=`yay -Qu | grep -v "\[ignored\]" | wc -l`
+count=$(yay -Qu 2>/dev/null | grep -cv "\[ignored\]")
 
-if [[ "$count" != "0" ]]; then
-    echo '{"text":" <sup>'$count'</sup>","tooltip":"'$count updates pending'","class":"notify"}' | jq --compact-output
+if [ "$count" -ne 0 ]; then
+    jq -nc --arg c "$count" '{"text":" <sup>\($c)</sup>","tooltip":"\($c) updates pending","class":"notify"}'
 else
-  echo '{"text":"  ","tooltip":"System is up-to-date","class":"good"}' | jq --compact-output
+    jq -nc '{"text":"  ","tooltip":"System is up-to-date","class":"good"}'
 fi

@@ -1,8 +1,9 @@
 #!/bin/bash
+set -euo pipefail
 # ~/.config/waybar/scripts/ddc.sh [brightness|contrast] [get|up|down]
 
-FEATURE=$1
-ACTION=$2
+FEATURE=${1:-}
+ACTION=${2:-}
 
 CACHE_DIR="$HOME/.cache/waybar-ddc"
 mkdir -p "$CACHE_DIR"

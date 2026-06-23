@@ -1,0 +1,202 @@
+@define-color block_bg rgba(30, 30, 46, 0.9);
+@define-color block_border rgba(255, 255, 255, 0.1);
+@define-color text_primary #cdd6f4;
+@define-color text_dim #585b70;
+@define-color accent_teal #94e2d5;
+@define-color accent_mauve #cba6f7;
+@define-color accent_green #a6e3a1;
+@define-color accent_peach #fab387;
+@define-color accent_blue #89b4fa;
+@define-color accent_pink #eba0ac;
+@define-color accent_yellow #f9e2af;
+@define-color accent_red #f38ba8;
+@define-color accent_cyan #89dceb;
+@define-color accent_sky #74c7ec;
+@define-color accent_rose #f5c2e7;
+@define-color mode_bg rgba(166, 3, 36, 0.85);
+@define-color mode_text #ffffff;
+@define-color highlight_bg rgba(0, 128, 128, 0.45);
+@define-color highlight_border rgba(148, 226, 213, 0.9);
+
+@import "base.css";
+
+.bar-top .modules-left,
+.bar-top .modules-center,
+.bar-top .modules-right {
+    background: @block_bg;
+    margin: 0px 3px;
+    padding: 0px 8px;
+    border-radius: 0 0 12px 12px;
+    border: 1px solid @block_border;
+}
+.bar-top .modules-right {
+    border-radius: 0 0 0 12px;
+}
+.bar-top .modules-left {
+    border-radius: 0 0 12px 0;
+}
+
+window#waybar.solo {
+    background: transparent;
+}
+
+/* Overrides to lessen bar height */
+.bar-top #workspaces button {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: 0;
+}
+
+.bar-top #idle_inhibitor,
+.bar-top #custom-keylight,
+.bar-top #bluetooth-lite,
+.bar-top #battery,
+.bar-top #custom-powerbtn {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: 0;
+}
+
+/* ── Center group layout ───────────────────────────────────── */
+#group-top-center {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+#clock-date {
+    font-size: 9px;
+    font-weight: bold;
+    color: @accent_green;
+    padding: 0;
+    margin: 1px 0;
+}
+
+/* ── Titlebox row (time, title, scratchpad, privacy) ────────── */
+window#waybar #group-titlebox-row {
+    padding: 0 12px;
+    margin: 0px 4px;
+    border-radius: 10px;
+    transition: opacity 0.25s ease;
+}
+window#waybar:not(.mode-default) #group-titlebox-row {
+    min-height: 0px;
+    min-width: 0px;
+    padding: 0px;
+    margin: 0px;
+    opacity: 0;
+}
+
+
+
+window#waybar #group-titlebox-row #scratchpad,
+window#waybar #group-titlebox-row #privacy {
+    margin-left: 6px;
+}
+
+
+.bar-top .modules-center {
+    padding: 0px 6px;
+    margin: 0px 3px;
+}
+
+#custom-ddc {
+    font-family: "Symbols Nerd Font";
+    letter-spacing: 0.01px;
+    margin: 0px;
+    padding: 0px 6px;
+    font-size: 16px;
+    min-width: 100px;
+}
+
+#bluetooth-lite {
+    margin: 0 4px;
+    min-width: 32px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* 1. Off state: dimmed */
+#bluetooth-lite.disabled,
+#bluetooth-lite.off {
+    color: @text_dim;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+/* 2. On state (not connected): brighter color, no highlight box */
+#bluetooth-lite.discoverable,
+#bluetooth-lite.on,
+#bluetooth-lite:not(.disabled):not(.connected) {
+    color: @text_primary;
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+/* 3. Connected state: active highlight */
+#bluetooth-lite.connected {
+    color: @accent_teal;
+    background: @highlight_bg;
+    border: 1px solid @highlight_border;
+}
+
+/* Keylight Module (matching Bluetooth view) */
+#custom-keylight {
+    margin: 0 4px;
+    min-width: 32px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+}
+#custom-keylight.inactive {
+    color: @text_dim;
+    background: transparent;
+    border: 1px solid transparent;
+}
+#custom-keylight.active {
+    color: @accent_teal;
+    background: @highlight_bg;
+    border: 1px solid @highlight_border;
+}
+
+/* Idle Inhibitor */
+#idle_inhibitor {
+    margin: 0 4px;
+    min-width: 32px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    color: @text_dim;
+    background: transparent;
+    border: 1px solid transparent;
+}
+#idle_inhibitor.activated {
+    color: @accent_teal;
+    background: @highlight_bg;
+    border: 1px solid @highlight_border;
+}
+
+
+
+/* ===== MODE WIDGET (top bar) ===== */
+/* sway/mode — only visible in non-default binding modes (e.g. resize) */
+.bar-top #mode {
+    color: @mode_text;
+    background-color: @mode_bg;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 2px 10px;
+    margin: 2px 4px;
+    border-radius: 8px;
+    animation: blink 0.5s infinite alternate;
+    min-width: 80px;
+}

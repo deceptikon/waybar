@@ -3,21 +3,20 @@
     "name": "bar-bottom",
     "layer": "top",
     "position": "bottom",
+    "reload_style_on_change": true,
     "height": 6,
     "modules-left": [
       "sway/workspaces#bottom"
     ],
     "modules-center": [
-      "sway/mode",
       "custom/uptime"
     ],
     "modules-right": [
-      "tray",
       "custom/ollama",
       "custom/llama"
     ],
     "include": [
-      "/home/lexx/.config/waybar/modules-ux-group.json"
+      "modules-controls.json"
     ],
     "sway/workspaces#bottom": {
       "disable-scroll": true,

@@ -1,0 +1,12 @@
+@import "base.css";
+
+window#waybar.bar-bottom {
+    background: rgba(30, 30, 46, 0.9);
+}
+.bar-bottom .modules-left,
+.bar-bottom .modules-center,
+.bar-bottom .modules-right {
+    margin: 0;
+    padding: 0;
+    border: none;
+}

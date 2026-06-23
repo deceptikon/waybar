@@ -3,6 +3,7 @@
     "name": "bar-vert",
     "layer": "top",
     "position": "right",
+    "reload_style_on_change": true,
     "width": 138,
     "fixed-center": true,
     "modules-left": [
@@ -27,8 +28,8 @@
       "custom/ext-display"
     ],
     "include": [
-      "/home/lexx/.config/waybar/modules-monitor-group.json",
-      "/home/lexx/.config/waybar/modules-ux-group.json"
+      "modules-sysmon.json",
+      "modules-controls.json"
     ],
     "clock": {
       "format": " {:%H:%M}",

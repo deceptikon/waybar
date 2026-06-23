@@ -1,0 +1,68 @@
+{
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "\uec15 <sup>\udb81\udcb3</sup>",
+      "deactivated": "\udb83\udfaa <sup>\udb81\udcb2</sup>"
+    }
+  },
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "tooltip": true,
+    "format-icons": {
+      "default": "\uf0e7",
+      "performance": "\uf0e7",
+      "balanced": "\uf24e",
+      "power-saver": "\uf09c"
+    }
+  },
+  "custom/dunst": {
+    "exec": "~/.config/waybar/scripts/utils/dunst.sh refresh",
+    "return-type": "json",
+    "interval": 1000,
+    "format": "{}<sup>\uf0a2</sup>",
+    "on-click": "~/.config/waybar/scripts/utils/dunst.sh",
+    "signal": 9
+  },
+  "custom/recorder": {
+    "format": "{}",
+    "interval": "once",
+    "return-type": "json",
+    "exec": "echo \"$(pgrep -x wf-recorder > /dev/null && echo '{\"text\":\"\udb82\ude1c <sup>\udb81\udc4a</sup>\",\"class\":\"recording\"}' || echo '{\"text\":\"\udb82\ude1c <sup>\ueba7</sup>\",\"class\":\"stopped\"}')\"",
+    "signal": 8,
+    "on-click": "~/.config/waybar/scripts/utils/capturer.sh",
+    "on-right-click": "kill $(pgrep -x wf-recorder)",
+    "tooltip": false
+  },
+  "custom/checkupdates": {
+    "exec": "~/.config/waybar/scripts/utils/checkupdates.sh",
+    "return-type": "json",
+    "interval": 3600,
+    "format": "{}",
+    "on-click": "wezterm -e yay -Syyu --noconfirm && yay -Sc --noconfirm && pkill -SIGRTMIN+8 waybar && notify-send '\u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e'",
+    "signal": 8
+  },
+  "custom/fnlock": {
+    "exec": "~/.config/waybar/scripts/utils/fn-lock.sh refresh",
+    "return-type": "json",
+    "signal": 10,
+    "on-click": "/usr/local/bin/toggle_fn_lock.sh"
+  },
+  "custom/ext-display": {
+    "exec": "~/.config/waybar/scripts/utils/ext-display.sh refresh",
+    "return-type": "json",
+    "format": "{}",
+    "interval": 1000,
+    "on-click": "~/.config/waybar/scripts/utils/ext-display.sh",
+    "signal": 11
+  },
+  "custom/llama": {
+    "exec": "~/.config/waybar/scripts/utils/llama-server.sh",
+    "return-type": "json",
+    "format": "{}",
+    "interval": 5,
+    "signal": 22,
+    "on-click": "~/.config/waybar/scripts/utils/llama-server.sh toggle"
+  }
+}

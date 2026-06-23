@@ -1,61 +1,20 @@
 [
   {
     "name": "bar-top",
-    "layer": "top",
-    "position": "top",
     "output": ["eDP-1"],
-    "modules-left": ["sway/workspaces"],
-    "modules-center": ["group/top-center"],
-    "modules-right": [
-      "group/audio",
-      "group/bright",
-      "idle_inhibitor",
-      "custom/keylight",
-      "bluetooth#lite",
-      "battery",
-      "custom/powerbtn"
-    ],
-    "include": [
-      "/home/lexx/.config/waybar/modules-top-shared.json",
-      "/home/lexx/.config/waybar/modules-hardware-group.json",
-      "/home/lexx/.config/waybar/modules-ux-group.json"
-    ],
-    "group/top-center": {
-      "orientation": "vertical",
-      "modules": [
-        "group/clock",
-        "sway/mode",
-        "group/titlebox-row"
-      ]
-    },
-    "group/clock": {
-      "orientation": "horizontal",
-      "modules": [
-        "clock#time",
-        "clock#date"
-      ]
-    }
+    "include": ["config-top-base.jsonc"]
   },
   {
-    "name": "bar-top",
-    "layer": "top",
-    "position": "top",
+    "name": "bar-top-ext",
     "output": ["HDMI-A-1"],
-    "modules-left": ["sway/workspaces"],
-    "modules-center": ["group/top-center"],
     "modules-right": [
       "group/audio",
-      "custom/ddc",
+      "group/bright-external",
       "idle_inhibitor",
       "custom/keylight",
       "bluetooth#lite",
       "battery",
       "custom/powerbtn"
-    ],
-    "include": [
-      "/home/lexx/.config/waybar/modules-top-shared.json",
-      "/home/lexx/.config/waybar/modules-hardware-group.json",
-      "/home/lexx/.config/waybar/modules-ux-group.json"
     ],
     "group/top-center": {
       "orientation": "vertical",
@@ -64,6 +23,7 @@
         "sway/mode",
         "group/titlebox-row"
       ]
-    }
+    },
+    "include": ["config-top-base.jsonc"]
   }
 ]

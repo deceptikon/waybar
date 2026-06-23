@@ -31,10 +31,18 @@ check_all_logs_deferred() {
     check_log "bottom"   "$LOGS_DIR/waybar-bottom.log"
 }
 
-# ── Reload mode ───────────────────────────────────────────────────────────────
+# ── Reload mode (full restart — SIGUSR2 is too flaky on multi-bar) ────────────
 if [[ "${1:-}" == "reload" ]]; then
-    killall -SIGUSR2 waybar 2>/dev/null || true
-    # Check logs 2s after reload to catch CSS errors that surface on reload
+    pkill -x waybar 2>/dev/null || true
+    sleep 0.3
+    waybar -c "$CFG_DIR/config-top"      -s "$CFG_DIR/style/top.css"     >> "$LOGS_DIR/waybar-top.log"    2>&1 &
+    disown
+    sleep 0.5
+    waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style/vertical.css" >> "$LOGS_DIR/waybar-vertical.log" 2>&1 &
+    disown
+    sleep 0.5
+    waybar -c "$CFG_DIR/config-bottom"   -s "$CFG_DIR/style/bottom.css"  >> "$LOGS_DIR/waybar-bottom.log"   2>&1 &
+    disown
     check_all_logs_deferred &
     disown
     exit 0
@@ -52,15 +60,15 @@ pkill -f "wifi-info.sh"       2>/dev/null || true
 ~/.config/waybar/scripts/sysmon/poller.sh &
 disown
 
-waybar -c "$CFG_DIR/config-top"      -s "$CFG_DIR/style-top.css"    >> "$LOGS_DIR/waybar-top.log"      2>&1 &
+waybar -c "$CFG_DIR/config-top"      -s "$CFG_DIR/style/top.css"     >> "$LOGS_DIR/waybar-top.log"      2>&1 &
+disown
+
+sleep 0.5
+waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style/vertical.css" >> "$LOGS_DIR/waybar-vertical.log"  2>&1 &
 disown
 
 sleep 1
-waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style-new.css"    >> "$LOGS_DIR/waybar-vertical.log"       &
-disown
-
-sleep 1
-waybar -c "$CFG_DIR/config-bottom"   -s "$CFG_DIR/style-bottom.css" >> "$LOGS_DIR/waybar-bottom.log"    2>&1 &
+waybar -c "$CFG_DIR/config-bottom"   -s "$CFG_DIR/style/bottom.css"  >> "$LOGS_DIR/waybar-bottom.log"    2>&1 &
 disown
 
 # Deferred log check after all bars have had time to start

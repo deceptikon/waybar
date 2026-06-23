@@ -2,26 +2,15 @@
   "group/titlebox-row": {
     "orientation": "horizontal",
     "modules": [
-      "custom/ws-color",
       "sway/window",
       "sway/scratchpad",
       "privacy"
     ]
   },
-  "custom/ws-color": {
-    "exec": "(swaymsg -t get_workspaces 2>/dev/null | jq -c '.[] | select(.focused==true) | {text: (.num | tostring), class: (\"ws\" + (.num | tostring)), tooltip: (\"Workspace \" + (.num | tostring))}'; stdbuf -oL swaymsg -t subscribe '[\"workspace\"]' 2>/dev/null | jq --unbuffered -c 'if .change == \"focus\" then {text: (.current.num | tostring), class: (\"ws\" + (.current.num | tostring)), tooltip: (\"Workspace \" + (.current.num | tostring))} else empty end')",
-    "format": "{}",
-    "return-type": "json",
-    "restart-interval": -1,
-    "tooltip": true
-  },
+
   "clock#date": {
-    "format": "<span text_transform=\"uppercase\">{:%A, %d %B %Y}</span>",
+    "format": "<span text_transform=\"uppercase\">{:%A, %d %B %Y   %H:%M}</span>",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
-  },
-  "clock#time": {
-    "format": "{:%H:%M}",
-    "tooltip": false
   },
   "sway/workspaces": {
     "disable-scroll": false,
@@ -61,15 +50,19 @@
     "tooltip-format": "{app}: {title}"
   },
   "sway/window": {
-    "format": "\uf17c [{title}] {app_id}",
-    "max-length": "",
+    "format": " {title} \uf17c [{app_id}]",
+    "max-length": "20",
     "all-outputs": true,
     "offscreen-css": true,
     "offscreen-css-text": "NO FOCUS",
     "icon-size": 16,
+    "icon": true,
     "rewrite": {
       "(.*) Mozilla Firefox": "$1 \ud83c\udf0e",
-      "(.*) VSCodium": "$1 \udb82\ude1e"
+      "(.*) VSCodium": "$1 \udb82\ude1e",
+      "(.*) - vim": " $1",
+      "(.*) - zsh": " [$1]",
+      "(.*) [foot]": " [$1]"
     }
   }
 }

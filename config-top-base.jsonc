@@ -1,0 +1,29 @@
+{
+  "layer": "top",
+  "position": "top",
+  "reload_style_on_change": true,
+  "modules-left": ["sway/workspaces"],
+  "modules-center": ["group/top-center"],
+  "modules-right": [
+    "group/audio",
+    "group/bright",
+    "idle_inhibitor",
+    "custom/keylight",
+    "bluetooth#lite",
+    "battery",
+    "custom/powerbtn"
+  ],
+  "include": [
+    "modules-top-shared.json",
+    "modules-peripherals.json",
+    "modules-controls.json"
+  ],
+  "group/top-center": {
+    "orientation": "vertical",
+    "modules": [
+      "clock",
+      "sway/mode",
+      "group/titlebox-row"
+    ]
+  }
+}

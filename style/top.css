@@ -36,11 +36,7 @@
     border-radius: 0 0 12px 0;
 }
 
-window#waybar.solo {
-    background: transparent;
-}
-
-/* Overrides to lessen bar height */
+/* Overrides to compact workspaces and right-side modules */
 .bar-top #workspaces button {
     margin-top: 0;
     margin-bottom: 0;
@@ -48,7 +44,6 @@ window#waybar.solo {
     padding-bottom: 0;
     min-height: 0;
 }
-
 .bar-top #idle_inhibitor,
 .bar-top #custom-keylight,
 .bar-top #bluetooth-lite,

@@ -222,7 +222,6 @@ tooltip label {
    RIGHT MODULES — compact button bar
    ════════════════════════════════════════════ */
 
-#idle_inhibitor,
 #power-profiles-daemon,
 #custom-dunst,
 #custom-recorder,
@@ -240,7 +239,6 @@ tooltip label {
   color: #6c7086;
 }
 
-#idle_inhibitor.activated,
 #custom-dunst.paused,
 #custom-checkupdates.notify,
 #custom-fnlock.active {

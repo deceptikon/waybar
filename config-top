@@ -16,14 +16,6 @@
       "battery",
       "custom/powerbtn"
     ],
-    "group/top-center": {
-      "orientation": "vertical",
-      "modules": [
-        "clock#date",
-        "sway/mode",
-        "group/titlebox-row"
-      ]
-    },
     "include": ["config-top-base.jsonc"]
   }
 ]

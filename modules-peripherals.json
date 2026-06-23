@@ -1,13 +1,13 @@
 {
   "custom/ddc": {
-    "exec": "~/.config/waybar/scripts/ddc.sh combo get",
+    "exec": "~/.config/waybar/scripts/utils/ddc.sh combo get",
     "format": "{}",
     "return-type": "json",
-    "on-scroll-up": "~/.config/waybar/scripts/ddc.sh combo up && pkill -SIGRTMIN+11 waybar",
-    "on-scroll-down": "~/.config/waybar/scripts/ddc.sh combo down && pkill -SIGRTMIN+11 waybar",
-    "on-click": "~/.config/waybar/scripts/ddc.sh combo set 50 && pkill -SIGRTMIN+11 waybar",
-    "on-click-right": "~/.config/waybar/scripts/ddc.sh combo set 100 && pkill -SIGRTMIN+11 waybar",
-    "on-click-middle": "~/.config/waybar/scripts/ddc.sh combo set 0 && pkill -SIGRTMIN+11 waybar",
+    "on-scroll-up": "~/.config/waybar/scripts/utils/ddc.sh combo up && pkill -SIGRTMIN+11 waybar",
+    "on-scroll-down": "~/.config/waybar/scripts/utils/ddc.sh combo down && pkill -SIGRTMIN+11 waybar",
+    "on-click": "~/.config/waybar/scripts/utils/ddc.sh combo set 50 && pkill -SIGRTMIN+11 waybar",
+    "on-click-right": "~/.config/waybar/scripts/utils/ddc.sh combo set 100 && pkill -SIGRTMIN+11 waybar",
+    "on-click-middle": "~/.config/waybar/scripts/utils/ddc.sh combo set 0 && pkill -SIGRTMIN+11 waybar",
     "signal": 11
   },
   "custom/keylight": {

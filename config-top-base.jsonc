@@ -21,7 +21,7 @@
   "group/top-center": {
     "orientation": "vertical",
     "modules": [
-      "clock",
+      "clock#date",
       "sway/mode",
       "group/titlebox-row"
     ]

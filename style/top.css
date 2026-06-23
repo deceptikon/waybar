@@ -23,11 +23,11 @@
 .bar-top .modules-left,
 .bar-top .modules-center,
 .bar-top .modules-right {
-    background: @block_bg;
+  background: rgba(30, 30, 46, 0.85);
     margin: 0px 3px;
     padding: 0px 8px;
     border-radius: 0 0 12px 12px;
-    border: 1px solid @block_border;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 .bar-top .modules-right {
     border-radius: 0 0 0 12px;
@@ -62,10 +62,14 @@ window#waybar.solo {
 }
 
 /* ── Center group layout ───────────────────────────────────── */
+#clock {
+    font-size: 9px;
+}
+
 #group-top-center {
     background: transparent;
     border: none;
-    padding: 0;
+    padding: 0px;
     margin: 0;
 }
 
@@ -106,11 +110,9 @@ window#waybar #group-titlebox-row #privacy {
 }
 
 #custom-ddc {
-    font-family: "Symbols Nerd Font";
-    letter-spacing: 0.01px;
     margin: 0px;
-    padding: 0px 6px;
-    font-size: 16px;
+    padding: 0px 0px;
+    font-size: 9px;
     min-width: 100px;
 }
 

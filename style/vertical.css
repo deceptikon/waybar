@@ -20,13 +20,13 @@ tooltip label {
   font-size: 11px;
 }
 
-/* All zone containers — consistent bg, padding, gap between modules */
+/* All zone containers — consistent subtle backgrounds */
 .bar-vert .modules-left,
 .bar-vert .modules-center,
 .bar-vert .modules-right {
   background: rgba(30, 30, 46, 0.85);
-  margin: 6px 2px;
-  padding: 6px 4px;
+  margin: 0px 2px;
+  padding: 8px 4px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }

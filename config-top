@@ -2,7 +2,8 @@
   {
     "name": "bar-top",
     "output": "eDP-1",
-    "include": "config-top-base.jsonc"
+    "include": "config-top-base.jsonc",
+    "modules-right": []
   },
   {
     "name": "bar-top-ext",
@@ -14,7 +15,6 @@
     ],
     "modules-right": [
       "group/bright-external",
-      "idle_inhibitor",
       "custom/keylight",
       "battery",
       "custom/powerbtn"

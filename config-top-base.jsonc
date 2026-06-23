@@ -12,7 +12,6 @@
   ],
   "modules-right": [
     "group/bright",
-    "idle_inhibitor",
     "custom/keylight",
     "battery"
   ],

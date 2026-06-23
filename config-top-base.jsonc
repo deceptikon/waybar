@@ -2,16 +2,19 @@
   "layer": "top",
   "position": "top",
   "reload_style_on_change": true,
-  "modules-left": ["sway/workspaces"],
-  "modules-center": ["group/top-center"],
+  "modules-left": [
+    "custom/powerbtn",
+    "bluetooth#lite",
+    "group/audio"
+  ],
+  "modules-center": [
+    "group/top-center"
+  ],
   "modules-right": [
-    "group/audio",
     "group/bright",
     "idle_inhibitor",
     "custom/keylight",
-    "bluetooth#lite",
-    "battery",
-    "custom/powerbtn"
+    "battery"
   ],
   "include": [
     "modules-top-shared.json",
@@ -25,5 +28,9 @@
       "sway/mode",
       "group/titlebox-row"
     ]
+  },
+  "tray": {
+    "icon-size": 20,
+    "spacing": 10
   }
 }

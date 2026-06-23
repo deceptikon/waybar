@@ -208,6 +208,30 @@ tooltip label {
 #privacy.screenshare { color: #f38ba8; }
 #privacy.audio-in { color: #89b4fa; }
 
+/* ── LLM switch group — ollama + llama toggle pair ── */
+#custom-ollama,
+#custom-llama {
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin: 2px 4px;
+  min-width: 36px;
+}
+#custom-ollama.on,
+#custom-llama.on {
+  border-color: rgba(148, 226, 213, 0.5);
+  background: rgba(0, 128, 128, 0.15);
+  color: #94e2d5;
+}
+#custom-ollama.off,
+#custom-llama.off {
+  color: #45475a;
+  border-color: rgba(255, 255, 255, 0.04);
+}
+
 .bar-vert #tray {
   border: none;
   background: rgba(20, 20, 28, 0.92);

@@ -1,21 +1,24 @@
 [
   {
     "name": "bar-top",
-    "output": ["eDP-1"],
-    "include": ["config-top-base.jsonc"]
+    "output": "eDP-1",
+    "include": "config-top-base.jsonc"
   },
   {
     "name": "bar-top-ext",
-    "output": ["HDMI-A-1"],
-    "modules-right": [
+    "output": "HDMI-A-1",
+    "modules-left": [
+      "custom/powerbtn",
       "group/audio",
+      "bluetooth#lite"
+    ],
+    "modules-right": [
       "group/bright-external",
       "idle_inhibitor",
       "custom/keylight",
-      "bluetooth#lite",
       "battery",
       "custom/powerbtn"
     ],
-    "include": ["config-top-base.jsonc"]
+    "include": "config-top-base.jsonc"
   }
 ]

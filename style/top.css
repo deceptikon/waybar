@@ -20,54 +20,43 @@
 
 @import "base.css";
 
-.bar-top .modules-left,
-.bar-top .modules-center,
-.bar-top .modules-right {
-  background: rgba(30, 30, 46, 0.85);
-    margin: 0px 3px;
-    padding: 0px 8px;
-    border-radius: 0 0 12px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-.bar-top .modules-right {
-    border-radius: 0 0 0 12px;
-}
+/* ════════════════════════════════════════════
+   TL — left zone: powerbtn, bluetooth, audio
+   ════════════════════════════════════════════ */
 .bar-top .modules-left {
     border-radius: 0 0 12px 0;
+    padding: 0px 8px;
+    margin: 0px 3px;
+    background: rgba(30, 30, 46, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.bar-top #custom-powerbtn,
+.bar-top #bluetooth-lite {
+    margin: 0 6px 0 0;
+    padding: 1px 6px;
+}
+.bar-top #group-audio {
+    margin: 0;
 }
 
-/* Overrides to compact workspaces and right-side modules */
-.bar-top #workspaces button {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    min-height: 0;
+/* ════════════════════════════════════════════
+   TC — center zone: date, mode, titlebox-row
+   ════════════════════════════════════════════ */
+.bar-top .modules-center {
+    padding: 0px 12px;
+    margin: 0px 3px;
+    background: rgba(30, 30, 46, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
-.bar-top #idle_inhibitor,
-.bar-top #custom-keylight,
-.bar-top #bluetooth-lite,
-.bar-top #battery,
-.bar-top #custom-powerbtn {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    min-height: 0;
-}
-
-/* ── Center group layout ───────────────────────────────────── */
 #clock {
     font-size: 9px;
 }
-
 #group-top-center {
     background: transparent;
     border: none;
     padding: 0px;
     margin: 0;
 }
-
 #clock-date {
     font-size: 9px;
     font-weight: bold;
@@ -76,7 +65,9 @@
     margin: 1px 0;
 }
 
-/* ── Titlebox row (time, title, scratchpad, privacy) ────────── */
+/* ════════════════════════════════════════════
+   Titlebox row (window, scratchpad, privacy)
+   ════════════════════════════════════════════ */
 window#waybar #group-titlebox-row {
     padding: 0 12px;
     margin: 0px 4px;
@@ -90,45 +81,47 @@ window#waybar:not(.mode-default) #group-titlebox-row {
     margin: 0px;
     opacity: 0;
 }
-
-
-
 window#waybar #group-titlebox-row #scratchpad,
 window#waybar #group-titlebox-row #privacy {
     margin-left: 6px;
 }
 
-
-.bar-top .modules-center {
-    padding: 0px 6px;
+/* ════════════════════════════════════════════
+   TR — right zone: bright, idle, keylight, battery
+   ════════════════════════════════════════════ */
+.bar-top .modules-right {
+    border-radius: 0 0 0 12px;
+    padding: 0px 10px 0px 4px;
     margin: 0px 3px;
+    background: rgba(30, 30, 46, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.bar-top #group-bright,
+.bar-top #idle_inhibitor,
+.bar-top #custom-keylight,
+.bar-top #battery {
+    margin: 0 6px 0 0;
+    padding: 1px 4px;
+}
+.bar-top .modules-right :last-child {
+    margin-right: 0;
 }
 
-#custom-ddc {
-    margin: 0px;
-    padding: 0px 0px;
-    font-size: 9px;
-    min-width: 100px;
-}
-
+/* ════════════════════════════════════════════
+   Individual module styles
+   ════════════════════════════════════════════ */
 #bluetooth-lite {
-    margin: 0 4px;
     min-width: 32px;
-    padding: 1px 6px;
     border-radius: 6px;
     font-size: 15px;
     font-weight: bold;
 }
-
-/* 1. Off state: dimmed */
 #bluetooth-lite.disabled,
 #bluetooth-lite.off {
     color: @text_dim;
     background: transparent;
     border: 1px solid transparent;
 }
-
-/* 2. On state (not connected): brighter color, no highlight box */
 #bluetooth-lite.discoverable,
 #bluetooth-lite.on,
 #bluetooth-lite:not(.disabled):not(.connected) {
@@ -136,15 +129,12 @@ window#waybar #group-titlebox-row #privacy {
     background: transparent;
     border: 1px solid transparent;
 }
-
-/* 3. Connected state: active highlight */
 #bluetooth-lite.connected {
     color: @accent_teal;
     background: @highlight_bg;
     border: 1px solid @highlight_border;
 }
 
-/* Keylight Module (matching Bluetooth view) */
 #custom-keylight {
     margin: 0 4px;
     min-width: 32px;
@@ -164,9 +154,7 @@ window#waybar #group-titlebox-row #privacy {
     border: 1px solid @highlight_border;
 }
 
-/* Idle Inhibitor */
 #idle_inhibitor {
-    margin: 0 4px;
     min-width: 32px;
     padding: 1px 6px;
     border-radius: 6px;
@@ -182,10 +170,14 @@ window#waybar #group-titlebox-row #privacy {
     border: 1px solid @highlight_border;
 }
 
+#custom-ddc {
+    margin: 0px;
+    padding: 0px 0px;
+    font-size: 9px;
+    min-width: 100px;
+}
 
-
-/* ===== MODE WIDGET (top bar) ===== */
-/* sway/mode — only visible in non-default binding modes (e.g. resize) */
+/* sway/mode — resize indicator */
 .bar-top #mode {
     color: @mode_text;
     background-color: @mode_bg;

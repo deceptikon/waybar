@@ -15,9 +15,9 @@
       "group/qwen-network"
     ],
     "modules-center": [
-      "group/tray",
       "custom/lang",
-      "privacy"
+      "custom/ollama",
+      "custom/llama"
     ],
     "modules-right": [
       "power-profiles-daemon",
@@ -40,58 +40,11 @@
         "on-scroll-down": "shift_down"
       }
     },
-    	"group/tray": {
-		"orientation": "horizontal",
-		"modules": [
-			"tray"
-		]
-	},
-    "tray": {
-      "icon-size": 15,
-      "spacing": 11,
-      "reverse-direction": true,
-      "icons": {
-        "blueman": "bluetooth",
-        "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png"
-      }
-    },
     "custom/lang": {
       "exec": "swaymsg -t get_inputs | grep layout_name | grep -v En | awk 'END{if(NR == 0){print \"EN\"}else{print toupper(substr($2,2,2))}}'",
       "interval": 1,
       "format": "{}"
     },
-    "privacy": {
-      "icon-spacing": 4,
-      "icon-size": 18,
-      "transition-duration": 250,
-      "modules": [
-        {
-          "type": "screenshare",
-          "tooltip": true,
-          "tooltip-icon-size": 24
-        },
-        {
-          "type": "audio-out",
-          "tooltip": true,
-          "tooltip-icon-size": 24
-        },
-        {
-          "type": "audio-in",
-          "tooltip": true,
-          "tooltip-icon-size": 24
-        }
-      ],
-      "ignore-monitor": true,
-      "ignore": [
-        {
-          "type": "audio-in",
-          "name": "cava"
-        },
-        {
-          "type": "screenshare",
-          "name": "obs"
-        }
-      ]
-    }
+    "privacy": null
   }
 ]

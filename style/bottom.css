@@ -31,18 +31,19 @@ window#bar-bottom {
 
 /* ════════════════════════════════════════════
    BOTTOM BAR WORKSPACES — thin colorful lines
-   sway/workspaces#bottom → GTK CSS id: #bottom
+   sway/workspaces#bottom → GTK CSS selector: #workspaces.bottom
+   Higher specificity than base.css #workspaces button
    ════════════════════════════════════════════ */
 
-#bottom {
+#workspaces.bottom {
     background: transparent;
 }
-#bottom button {
+#workspaces.bottom button {
     padding: 0;
-    margin: 0 12px;
-    min-height: 2px;
-    min-width: 60px;
-    border-radius: 0;
+    margin: 0 8px;
+    min-height: 4px;
+    min-width: 40px;
+    border-radius: 4px;
     border: none;
     background-color: white;
     opacity: 0.25;
@@ -50,26 +51,27 @@ window#bar-bottom {
     color: transparent;
     font-size: 0;
 }
-#bottom button.focused,
-#bottom button.active {
+#workspaces.bottom button.focused,
+#workspaces.bottom button.active {
     opacity: 1;
-    min-width: 120px;
-    min-height: 3px;
+    min-width: 80px;
+    min-height: 6px;
+    box-shadow: 0px -2px 6px rgba(148, 226, 213, 0.5);
 }
-#bottom button.urgent {
+#workspaces.bottom button.urgent {
     background-color: #f38ba8;
     opacity: 1;
 }
-#bottom button:nth-child(1)  { background-color: #fab387; }
-#bottom button:nth-child(2)  { background-color: #89b4fa; }
-#bottom button:nth-child(3)  { background-color: #a6e3a1; }
-#bottom button:nth-child(4)  { background-color: #cba6f7; }
-#bottom button:nth-child(5)  { background-color: #f9e2af; }
-#bottom button:nth-child(6)  { background-color: #94e2d5; }
-#bottom button:nth-child(7)  { background-color: #89dceb; }
-#bottom button:nth-child(8)  { background-color: #74c7ec; }
-#bottom button:nth-child(9)  { background-color: #f5c2e7; }
-#bottom button:nth-child(10) { background-color: #eba0ac; }
+#workspaces.bottom button:nth-child(1)  { background-color: #fab387; }
+#workspaces.bottom button:nth-child(2)  { background-color: #89b4fa; }
+#workspaces.bottom button:nth-child(3)  { background-color: #a6e3a1; }
+#workspaces.bottom button:nth-child(4)  { background-color: #cba6f7; }
+#workspaces.bottom button:nth-child(5)  { background-color: #f9e2af; }
+#workspaces.bottom button:nth-child(6)  { background-color: #94e2d5; }
+#workspaces.bottom button:nth-child(7)  { background-color: #89dceb; }
+#workspaces.bottom button:nth-child(8)  { background-color: #74c7ec; }
+#workspaces.bottom button:nth-child(9)  { background-color: #f5c2e7; }
+#workspaces.bottom button:nth-child(10) { background-color: #eba0ac; }
 
 /* ════════════════════════════════════════════
    BOTTOM BAR MODULES — uptime, ollama, llama

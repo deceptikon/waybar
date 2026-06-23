@@ -32,88 +32,9 @@ window#waybar {
     margin: 0;
 }
 
-.bar-horiz .modules-left,
-.bar-horiz .modules-center,
-.bar-horiz .modules-right {
-    background: rgba(30, 30, 46, 0.9);
-    margin: 2px 3px;
-    padding: 2px 8px;
-    border-radius: 0 0 12px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.bar-horiz .modules-right {
-    border-radius: 0 0 0 12px;
-}
-.bar-horiz .modules-left {
-    border-radius: 0 0 12px 0;
-}
-
-window.bar-vert {
-    background: rgba(15, 15, 20, 0.6);
-    padding: 10px 0;
-}
-.bar-vert .modules-left,
-.bar-vert .modules-center,
-.bar-vert .modules-right {
-    background: rgba(0, 0, 0, 0.4);
-    margin: 4px;
-    padding: 6px 2px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 /* ════════════════════════════════════════════
-   WORKSPACES & WINDOW
+   WORKSPACES (base style, overridden per-bar)
    ════════════════════════════════════════════ */
-
-#mode {
-    color: #ffffff;
-    background-color: rgba(166, 3, 36, 0.657);
-    font-size: 8px;
-    padding: 0 6px;
-    margin: 2px 0;
-    border-radius: 10px;
-    animation: blink 0.5s infinite alternate;
-    min-width: 150px;
-}
-
-#window {
-    font-size: 13px;
-    font-weight: 500;
-    padding: 2px 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    min-width: 350px;
-    margin-top: 4px;
-    margin-bottom: 2px;
-}
-window#waybar.solo #window {
-    color: #eee8d5;
-    background-color: #073642;
-}
-window#waybar.floating #window {
-    padding: 2px 15px;
-    color: #eee8d5;
-    background-color: #b58900;
-}
-window#waybar.tiled #window {
-    padding: 2px 15px;
-    color: #eee8d5;
-    background-color: #334b16;
-}
-window#waybar.stacked #window {
-    padding: 2px 15px;
-    color: #eee8d5;
-    background: #2aa196;
-}
-window#waybar.tabbed {
-    padding: 2px 15px;
-    color: #eee8d5;
-    background: #859900;
-}
-window#waybar.code-oss.bar-low * {
-    background-color: #007acc;
-}
 
 #workspaces button {
     margin: 4px 0;
@@ -146,7 +67,7 @@ window#waybar.code-oss.bar-low * {
 }
 
 /* ════════════════════════════════════════════
-   HARDWARE MONITORS
+   BATTERY
    ════════════════════════════════════════════ */
 
 #battery {
@@ -168,156 +89,6 @@ window#waybar.code-oss.bar-low * {
 }
 
 /* ════════════════════════════════════════════
-   NETWORK
-   ════════════════════════════════════════════ */
-
-#network {
-    color: palegreen;
-}
-#network.disconnected {
-    background: rgba(200, 30, 30, 0.5);
-    animation: blinkred 0.2s linear infinite alternate;
-    padding: 0px 10px 0 0;
-    border-radius: 10px 50px 50px 10px;
-}
-
-#network-qwi,
-#network.qwi {
-    font-size: 16px;
-    min-width: 28px;
-    padding: 2px 6px;
-    border: none;
-    background: transparent;
-    border-radius: 0;
-    color: #94e2d5;
-    margin: 0 4px 0 6px;
-}
-#network-qwi.disconnected,
-#network.qwi.disconnected {
-    color: #666;
-}
-
-#group-qwen-network {
-    background: rgba(20, 20, 28, 0.92);
-    border: 1px solid rgba(148, 226, 213, 0.4);
-    border-radius: 8px;
-    padding: 2px 4px 2px 6px;
-    margin: 0 4px;
-}
-
-#custom-qwen-wifi-info {
-    font-size: 12px;
-    font-weight: 500;
-    min-height: 32px;
-    min-width: 100px;
-    padding: 2px 8px;
-    border-radius: 6px;
-    border: 1px solid rgba(148, 226, 213, 0.4);
-    background: rgba(30, 30, 42, 0.85);
-    color: #94e2d5;
-    font-family: "JetBrainsMono Nerd Font", "MesloLGS Nerd Font", monospace;
-}
-#custom-qwen-wifi-info.medium {
-    background: rgba(249, 226, 175, 0.15);
-    border-color: rgba(249, 226, 175, 0.45);
-    color: #f9e2af;
-}
-#custom-qwen-wifi-info.warning {
-    background: rgba(250, 179, 135, 0.2);
-    border-color: rgba(250, 179, 135, 0.55);
-    color: #fab387;
-}
-#custom-qwen-wifi-info.critical {
-    background: rgba(243, 139, 168, 0.2);
-    border-color: rgba(243, 139, 168, 0.55);
-    color: #f38ba8;
-}
-#custom-qwen-wifi-info.disconnected {
-    background: rgba(100, 100, 100, 0.2);
-    border-color: rgba(120, 120, 120, 0.4);
-    color: #aaa;
-}
-
-/* ════════════════════════════════════════════
-   SYSTEM MONITORS — CPU, GPU, RAM, SSD, ASUS
-   ════════════════════════════════════════════ */
-
-#group-qwen-ssd {
-    background: rgba(20, 20, 28, 0.92);
-    border: 1px solid rgba(166, 227, 161, 0.4);
-    border-radius: 8px;
-    padding: 2px 4px 2px 6px;
-    margin: 0 4px;
-}
-#custom-qwen-ssd-icon {
-    font-size: 16px;
-    min-width: 24px;
-    padding: 2px 4px;
-    border: none;
-    background: transparent;
-    border-radius: 0;
-    color: #a6e3a1;
-    margin-right: 2px;
-}
-#custom-qwen-ssd-icon.critical { color: #f38ba8; }
-#custom-qwen-ssd-icon.warning  { color: #fab387; }
-#custom-qwen-ssd-icon.medium   { color: #f9e2af; }
-
-#group-qwen-cpu {
-    background: rgba(20, 20, 28, 0.92);
-    border: 1px solid rgba(166, 227, 161, 0.4);
-    border-radius: 8px;
-    padding: 2px 4px 2px 6px;
-    margin: 0 4px;
-}
-#custom-qwen-cpu-icon {
-    font-size: 16px;
-    min-width: 24px;
-    padding: 2px 4px;
-    border: none;
-    background: transparent;
-    border-radius: 0;
-    color: #a6e3a1;
-    margin-right: 2px;
-}
-
-#group-qwen-ram {
-    padding: 0 2px 0 4px;
-    background: rgba(20, 20, 28, 0.92);
-    border: 1px solid rgba(137, 180, 250, 0.4);
-    border-radius: 8px;
-    margin: 0 4px;
-}
-#custom-qwen-ram-icon {
-    margin-right: 2px;
-    font-size: 16px;
-    min-width: 24px;
-    padding: 2px 4px;
-    border: none;
-    background: transparent;
-    border-radius: 0;
-    color: #89b4fa;
-}
-
-#group-qwen-asus {
-    background: rgba(20, 20, 28, 0.92);
-    border: 1px solid rgba(148, 226, 213, 0.4);
-    border-radius: 8px;
-    padding: 2px 4px 2px 6px;
-    margin: 0 4px;
-}
-#custom-qwen-asus-icon {
-    font-size: 16px;
-    min-width: 24px;
-    padding: 2px 4px;
-    border: none;
-    background: transparent;
-    border-radius: 0;
-    color: #94e2d5;
-    margin-right: 2px;
-}
-
-/* ════════════════════════════════════════════
    AUDIO & DISPLAY — sliders + group container
    ════════════════════════════════════════════ */
 
@@ -334,6 +105,11 @@ window#waybar.code-oss.bar-low * {
     min-width: 20px;
 }
 
+#pulseaudio-slider,
+#backlight-slider {
+    margin: 0 6px;
+    padding: 0 4px;
+}
 #pulseaudio-slider trough,
 #backlight-slider trough {
     min-height: 10px;
@@ -350,11 +126,6 @@ window#waybar.code-oss.bar-low * {
     background: linear-gradient(135deg, #fab387, #f9e2af);
     border-radius: 4px;
 }
-#pulseaudio-slider,
-#backlight-slider {
-    margin: 0 6px;
-    padding: 0 4px;
-}
 #pulseaudio-slider slider,
 #backlight-slider slider {
     border: none;
@@ -362,15 +133,6 @@ window#waybar.code-oss.bar-low * {
     border-radius: 0;
     min-width: 2px;
     min-height: 2px;
-}
-
-#pulseaudio,
-#backlight {
-    margin-right: 6px;
-}
-#pulseaudio-slider,
-#backlight-slider {
-    margin-left: 2px;
 }
 
 #group-audio,
@@ -385,201 +147,6 @@ window#waybar.code-oss.bar-low * {
 }
 
 /* ════════════════════════════════════════════
-   SYSTEM CONTROLS & TOGGLES
-   ════════════════════════════════════════════ */
-
-#custom-powerbtn {
-    margin: 0 4px;
-    /* border: 1px solid rgba(0, 128, 128, 0.3); */
-    border-radius: 6px;
-    min-height: 16px;
-    /* min-width: 42px; */
-    color: #249e94;
-    font-size: 16px;
-    padding: 2px 4px;
-}
-
-#idle_inhibitor,
-#power-profiles-daemon,
-#custom-dunst,
-#custom-recorder,
-#custom-fnlock,
-#custom-ext-display,
-#custom-checkupdates {
-    border: 1px solid rgba(0, 128, 128, 0.3);
-    border-top: 2px solid lightseagreen;
-    border-bottom: 2px solid teal;
-    border-radius: 8px;
-    margin: 2px 4px;
-    min-height: 20px;
-    min-width: 30px;
-    color: #249e94;
-    font-size: 24px;
-    padding: 4px;
-    box-shadow: -1px 1px 3px rgba(0, 128, 128, 0.3);
-}
-
-#custom-fnlock.active {
-    border: 1px solid lightseagreen;
-    box-shadow: -1px 1px 5px rgba(222, 90, 0, 0.95);
-    border-bottom: 4px solid teal;
-    color: #90ee90;
-}
-
-#custom-ext-display.off { color: #666; }
-#custom-ext-display.disconnected {
-    color: #444;
-    opacity: 0.5;
-}
-
-#custom-checkupdates.notify,
-#idle_inhibitor.activated,
-#custom-dunst.paused,
-#custom-lang,
-#custom-recorder.recording,
-#custom-fnlock.active,
-#custom-checkupdates.active {
-    border: 1px solid lightseagreen;
-    box-shadow: -1px 1px 5px rgba(222, 90, 0, 0.95);
-    border-bottom: 4px solid teal;
-    background: rgba(0, 99, 99, 0.3);
-}
-
-#custom-recorder.recording {
-    color: crimson;
-}
-
-/* ════════════════════════════════════════════
-   TRAY
-   ════════════════════════════════════════════ */
-
-.bar-vert #tray {
-    border: none;
-    background: transparent;
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
-    min-width: 0;
-}
-#tray {
-    padding: 0 10px;
-    min-width: 120px;
-}
-#tray > .passive,
-#tray > .active,
-#tray > .needs-attention {
-    border-radius: 4px;
-}
-
-/* ════════════════════════════════════════════
-   CLOCK
-   ════════════════════════════════════════════ */
-
-#clock {
-    color: #cba6f7;
-    font-size: 14px;
-    padding: 4px;
-}
-
-/* ════════════════════════════════════════════
-   BOTTOM BAR — line workspaces, uptime, ollama
-   ════════════════════════════════════════════ */
-
-#custom-uptime {
-    color: #fab387;
-    font-size: 8px;
-    padding: 0 8px;
-    min-width: 100px;
-}
-
-#custom-ollama {
-    color: #249e94;
-    font-size: 8px;
-    padding: 0 8px;
-}
-#custom-ollama.on  { color: #94e2d5; }
-#custom-ollama.off { color: #666; }
-
-#workspaces.bottom {
-    background: transparent;
-    border: none;
-    margin: 0;
-    padding: 0;
-}
-#workspaces.bottom button {
-    padding: 0;
-    margin: 0 12px;
-    min-height: 2px;
-    min-width: 60px;
-    border-radius: 1px;
-    border: none;
-    background-color: white;
-    opacity: 0.25;
-    transition: all 0.3s ease;
-}
-#workspaces.bottom button.focused,
-#workspaces.bottom button.active {
-    opacity: 1;
-    min-width: 120px;
-    min-height: 3px;
-}
-#workspaces.bottom button.urgent {
-    background-color: #f38ba8;
-    opacity: 1;
-    animation: blinkred 0.5s infinite alternate;
-}
-#workspaces.bottom button:nth-child(1)  { background-color: #fab387; }
-#workspaces.bottom button:nth-child(2)  { background-color: #89b4fa; }
-#workspaces.bottom button:nth-child(3)  { background-color: #a6e3a1; }
-#workspaces.bottom button:nth-child(4)  { background-color: #cba6f7; }
-#workspaces.bottom button:nth-child(5)  { background-color: #f9e2af; }
-#workspaces.bottom button:nth-child(6)  { background-color: #94e2d5; }
-#workspaces.bottom button:nth-child(7)  { background-color: #89dceb; }
-#workspaces.bottom button:nth-child(8)  { background-color: #74c7ec; }
-#workspaces.bottom button:nth-child(9)  { background-color: #f5c2e7; }
-#workspaces.bottom button:nth-child(10) { background-color: #eba0ac; }
-
-/* ════════════════════════════════════════════
-   VERTICAL BAR — unified monitor group layout
-   ════════════════════════════════════════════ */
-
-.bar-vert #group-qwen-cpu,
-.bar-vert #group-qwen-ram,
-.bar-vert #group-qwen-ssd,
-.bar-vert #group-qwen-network,
-.bar-vert #group-qwen-asus {
-    min-width: 160px;
-    margin: 12px 4px 2px;
-    padding: 4px 6px;
-}
-
-#custom-qwen-cpu,
-#custom-qwen-ram,
-#custom-qwen-ssd,
-#custom-qwen-asus {
-    font-size: 11px;
-    font-weight: 500;
-    min-height: 32px;
-    padding: 2px 6px;
-    border-radius: 6px;
-    min-width: 100px;
-}
-
-#network-qwi,
-#custom-qwen-cpu-icon,
-#custom-qwen-ram-icon,
-#custom-qwen-ssd-icon,
-#custom-qwen-asus-icon {
-    padding-top: 4px;
-}
-
-.bar-vert #group-qwen-cpu     { border-color: rgba(166, 227, 161, 0.5); }
-.bar-vert #group-qwen-ram     { border-color: rgba(137, 180, 250, 0.5); }
-.bar-vert #group-qwen-ssd     { border-color: rgba(166, 227, 161, 0.5); }
-.bar-vert #group-qwen-network { border-color: rgba(148, 226, 213, 0.5); }
-.bar-vert #group-qwen-asus    { border-color: rgba(148, 226, 213, 0.5); }
-
-/* ════════════════════════════════════════════
    ANIMATIONS
    ════════════════════════════════════════════ */
 
@@ -590,10 +157,6 @@ window#waybar.code-oss.bar-low * {
         text-decoration: underline;
         font-size: 20px;
     }
-}
-
-@keyframes wait {
-    to { text-decoration: underline; }
 }
 
 @keyframes blink {

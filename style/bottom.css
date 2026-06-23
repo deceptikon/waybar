@@ -1,12 +1,110 @@
-@import "base.css";
+/* ═══════════════════════════════════════════
+   BOTTOM BAR — ultra-thin standalone CSS
+   No @import — self-contained to avoid conflicts
+   ════════════════════════════════════════════ */
 
-window#waybar.bar-bottom {
+/* Universal reset for this bar */
+* {
+    min-height: 0;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    font-family: "Monaspace Krypton Frozen", "JetBrainsMono Nerd Font", monospace;
+    font-size: 7px;
+}
+
+/* ════════════════════════════════════════════
+   BOTTOM BAR CHROME
+   ═══════════════════════════════════════════ */
+
+window#bar-bottom {
     background: rgba(30, 30, 46, 0.9);
 }
+
 .bar-bottom .modules-left,
 .bar-bottom .modules-center,
 .bar-bottom .modules-right {
-    margin: 0;
+    background: transparent;
+}
+
+/* ════════════════════════════════════════════
+   BOTTOM BAR WORKSPACES — thin colorful lines
+   sway/workspaces#bottom → GTK CSS id: #bottom
+   ════════════════════════════════════════════ */
+
+#bottom {
+    background: transparent;
+}
+#bottom button {
     padding: 0;
+    margin: 0 12px;
+    min-height: 2px;
+    min-width: 60px;
+    border-radius: 0;
     border: none;
+    background-color: white;
+    opacity: 0.25;
+    transition: all 0.3s ease;
+    color: transparent;
+    font-size: 0;
+}
+#bottom button.focused,
+#bottom button.active {
+    opacity: 1;
+    min-width: 120px;
+    min-height: 3px;
+}
+#bottom button.urgent {
+    background-color: #f38ba8;
+    opacity: 1;
+}
+#bottom button:nth-child(1)  { background-color: #fab387; }
+#bottom button:nth-child(2)  { background-color: #89b4fa; }
+#bottom button:nth-child(3)  { background-color: #a6e3a1; }
+#bottom button:nth-child(4)  { background-color: #cba6f7; }
+#bottom button:nth-child(5)  { background-color: #f9e2af; }
+#bottom button:nth-child(6)  { background-color: #94e2d5; }
+#bottom button:nth-child(7)  { background-color: #89dceb; }
+#bottom button:nth-child(8)  { background-color: #74c7ec; }
+#bottom button:nth-child(9)  { background-color: #f5c2e7; }
+#bottom button:nth-child(10) { background-color: #eba0ac; }
+
+/* ════════════════════════════════════════════
+   BOTTOM BAR MODULES — uptime, ollama, llama
+   ════════════════════════════════════════════ */
+
+#custom-uptime {
+    color: #fab387;
+    font-size: 6px;
+    padding: 0 6px;
+    min-height: 0;
+    margin: 0;
+}
+
+#custom-ollama {
+    color: #249e94;
+    font-size: 6px;
+    padding: 0 6px;
+    min-height: 0;
+    margin: 0;
+}
+#custom-ollama.on  { color: #94e2d5; }
+#custom-ollama.off { color: #666; }
+
+#custom-llama {
+    color: #249e94;
+    font-size: 6px;
+    padding: 0 6px;
+    min-height: 0;
+    margin: 0;
+}
+#custom-llama.on  { color: #94e2d5; }
+#custom-llama.off { color: #666; }
+
+#mode {
+    font-size: 6px;
+    padding: 0;
+    min-height: 0;
 }

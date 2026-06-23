@@ -4,7 +4,7 @@
     "layer": "top",
     "position": "bottom",
     "reload_style_on_change": true,
-    "height": 6,
+    "height": 3,
     "modules-left": [
       "sway/workspaces#bottom"
     ],

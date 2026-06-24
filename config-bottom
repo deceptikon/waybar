@@ -4,11 +4,12 @@
     "layer": "top",
     "position": "bottom",
     "reload_style_on_change": true,
-    "height": 3,
+    "height": 24,
     "modules-left": [
       "sway/workspaces#bottom"
     ],
     "modules-center": [
+      "custom/powerbtn",
       "custom/uptime"
     ],
     "modules-right": [
@@ -58,6 +59,18 @@
       "interval": 5,
       "format": "{}",
       "return-type": "json"
+    },
+    "custom/powerbtn": {
+      "format": "⏻ ",
+      "tooltip": false,
+      "menu": "on-click",
+      "menu-file": "~/.config/waybar/feeds/powermenu.xml",
+      "menu-actions": {
+        "shutdown": "shutdown",
+        "reboot": "reboot",
+        "suspend": "systemctl suspend",
+        "hibernate": "systemctl hibernate"
+      }
     }
   }
 ]

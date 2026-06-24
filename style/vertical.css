@@ -155,10 +155,11 @@ tooltip label {
    ════════════════════════════════════════════ */
 
 .bar-vert .modules-center {
-  background: transparent;
-  border: none;
-  margin: 0;
-  padding: 0;
+  background: rgba(30, 30, 46, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin: 4px 2px;
+  padding: 8px 4px;
+  border-radius: 10px;
 }
 
 #custom-lang {
@@ -227,36 +228,15 @@ tooltip label {
   color: #94e2d5;
 }
 
-/* ── LLM pair ─ */
-#custom-ollama,
-#custom-llama {
-  font-size: 10px;
-  font-weight: 600;
-  color: #a6adc8;
-  background: rgba(20, 20, 28, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 5px 6px;
-  margin: 3px 4px;
-  min-width: 36px;
-}
-#custom-ollama.on,
-#custom-llama.on {
-  border-color: rgba(148, 226, 213, 0.5);
-  background: rgba(0, 128, 128, 0.15);
-  color: #94e2d5;
-}
-#custom-ollama.off,
-#custom-llama.off {
-  color: #a6adc8;
-  border-color: rgba(255, 255, 255, 0.04);
-}
+/* ── LLM pair ─ (now in VR, styled with VR compact buttons below) */
 
 /* ════════════════════════════════════════════
    VR (right) — tools & alerts
    Compact, uniform buttons, consistent spacing
    ═══════════════════════════════════════════ */
 
+#custom-ollama,
+#custom-llama,
 #custom-dunst,
 #custom-recorder,
 #custom-checkupdates,
@@ -268,7 +248,7 @@ tooltip label {
   padding: 8px 6px;
   min-height: 32px;
   min-width: 36px;
-  font-size: 18px;
+  font-size: 15px;
   color: #a6adc8;
 }
 
@@ -292,15 +272,19 @@ tooltip label {
   color: #a6e3a1;
 }
 
-#tray {
-  border: none;
-  background: rgba(20, 20, 28, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 6px 8px;
-  margin: 6px 4px;
-  min-height: 24px;
+#custom-ollama.on,
+#custom-llama.on {
+  border-color: rgba(148, 226, 213, 0.5);
+  background: rgba(0, 128, 128, 0.15);
+  color: #94e2d5;
 }
+
+#custom-ollama.off,
+#custom-llama.off {
+  color: #585b70;
+  border-color: rgba(255, 255, 255, 0.04);
+}
+
 
 /* ════════════════════════════════════════════
    WORKSPACES (not used in vert, inherited)

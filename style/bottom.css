@@ -12,7 +12,7 @@
     border: none;
     border-radius: 0;
     font-family: "Monaspace Krypton Frozen", "JetBrainsMono Nerd Font", monospace;
-    font-size: 7px;
+    font-size: 10px;
 }
 
 /* ════════════════════════════════════════════
@@ -47,9 +47,15 @@ window#bar-bottom {
     border: none;
     background-color: white;
     opacity: 0.25;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     color: transparent;
     font-size: 0;
+}
+#workspaces.bottom button:hover {
+    min-height: 7px;
+    min-width: 70px;
+    opacity: 0.6;
+    box-shadow: 0px -1px 4px rgba(148, 226, 213, 0.3);
 }
 #workspaces.bottom button.focused,
 #workspaces.bottom button.active {
@@ -74,15 +80,38 @@ window#bar-bottom {
 #workspaces.bottom button:nth-child(10) { background-color: #eba0ac; }
 
 /* ════════════════════════════════════════════
-   BOTTOM BAR MODULES — uptime, ollama, llama
+   BOTTOM BAR MODULES — powerbtn, uptime, ollama, llama
    ════════════════════════════════════════════ */
 
-#custom-uptime {
+#custom-powerbtn {
+    font-size: 12px;
     color: #fab387;
-    font-size: 6px;
-    padding: 0 6px;
+    opacity: 0.7;
+    padding: 0 2px 0 8px;
     min-height: 0;
     margin: 0;
+    transition: opacity 0.2s ease;
+}
+#custom-powerbtn:hover {
+    opacity: 1;
+}
+
+#custom-uptime {
+    color: #585b70;
+    font-size: 8px;
+    font-weight: 500;
+    padding: 0 4px 0 0;
+    min-height: 0;
+    margin: 0;
+}
+
+#tray {
+    padding: 0 6px;
+    margin: 0 4px 0 0;
+    min-height: 0;
+}
+#tray menu {
+    border-radius: 8px;
 }
 
 #custom-ollama {

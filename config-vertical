@@ -16,39 +16,26 @@
     ],
     "modules-center": [
       "custom/lang",
-      "tray",
-      "custom/ollama",
-      "custom/llama"
+      "power-profiles-daemon",
+      "custom/ext-display",
+      "idle_inhibitor"
     ],
     "modules-right": [
+      "custom/ollama",
+      "custom/llama",
       "custom/checkupdates",
       "custom/dunst",
       "custom/recorder",
-      "custom/fnlock",
-      "idle_inhibitor",
-      "custom/ext-display"
+      "custom/fnlock"
     ],
     "include": [
       "modules-sysmon.json",
       "modules-controls.json"
     ],
-    "clock": {
-      "format": " {:%H:%M}",
-      "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-      "on-click": "yad --name=yad-calendar --calendar --undecorated",
-      "actions": {
-        "on-scroll-up": "shift_up",
-        "on-scroll-down": "shift_down"
-      }
-    },
     "custom/lang": {
       "exec": "swaymsg -t get_inputs | grep layout_name | grep -v En | awk 'END{if(NR == 0){print \"EN\"}else{print toupper(substr($2,2,2))}}'",
       "interval": 1,
       "format": "{}"
-    },
-    "tray": {
-      "icon-size": 15,
-      "spacing": 11
     }
   }
 ]

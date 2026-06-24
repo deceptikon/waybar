@@ -140,59 +140,101 @@ sed -i 's/#6c7086/#a6adc8/g' style/vertical.css
 sed -i 's/#45475a/#6c7086/g' style/vertical.css
 ```
 
-## Critical Quirk #4: `.modules-center` Container Bloat
+## Critical Quirk #4: Container Backgrounds and Dark Voids
 
 ### The Problem
-Giving `.modules-center` a solid dark background creates a "dark hole" - the container stretches to fill all available space while only tiny modules sit at the bottom.
+Giving `.modules-center` a solid dark background OR transparent background both cause visual artifacts.
 
-**Causes huge empty space:**
+**Problem A: Solid bg causes dark void**
 ```css
 .bar-vert .modules-center {
-  background: rgba(25, 25, 38, 0.9);  /* ← Solid block filling space */
-  border-color: rgba(148, 226, 213, 0.12);
+  background: rgba(25, 25, 38, 0.9);  /* ← GTK stretches this to full height */
 }
 ```
-
 **Result:** Massive dark void with barely visible modules at bottom.
 
-**Fix: Transparent container**
+**Problem B: Transparent also fails (GTK adds its own default bg)**
 ```css
 .bar-vert .modules-center {
-  background: transparent;  /* ← No block */
+  background: transparent;  /* ← GTK internally adds default dark bg! */
   border: none;
   margin: 0;
   padding: 0;
 }
 ```
+**Result:** Dark void still appears - GTK's renderer adds its own background on top of `transparent`.
 
-### Why This Happens
-- `.modules-center` is a container that wraps all center modules
-- If it has solid bg, GTK renders it as a large box
-- Modules inside don't stretch the container, but container stretches empty space
-- Result: dark void + barely visible modules
+### The Final Solution: Consistent Explicit Backgrounds
 
-### Container Pattern
-
-**For zones with few modules (center, right):**
+**Always use explicit backgrounds for ALL zones:**
 ```css
-.bar-vert .modules-center {
-  background: transparent;
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-```
-
-**For zones that need visual separation (left monitor groups):**
-```css
-.bar-vert .modules-left {
-  background: rgba(30, 30, 46, 0.85);
-  margin: 6px 2px;
-  padding: 6px 4px;
+/* ✅ Working pattern for ALL zones */
+.bar-vert .modules-left,
+.bar-vert .modules-center,
+.bar-vert .modules-right {
+  background: rgba(30, 30, 46, 0.85);  /* ← Explicit bg, no void */
+  margin: 0px 2px;                      /* ← Tight margins */
+  padding: 8px 4px;                     /* ← Small padding */
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 ```
+
+### Why This Happens
+
+**Key insight from June 24, 2026:**
+- GTK's CSS renderer automatically adds a default dark background to `.modules-*` containers
+- Setting `background: transparent` doesn't override this (GTK ignores it)
+- Setting solid `background: rgba(...)` also gets stretched to fill space
+- **Solution:** Give all zones the same explicit background (`rgba(30,30,46,0.85)`) so GTK doesn't add anything extra
+
+### Testing the Fix
+
+```bash
+# Before fix - dark void visible
+bar-vert .modules-center {
+  background: transparent;  /* ← Dark void appears */
+}
+
+# After fix - consistent appearance
+.bar-vert .modules-center {
+  background: rgba(30, 30, 46, 0.85);  /* ← Dark void gone */
+}
+```
+
+### Container Pattern (Updated June 24, 2026)
+
+**All zones get the same treatment:**
+```css
+.bar-vert .modules-left,
+.bar-vert .modules-center,
+.bar-vert .modules-right {
+  background: rgba(30, 30, 46, 0.85);  /* ← Explicit for all zones */
+  margin: 0px 2px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+```
+
+**Individual module styling (inside containers):**
+```css
+/* Each module gets its own bg/border inside the container */
+#custom-lang {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(137, 220, 235, 0.3);
+  padding: 6px 10px;
+}
+
+#custom-ollama,
+#custom-llama {
+  background: rgba(20, 20, 28, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 5px 6px;
+}
+```
+
+**Result:** Clean visual separation between zones, no dark voids, modules clearly visible.
 
 ## Critical Quirk #5: Bar Height Bloat from Padding
 
@@ -251,7 +293,7 @@ tail logs/test.log | grep "Bar configured"
 | Colored bg not visible | Wrong selector (`#group-titlebox-row`) | Use `#titlebox-row` |
 | Waybar crashes at startup | `text-align` in CSS | Remove all text-align |
 | Module invisible | Color `#6c7086` on dark bg | Brighten to `#a6adc8` |
-| Huge dark hole in VC | `.modules-center` solid bg | Make transparent |
+| Huge dark void in VC | `background: transparent` on center | **Use explicit `rgba(30,30,46,0.85)` for ALL zones** |
 | Bar grows from 33→50px | Vertical padding | Use `min-height: 0` + horizontal padding |
 | Modules disappear | Module stub override | Remove `exec: "echo ''"` blocks |
 
@@ -262,14 +304,16 @@ Before any CSS changes:
 - [ ] `waybar -l debug` shows correct widget tree (check for `group/` stripped IDs)
 - [ ] No `text-align` in any CSS rule
 - [ ] All text colors visible against their backgrounds
-- [ ] Container backgrounds don't create large empty spaces
+- [ ] **All zones use explicit backgrounds** - never `transparent`
+- [ ] Container backgrounds match across all zones (`rgba(30,30,46,0.85)`)
 - [ ] `min-height: 0` on all .modules-* containers
 
 After changes:
 
 - [ ] Top bar height: 33-36px (not 50px+)
 - [ ] Bottom bar height: 11-15px
-- [ ] Vertical bar shows all zones with proper content
+- [ ] **Vertical bar: all zones have consistent backgrounds, no dark voids**
+- [ ] `.modules-center` shows modules clearly (no empty dark space)
 - [ ] No GTK errors in logs
 - [ ] All modules visible at their intended colors
 

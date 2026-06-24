@@ -66,7 +66,7 @@
     "on-click": "~/.config/waybar/scripts/utils/llama-server.sh toggle"
   },
   "custom/ollama": {
-    "exec": "if curl -s http://localhost:11111/api/tags > /dev/null 2>&1; then jq -n '{text:\" UP\",tooltip:\"Ollama is running\",class:\"on\"}'; else jq -n '{text:\" DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
+    "exec": "if curl -s http://localhost:11111/api/tags > /dev/null 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps 2>/dev/null | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -cn --arg m \"$models\" '{text:(\"󱚣 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -cn '{text:\"󱚣 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -cn '{text:\"󱚣 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
     "interval": 5,
     "format": "{}",
     "return-type": "json"

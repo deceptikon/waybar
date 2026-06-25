@@ -114,7 +114,7 @@ eval $(jq -r '
       row+="<span fgcolor=\"$col\">󰘚</span>"
     done
     rows+="$row"
-    [ "$r" -lt 3 ] && rows+="\n"
+    [ "$r" -lt 3 ] && rows+=$'\n'
   done
   text="<span line_height='0.65'>${rows}</span>"
   jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'
@@ -146,7 +146,7 @@ eval $(jq -r '
     [ "$i" -lt "$fill" ] && r1+="<span fgcolor='#89b4fa'></span>" || r1+="<span fgcolor='#383838'></span>"
     [ "$i" -lt "$fill" ] && r2+="<span fgcolor='#383838'></span>" || r2+="<span fgcolor='#89b4fa'></span>"
   done
-  text="<span line_height='0.65'>${r1}\n${r2}</span>"
+  text="<span line_height='0.65'>${r1}"$'\n'"${r2}</span>"
   jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'
 ) > "$FEEDS/compact-ram.json.tmp" && mv "$FEEDS/compact-ram.json.tmp" "$FEEDS/compact-ram.json"
 

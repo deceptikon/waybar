@@ -1,0 +1,42 @@
+[
+  {
+    "name": "bar-vert-lite",
+    "layer": "top",
+    "position": "right",
+    "start_hidden": true,
+    "reload_style_on_change": true,
+    "width": 69,
+    "fixed-center": true,
+    "modules-left": [
+      "group/qwen-gpu",
+      "group/qwen-cpu",
+      "group/qwen-ram",
+      "group/qwen-ssd",
+      "group/qwen-asus",
+      "group/qwen-network"
+    ],
+    "modules-center": [
+      "custom/lang",
+      "power-profiles-daemon",
+      "custom/ext-display",
+      "idle_inhibitor"
+    ],
+    "modules-right": [
+      "custom/ollama",
+      "custom/llama",
+      "custom/checkupdates",
+      "custom/dunst",
+      "custom/recorder",
+      "custom/fnlock"
+    ],
+    "include": [
+      "modules-sysmon.json",
+      "modules-controls.json"
+    ],
+    "custom/lang": {
+      "exec": "swaymsg -t get_inputs | grep layout_name | grep -v En | awk 'END{if(NR == 0){print \"EN\"}else{print toupper(substr($2,2,2))}}'",
+      "interval": 1,
+      "format": "{}"
+    }
+  }
+]

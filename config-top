@@ -7,6 +7,7 @@
       "group/audio"
     ],
     "modules-right": [
+      "custom/toggle-vert-lite",
       "group/bright",
       "custom/keylight",
       "battery",
@@ -22,6 +23,7 @@
       "bluetooth#lite"
     ],
     "modules-right": [
+      "custom/toggle-vert-lite",
       "group/bright-external",
       "custom/keylight",
       "battery"

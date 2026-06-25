@@ -27,8 +27,9 @@ check_log() {
 check_all_logs_deferred() {
     sleep 2
     check_log "top"      "$LOGS_DIR/waybar-top.log"
-    check_log "vertical" "$LOGS_DIR/waybar-vertical.log"
-    check_log "bottom"   "$LOGS_DIR/waybar-bottom.log"
+    check_log "vertical"      "$LOGS_DIR/waybar-vertical.log"
+    check_log "vertical-lite" "$LOGS_DIR/waybar-vertical-lite.log"
+    check_log "bottom"        "$LOGS_DIR/waybar-bottom.log"
 }
 
 # ── Reload mode (full restart — SIGUSR2 is too flaky on multi-bar) ────────────
@@ -39,6 +40,9 @@ if [[ "${1:-}" == "reload" ]]; then
     disown
     sleep 0.5
     waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style/vertical.css" >> "$LOGS_DIR/waybar-vertical.log" 2>&1 &
+    disown
+    sleep 0.5
+    waybar -c "$CFG_DIR/config-vertical-lite" -s "$CFG_DIR/style/vertical-lite.css" >> "$LOGS_DIR/waybar-vertical-lite.log" 2>&1 & >> "$LOGS_DIR/waybar-vertical-lite.log" 2>&1 &
     disown
     sleep 0.5
     waybar -c "$CFG_DIR/config-bottom"   -s "$CFG_DIR/style/bottom.css"  >> "$LOGS_DIR/waybar-bottom.log"   2>&1 &
@@ -67,7 +71,11 @@ sleep 0.5
 waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style/vertical.css" >> "$LOGS_DIR/waybar-vertical.log"  2>&1 &
 disown
 
-sleep 1
+sleep 0.5
+waybar -c "$CFG_DIR/config-vertical-lite" -s "$CFG_DIR/style/vertical-lite.css" >> "$LOGS_DIR/waybar-vertical-lite.log" 2>&1 & >> "$LOGS_DIR/waybar-vertical-lite.log" 2>&1 &
+disown
+
+sleep 0.5
 waybar -c "$CFG_DIR/config-bottom"   -s "$CFG_DIR/style/bottom.css"  >> "$LOGS_DIR/waybar-bottom.log"    2>&1 &
 disown
 

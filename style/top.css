@@ -179,6 +179,23 @@ window#waybar:not(.mode-default) #titlebox-row {
     min-width: 100px;
 }
 
+#custom-toggle-vert-lite {
+  margin: 0 8px 0 0;
+  padding: 3px 8px;
+  min-width: 24px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  color: @accent_mauve;
+  background: transparent;
+  border: 1px solid transparent;
+}
+#custom-toggle-vert-lite:hover {
+  color: @text_primary;
+  background: rgba(203, 166, 247, 0.15);
+  border: 1px solid rgba(203, 166, 247, 0.3);
+}
+
 /* sway/mode — resize indicator */
 .bar-top #mode {
     color: @mode_text;

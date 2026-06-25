@@ -70,5 +70,11 @@
     "interval": 5,
     "format": "{}",
     "return-type": "json"
+  },
+  "custom/toggle-vert-lite": {
+    "format": "ﲒ",
+    "tooltip": false,
+    "on-click": "/home/lexx/.config/waybar/scripts/utils/toggle-vert-lite.sh",
+    "interval": 86400
   }
 }

@@ -6,11 +6,18 @@ poller.sh (background daemon, wakes every 2s)
   ├─ collect.sh  (reads /proc/* + /sys/* + sensors -j — labeled lines)
   │   │ pipe
   │   ▼
-  └─ mapper.sh   (parses labeled sections → unified JSON → /tmp/sysmon.json)
+  ├─ mapper.sh   (parses labeled sections → unified JSON → stdout)
+  │   │
+  │   ├──(tee)──→ /tmp/sysmon.json (atomic write once per cycle)
+  │   │
+  │   ▼
+  └─ formatter.sh  (reads /tmp/sysmon.json → writes per-metric feeds/)
+```
 
+```
 /tmp/sysmon.json ← written atomically every 2s by poller (write tmp + mv)
 
-  ├─ sysmon/frame.sh <metric>  ← reads /tmp/sysmon.json, writes to feeds/<metric>.json
+  ├─ sysmon/formatter.sh       ← reads /tmp/sysmon.json, writes to feeds/<metric>.json
   │                              (consumed by 6 waybar modules via tail -F)
   │
   └─ sysmon/compact-*.py       ← reads /tmp/sysmon.json directly
@@ -24,7 +31,7 @@ poller.sh (background daemon, wakes every 2s)
 | `sysmon/poller.sh` | Background loop: collect + mapper every 2s → `/tmp/sysmon.json` |
 | `sysmon/collect.sh` | Collector: reads `/proc/*` + sysfs + `sensors -j`, outputs labeled sections |
 | `sysmon/mapper.sh` | Parser: reads labeled raw sections, emits unified JSON tree |
-| `sysmon/frame.sh` | Formatter: reads `/tmp/sysmon.json`, formats one metric, writes to `feeds/<metric>.json` |
+| `sysmon/formatter.sh` | Formatter: reads `/tmp/sysmon.json` (stdin), writes all per-metric feeds atomically |
 | `sysmon/icon.sh` | One-liner per metric, outputs Waybar JSON with just the icon glyph |
 | `sysmon/compact-{gpu,cpu,ram,ssd}.py` | Python compact formatters for vertical-lite bar |
 

@@ -1,4 +1,11 @@
 .aider*
+.qwen/
 
 feeds/
 logs/
+
+__pycache__/
+*.pyc
+*.bak
+test-*
+test.*

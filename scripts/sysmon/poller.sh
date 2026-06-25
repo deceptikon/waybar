@@ -6,6 +6,8 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 while true; do
-  "$DIR/collect.sh" | "$DIR/mapper.sh" | bash "$DIR/formatter.sh"
+  "$DIR/collect.sh" | "$DIR/mapper.sh" > /tmp/sysmon.json.tmp
+  mv /tmp/sysmon.json.tmp /tmp/sysmon.json
+  bash "$DIR/formatter.sh" < /tmp/sysmon.json
   sleep 2
 done

@@ -18,6 +18,10 @@
       "idle_inhibitor"
     ],
     "modules-right": [
+      "custom/ollama",
+      "custom/llama",
+      "custom/checkupdates",
+      "custom/ext-display",
       "custom/dunst",
       "custom/recorder",
       "custom/fnlock"

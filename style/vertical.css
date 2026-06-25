@@ -162,19 +162,6 @@ tooltip label {
   border-radius: 10px;
 }
 
-#custom-lang {
-  font-size: 11px;
-  font-weight: 600;
-  color: #89dceb;
-  background: rgba(20, 20, 28, 0.92);
-  border: 1px solid rgba(137, 220, 235, 0.3);
-  border-radius: 8px;
-  padding: 6px 10px;
-  margin: 4px 4px;
-  min-width: 40px;
-  min-width: 40px;
-}
-
 /* Primary action cards: ppd, ext-display, idle_inhibitor */
 #power-profiles-daemon,
 #custom-ext-display,

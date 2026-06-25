@@ -21,7 +21,7 @@
 @import "base.css";
 
 /* ════════════════════════════════════════════
-   TL — left zone: powerbtn, bluetooth, audio
+   TL — left zone: powerbtn, bluetooth, wifi, lang, audio
    ════════════════════════════════════════════ */
 .bar-top .modules-left {
     border-radius: 0 0 12px 0;
@@ -34,7 +34,9 @@
     margin: 0 12px 0 0;
     padding: 3px 10px;
 }
-.bar-top #bluetooth-lite {
+.bar-top #bluetooth-lite,
+.bar-top #custom-wifi,
+.bar-top #custom-lang {
     margin: 0 12px 0 0;
     padding: 3px 10px;
 }
@@ -135,6 +137,39 @@ window#waybar:not(.mode-default) #titlebox-row {
     color: @accent_teal;
     background: @highlight_bg;
     border: 1px solid @highlight_border;
+}
+
+#custom-wifi {
+    min-width: 32px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+}
+#custom-wifi.disabled,
+#custom-wifi.off {
+    color: @text_dim;
+    background: transparent;
+    border: 1px solid transparent;
+}
+#custom-wifi.enabled,
+#custom-wifi:not(.disabled):not(.connected) {
+    color: @text_primary;
+    background: transparent;
+    border: 1px solid transparent;
+}
+#custom-wifi.connected {
+    color: @accent_teal;
+    background: @highlight_bg;
+    border: 1px solid @highlight_border;
+}
+
+#custom-lang {
+    font-size: 13px;
+    font-weight: 600;
+    color: @accent_cyan;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
 }
 
 #custom-keylight {

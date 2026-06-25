@@ -5,6 +5,8 @@
   "modules-left": [
     "custom/powerbtn",
     "bluetooth#lite",
+    "custom/wifi",
+    "custom/lang",
     "group/audio"
   ],
   "modules-center": [

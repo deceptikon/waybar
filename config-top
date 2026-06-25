@@ -4,6 +4,8 @@
     "output": "eDP-1",
     "modules-left": [
       "bluetooth#lite",
+      "custom/wifi",
+      "custom/lang",
       "group/audio"
     ],
     "modules-right": [
@@ -20,7 +22,9 @@
     "output": "HDMI-A-1",
     "modules-left": [
       "group/audio",
-      "bluetooth#lite"
+      "bluetooth#lite",
+      "custom/wifi",
+      "custom/lang"
     ],
     "modules-right": [
       "group/bright-external",

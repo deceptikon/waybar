@@ -68,8 +68,8 @@
     "interval": 20,
     "full-at": 90,
     "states": {
-      "good": 50,
-      "warning": 10,
+      "good": 41,
+      "warning": 40,
       "critical": 5
     },
     "design-capacity": false,
@@ -124,6 +124,14 @@
     "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
     "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%"
+  },
+  "custom/wifi": {
+    "exec": "~/.config/waybar/scripts/utils/wifi-indicator.sh",
+    "return-type": "json",
+    "format": "{}",
+    "on-click": "~/.config/waybar/scripts/utils/wifi-toggle.sh",
+    "on-click-right": "nm-connection-editor",
+    "signal": 12
   },
   "custom/powerbtn": {
     "format" : "⏻ ",

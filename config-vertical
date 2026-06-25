@@ -10,20 +10,7 @@
       "group/qwen-asus",
       "group/qwen-network"
     ],
-    "modules-center": [
-      "custom/lang",
-      "power-profiles-daemon",
-      "custom/ext-display",
-      "idle_inhibitor"
-    ],
-    "modules-right": [
-      "custom/ollama",
-      "custom/llama",
-      "custom/checkupdates",
-      "custom/dunst",
-      "custom/recorder",
-      "custom/fnlock"
-    ],
+    
     "include": [
       "config-vertical-base.jsonc",
       "modules-sysmon.json"

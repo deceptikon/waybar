@@ -3,6 +3,20 @@
   "position": "right",
   "reload_style_on_change": true,
   "fixed-center": true,
+"modules-center": [
+      "custom/lang",
+      "power-profiles-daemon",
+      "custom/ext-display",
+      "idle_inhibitor"
+    ],
+    "modules-right": [
+      "custom/ollama",
+      "custom/llama",
+      "custom/checkupdates",
+      "custom/dunst",
+      "custom/recorder",
+      "custom/fnlock"
+    ],
   "include": [
     "modules-controls.json"
   ],

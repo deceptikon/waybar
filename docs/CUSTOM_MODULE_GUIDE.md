@@ -239,9 +239,9 @@ To measure actual rendered height, watch `waybar` stderr: `Bar configured (width
 2. **Add to `qwen-modules.json`** (or `default-modules.json`). Validate: `jq .`
 3. **Add CSS** to `style.css` (scoped to `#<module-id>`)
 4. **Wire to `bar-horiz-dev`** in config for isolated iteration (don't touch production bar yet)
-5. **Reload**: `pkill -SIGUSR2 waybar`
+5. **Reload**: `scripts/waybar-start.sh reload`
 6. **Check stderr**: `grep '\[error\]' /tmp/waybar-startup.log | tail`
-7. **Iterate on CSS** with SIGUSR2 reloads until the visual matches
+7. **Iterate on CSS** with reloads until the visual matches
 8. **Commit**: `git add -A && git commit -m "..."`
 9. **Once stable, move** the module definition into the production bar's config
 
@@ -417,7 +417,6 @@ jq . default-modules.json
 jq . <group-modules>.json
 bash -n scripts/<name>.sh
 ./scripts/<name>.sh                    # test output
-pkill -SIGUSR2 waybar                  # reload (no restart needed)
-pkill waybar; sleep 0.4; waybar &      # full restart (if reload doesn't pick up)
+scripts/waybar-start.sh reload         # full restart (SIGUSR2 unreliable on multi-bar)
 grep '\[error\]' /tmp/waybar-startup.log | tail
 ```

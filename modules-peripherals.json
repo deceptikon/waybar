@@ -131,6 +131,7 @@
     "format": "{}",
     "on-click": "~/.config/waybar/scripts/utils/wifi-toggle.sh",
     "on-click-right": "nm-connection-editor",
+    "interval": 30,
     "signal": 12
   },
   "custom/powerbtn": {

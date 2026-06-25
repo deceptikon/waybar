@@ -17,11 +17,10 @@ poller.sh (background daemon, wakes every 2s)
 ```
 /tmp/sysmon.json ← written atomically every 2s by poller (write tmp + mv)
 
-  ├─ sysmon/formatter.sh       ← reads /tmp/sysmon.json, writes to feeds/<metric>.json
-  │                              (consumed by 6 waybar modules via tail -F)
-  │
-  └─ sysmon/compact-*.py       ← reads /tmp/sysmon.json directly
-                                   (consumed by vertical-lite bar modules)
+  └─ sysmon/formatter.sh       ← reads /tmp/sysmon.json, writes to feeds/<metric>.json
+                                 (all bars consume via tail -F:
+                                  vertical full + top → feeds/{gpu,cpu,ram,ssd}.json
+                                  vertical-lite       → feeds/compact-{gpu,cpu,ram,ssd}.json)
 ```
 
 ## Components
@@ -31,9 +30,8 @@ poller.sh (background daemon, wakes every 2s)
 | `sysmon/poller.sh` | Background loop: collect + mapper every 2s → `/tmp/sysmon.json` |
 | `sysmon/collect.sh` | Collector: reads `/proc/*` + sysfs + `sensors -j`, outputs labeled sections |
 | `sysmon/mapper.sh` | Parser: reads labeled raw sections, emits unified JSON tree |
-| `sysmon/formatter.sh` | Formatter: reads `/tmp/sysmon.json` (stdin), writes all per-metric feeds atomically |
+| `sysmon/formatter.sh` | Formatter: reads `/tmp/sysmon.json` (stdin), writes all per-metric feeds + compact feeds atomically |
 | `sysmon/icon.sh` | One-liner per metric, outputs Waybar JSON with just the icon glyph |
-| `sysmon/compact-{gpu,cpu,ram,ssd}.py` | Python compact formatters for vertical-lite bar |
 
 ## Sources
 
@@ -69,5 +67,5 @@ poller.sh (background daemon, wakes every 2s)
 | Bar | Modules | Source |
 |---|---|---|
 | Vertical (full) | `group/qwen-{gpu,cpu,ram,ssd,asus,network}` | `tail -F feeds/<metric>.json` |
-| Vertical-lite | `custom/compact-{gpu,cpu,ram,ssd}` | `compact-*.py` reads `/tmp/sysmon.json` |
+| Vertical-lite | `custom/compact-{gpu,cpu,ram,ssd}` | `tail -F feeds/compact-<metric>.json` |
 | Top | `group/qwen-{cpu,ram,ssd,network}` (in `group/top-center`) | `tail -F feeds/<metric>.json` |

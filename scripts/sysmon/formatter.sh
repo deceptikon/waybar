@@ -51,6 +51,18 @@ eval $(jq -r '
   draw_module "" "<b><span font='8'>${bar}</span> ${gpu_pct}%</b>" "<span size='small'>${gpu_freq}MHz 󰔐 ${gpu_temp}°C</span>" "$ACCENT" "$cls"
 ) > "$FEEDS/gpu.json.tmp" && mv "$FEEDS/gpu.json.tmp" "$FEEDS/gpu.json"
 
+# 1b. Compact GPU (for vertical-lite bar)
+(
+  cls="good"; [ "$gpu_pct" -ge 40 ] && cls="medium"; [ "$gpu_pct" -ge 70 ] && cls="warning"; [ "$gpu_pct" -ge 90 ] && cls="critical"
+  n=4; fill=$((gpu_pct * n / 100))
+  [ "$fill" -gt "$n" ] && fill=$n; [ "$fill" -lt 0 ] && fill=0
+  filled=""; dim=""
+  for ((i=0; i<fill; i++)); do filled+="󰾲"; done
+  for ((i=fill; i<n; i++)); do dim+="󰾲"; done
+  text="<span fgcolor='#fab387'>${filled}</span><span fgcolor='#383838'>${dim}</span>"
+  printf '{"text":"%s","class":"%s"}\n' "$text" "$cls"
+) > "$FEEDS/compact-gpu.json.tmp" && mv "$FEEDS/compact-gpu.json.tmp" "$FEEDS/compact-gpu.json"
+
 # 2. CPU
 (
   ACCENT="#a6e3a1"
@@ -83,6 +95,31 @@ eval $(jq -r '
   draw_module "" "<span font='11'>${bar1}"$'\n'"${bar2}</span>" "<span size='small'><span fgcolor=\"#a6e3a1\">AVG ${cpu_avg}%</span> 󰔐 ${tc_fmt}°C</span>" "$ACCENT" "$cls"
 ) > "$FEEDS/cpu.json.tmp" && mv "$FEEDS/cpu.json.tmp" "$FEEDS/cpu.json"
 
+# 2b. Compact CPU (for vertical-lite bar)
+(
+  cls="good"; [ "$cpu_avg" -ge 40 ] && cls="medium"; [ "$cpu_avg" -ge 70 ] && cls="warning"; [ "$cpu_avg" -ge 90 ] && cls="critical"
+  cores_str=$(jq -r '.cpu.per_core[]? // 0' <<< "$data")
+  rows=""; c=0
+  for r in $(seq 0 3); do
+    row=""
+    for col in $(seq 0 3); do
+      p=$(echo "$cores_str" | sed -n "$((c+1))p")
+      c=$((c+1))
+      if [ "$p" -ge 90 ]; then col="#f38ba8"
+      elif [ "$p" -ge 70 ]; then col="#fab387"
+      elif [ "$p" -ge 40 ]; then col="#f9e2af"
+      elif [ "$p" -ge 15 ]; then col="#89b4fa"
+      elif [ "$p" -ge 1 ]; then col="#484848"
+      else col="#383838"; fi
+      row+="<span fgcolor=\"$col\">󰘚</span>"
+    done
+    rows+="$row"
+    [ "$r" -lt 3 ] && rows+="\n"
+  done
+  text="<span line_height=\"0.65\">${rows}</span>"
+  printf '{"text":"%s","class":"%s"}\n' "$text" "$cls"
+) > "$FEEDS/compact-cpu.json.tmp" && mv "$FEEDS/compact-cpu.json.tmp" "$FEEDS/compact-cpu.json"
+
 # 3. RAM
 (
   ACCENT="#89b4fa"
@@ -98,6 +135,20 @@ eval $(jq -r '
   done
   draw_module "" "<span font='8'>${row1}</span>" "<span font='12'>${bar}</span>" "$ACCENT" "$cls" "<span size='small'>swapped: ${swap_gb}Gb</span>"
 ) > "$FEEDS/ram.json.tmp" && mv "$FEEDS/ram.json.tmp" "$FEEDS/ram.json"
+
+# 3b. Compact RAM (for vertical-lite bar)
+(
+  cls="good"; [ "$ram_pct" -ge 50 ] && cls="medium"; [ "$ram_pct" -ge 75 ] && cls="warning"; [ "$ram_pct" -ge 90 ] && cls="critical"
+  n=4; fill=$((ram_pct * n / 100))
+  [ "$fill" -gt "$n" ] && fill=$n; [ "$fill" -lt 0 ] && fill=0
+  r1=""; r2=""
+  for ((i=0; i<fill; i++)); do r1+="<span fgcolor='#89b4fa'></span>"; done
+  for ((i=fill; i<n; i++)); do r1+="<span fgcolor='#383838'></span>"; done
+  for ((i=0; i<fill; i++)); do r2+="<span fgcolor='#383838'></span>"; done
+  for ((i=fill; i<n; i++)); do r2+="<span fgcolor='#89b4fa'></span>"; done
+  text="<span line_height=\"0.65\">${r1}\n${r2}</span>"
+  printf '{"text":"%s","class":"%s"}\n' "$text" "$cls"
+) > "$FEEDS/compact-ram.json.tmp" && mv "$FEEDS/compact-ram.json.tmp" "$FEEDS/compact-ram.json"
 
 # 4. SSD
 (
@@ -129,6 +180,19 @@ eval $(jq -r '
 
   draw_module "" "$row1" "<span font='7'>$row2</span>" "$ACCENT" "$cls" "<span font='7'>$row3</span>"
 ) > "$FEEDS/ssd.json.tmp" && mv "$FEEDS/ssd.json.tmp" "$FEEDS/ssd.json"
+
+# 4b. Compact SSD (for vertical-lite bar)
+(
+  up=$(df / | awk 'END{print $5}' | tr -d '%')
+  cls="good"; [ "$up" -ge 70 ] && cls="medium"; [ "$up" -ge 85 ] && cls="warning"; [ "$up" -ge 95 ] && cls="critical"
+  n=4; fill=$((up * n / 100))
+  [ "$fill" -gt "$n" ] && fill=$n; [ "$fill" -lt 0 ] && fill=0
+  filled=""; dim=""
+  for ((i=0; i<fill; i++)); do filled+="󰋊"; done
+  for ((i=fill; i<n; i++)); do dim+="󰋊"; done
+  text="<span fgcolor='#a6e3a1'>${filled}</span><span fgcolor='#383838'>${dim}</span>"
+  printf '{"text":"%s","class":"%s"}\n' "$text" "$cls"
+) > "$FEEDS/compact-ssd.json.tmp" && mv "$FEEDS/compact-ssd.json.tmp" "$FEEDS/compact-ssd.json"
 
 # 5. TEMP
 (

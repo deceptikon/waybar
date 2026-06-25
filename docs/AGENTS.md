@@ -37,7 +37,7 @@ style/bottom.css          # Bottom bar
 
 scripts/waybar-start.sh   # Start/reload/stop all 4 bars
 scripts/utils/            # Utility scripts (toggle-vert-lite, fn-lock, dunst, etc.)
-scripts/sysmon/           # Sysmon pipeline (poller, collect, mapper, frame, compact-*.py)
+scripts/sysmon/           # Sysmon pipeline (poller, collect, mapper, formatter, icon)
 scripts/network/          # Network scripts (wifi-info.sh)
 ```
 
@@ -53,13 +53,12 @@ scripts/network/          # Network scripts (wifi-info.sh)
 poller.sh (background, every 2s)
   → collect.sh (reads /proc/* + /sys/* + sensors)
   → mapper.sh (parses → /tmp/sysmon.json)
+  → formatter.sh (reads /tmp/sysmon.json → writes feeds/<metric>.json + feeds/compact-<metric>.json)
 
-6 waybar modules (interval 2, return-type: json):
-  custom/qwen-<metric> → tail -F feeds/<metric>.json (written by poller via frame.sh)
-  custom/qwen-<metric>-icon → sysmon/icon.sh <metric> (static glyph, interval: once)
-
-Vertical-lite uses compact Python scripts instead:
-  custom/compact-{gpu,cpu,ram,ssd} → sysmon/compact-*.py (reads /tmp/sysmon.json directly)
+All bars consume via tail -F:
+  vertical full + top → tail -F feeds/{gpu,cpu,ram,ssd,asus,network}.json
+  vertical-lite       → tail -F feeds/compact-{gpu,cpu,ram,ssd}.json
+  icon modules        → sysmon/icon.sh <metric> (interval: once, static glyph)
 ```
 
 ## Signal Convention

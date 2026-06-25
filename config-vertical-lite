@@ -31,26 +31,26 @@
       "format": "{}"
     },
     "custom/compact-gpu": {
-      "exec": "~/.config/waybar/scripts/sysmon/compact-gpu.py",
-      "interval": 2,
+      "exec": "tail -F ~/.config/waybar/feeds/compact-gpu.json",
+      "interval": "once",
       "format": "{}",
       "return-type": "json"
     },
     "custom/compact-cpu": {
-      "exec": "~/.config/waybar/scripts/sysmon/compact-cpu.py",
-      "interval": 2,
+      "exec": "tail -F ~/.config/waybar/feeds/compact-cpu.json",
+      "interval": "once",
       "format": "{}",
       "return-type": "json"
     },
     "custom/compact-ram": {
-      "exec": "~/.config/waybar/scripts/sysmon/compact-ram.py",
-      "interval": 2,
+      "exec": "tail -F ~/.config/waybar/feeds/compact-ram.json",
+      "interval": "once",
       "format": "{}",
       "return-type": "json"
     },
     "custom/compact-ssd": {
-      "exec": "~/.config/waybar/scripts/sysmon/compact-ssd.py",
-      "interval": 2,
+      "exec": "tail -F ~/.config/waybar/feeds/compact-ssd.json",
+      "interval": "once",
       "format": "{}",
       "return-type": "json"
     }

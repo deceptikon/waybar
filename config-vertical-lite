@@ -9,7 +9,6 @@
     "fixed-center": true,
     "modules-left": [
       "custom/compact-gpu",
-      "custom/compact-cpu-icon",
       "custom/compact-cpu",
       "custom/compact-ram",
       "custom/compact-ssd"
@@ -34,12 +33,6 @@
     "custom/compact-gpu": {
       "exec": "~/.config/waybar/scripts/sysmon/compact-gpu.py",
       "interval": 2,
-      "format": "{}",
-      "return-type": "json"
-    },
-    "custom/compact-cpu-icon": {
-      "exec": "echo '{\"text\":\" 󰍛 \"}'",
-      "interval": 86400,
       "format": "{}",
       "return-type": "json"
     },

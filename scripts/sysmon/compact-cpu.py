@@ -16,7 +16,7 @@ cls = data.get("class", "good")
 spans = re.findall(r'<span fgcolor="([^"]+)">([^<]+)</span>', text)
 dots = [c for c, ch in spans if ch.strip()]
 
-# 4 rows of 4 cores — icon-based
+# 4 rows of 4 cores — icon-based with negative rise to tighten rows
 icon = "󰍛"
 rows = []
 for r in range(4):
@@ -25,7 +25,9 @@ for r in range(4):
         idx = r * 4 + c
         col = dots[idx] if idx < len(dots) else "#383838"
         cells.append(f'<span fgcolor="{col}">{icon}</span>')
-    rows.append("".join(cells))
+    row = "".join(cells)
+    rise = f' rise="-2500"' if r > 0 else ""
+    rows.append(f'<span{rise}>' + row + '</span>')
 
 out = "\n".join(rows)
 print(json.dumps({"text": out, "class": cls}))

@@ -80,11 +80,6 @@ window#waybar {
     border-radius: 6px;
     background: transparent;
     border: 1px solid transparent;
-    transform: rotate(45deg);
-}
-#battery.warning,
-#battery.critical {
-    transform: none;
 }
 #battery.warning {
     color: #a6e3a1;
@@ -101,7 +96,6 @@ window#waybar {
     color: #94e2d5;
     background: rgba(0, 128, 128, 0.3);
     border: 1px solid rgba(148, 226, 213, 0.6);
-    transform: none;
 }
 
 /* ════════════════════════════════════════════

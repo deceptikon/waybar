@@ -27,13 +27,36 @@
       "custom/fnlock"
     ],
     "include": [
-      "modules-controls.json",
-      "modules-compact.json"
+      "modules-controls.json"
     ],
     "custom/lang": {
       "exec": "swaymsg -t get_inputs | grep layout_name | grep -v En | awk 'END{if(NR == 0){print \"EN\"}else{print toupper(substr($2,2,2))}}'",
       "interval": 1,
       "format": "{}"
+    },
+    "custom/compact-gpu": {
+      "exec": "tail -F ~/.config/waybar/feeds/compact-gpu.json 2>/dev/null",
+      "return-type": "json",
+      "on-click": "gpustat",
+      "on-right-click": "nvtop"
+    },
+    "custom/compact-cpu": {
+      "exec": "tail -F ~/.config/waybar/feeds/compact-cpu.json 2>/dev/null",
+      "return-type": "json",
+      "on-click": "htop",
+      "on-right-click": "gnome-system-monitor"
+    },
+    "custom/compact-ram": {
+      "exec": "tail -F ~/.config/waybar/feeds/compact-ram.json 2>/dev/null",
+      "return-type": "json",
+      "on-click": "gnome-system-monitor",
+      "on-right-click": "free -h"
+    },
+    "custom/compact-ssd": {
+      "exec": "tail -F ~/.config/waybar/feeds/compact-ssd.json 2>/dev/null",
+      "return-type": "json",
+      "on-click": "gnome-disks",
+      "on-right-click": "lsblk"
     }
   }
 ]

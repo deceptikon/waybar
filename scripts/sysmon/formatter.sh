@@ -59,7 +59,7 @@ eval $(jq -r '
   filled=""; dim=""
   for ((i=0; i<fill; i++)); do filled+="󰾲"; done
   for ((i=fill; i<n; i++)); do dim+="󰾲"; done
-  text="<span fgcolor='#fab387'>${filled}</span><span fgcolor='#383838'>${dim}</span>"
+  text="${filled:+<span fgcolor='#fab387'>${filled}</span>}${dim:+<span fgcolor='#383838'>${dim}</span>}"
   printf '{"text":"%s","class":"%s"}\n' "$text" "$cls"
 ) > "$FEEDS/compact-gpu.json.tmp" && mv "$FEEDS/compact-gpu.json.tmp" "$FEEDS/compact-gpu.json"
 
@@ -142,10 +142,10 @@ eval $(jq -r '
   n=4; fill=$((ram_pct * n / 100))
   [ "$fill" -gt "$n" ] && fill=$n; [ "$fill" -lt 0 ] && fill=0
   r1=""; r2=""
-  for ((i=0; i<fill; i++)); do r1+="<span fgcolor='#89b4fa'></span>"; done
-  for ((i=fill; i<n; i++)); do r1+="<span fgcolor='#383838'></span>"; done
-  for ((i=0; i<fill; i++)); do r2+="<span fgcolor='#383838'></span>"; done
-  for ((i=fill; i<n; i++)); do r2+="<span fgcolor='#89b4fa'></span>"; done
+  for ((i=0; i<n; i++)); do
+    [ "$i" -lt "$fill" ] && r1+="<span fgcolor='#89b4fa'></span>" || r1+="<span fgcolor='#383838'></span>"
+    [ "$i" -lt "$fill" ] && r2+="<span fgcolor='#383838'></span>" || r2+="<span fgcolor='#89b4fa'></span>"
+  done
   text="<span line_height=\"0.65\">${r1}\n${r2}</span>"
   printf '{"text":"%s","class":"%s"}\n' "$text" "$cls"
 ) > "$FEEDS/compact-ram.json.tmp" && mv "$FEEDS/compact-ram.json.tmp" "$FEEDS/compact-ram.json"
@@ -190,7 +190,7 @@ eval $(jq -r '
   filled=""; dim=""
   for ((i=0; i<fill; i++)); do filled+="󰋊"; done
   for ((i=fill; i<n; i++)); do dim+="󰋊"; done
-  text="<span fgcolor='#a6e3a1'>${filled}</span><span fgcolor='#383838'>${dim}</span>"
+  text="${filled:+<span fgcolor='#a6e3a1'>${filled}</span>}${dim:+<span fgcolor='#383838'>${dim}</span>}"
   printf '{"text":"%s","class":"%s"}\n' "$text" "$cls"
 ) > "$FEEDS/compact-ssd.json.tmp" && mv "$FEEDS/compact-ssd.json.tmp" "$FEEDS/compact-ssd.json"
 

@@ -7,10 +7,10 @@
       "group/audio"
     ],
     "modules-right": [
-      "custom/toggle-vert-lite",
       "group/bright",
       "custom/keylight",
       "battery",
+      "custom/toggle-vert-lite",
       "custom/powerbtn"
     ],
     "include": "config-top-base.jsonc"
@@ -23,10 +23,10 @@
       "bluetooth#lite"
     ],
     "modules-right": [
-      "custom/toggle-vert-lite",
       "group/bright-external",
       "custom/keylight",
-      "battery"
+      "battery",
+      "custom/toggle-vert-lite"
     ],
     "include": "config-top-base.jsonc"
   }

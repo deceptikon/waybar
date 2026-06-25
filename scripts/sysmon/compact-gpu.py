@@ -16,7 +16,7 @@ m = re.search(r'(\d+)%', text)
 pct = int(m.group(1)) if m else 0
 
 # Bar made of GPU icon
-n = 5
+n = 4
 fill = round(pct / 100 * n)
 bar = '<span fgcolor="#fab387">󰾲</span>' * fill + '<span fgcolor="#383838">󰾲</span>' * (n - fill)
 

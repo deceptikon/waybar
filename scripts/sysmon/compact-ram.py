@@ -21,11 +21,11 @@ pct = int(used / total * 100) if total > 0 else 0
 
 # 2 rows of icon bars
 icon = ""
-n = 5
+n = 4
 fill = round(pct / 100 * n)
 
 row1 = '<span fgcolor="#89b4fa">' + icon * fill + '</span><span fgcolor="#383838">' + icon * (n - fill) + '</span>'
 row2 = '<span fgcolor="#383838">' + icon * fill + '</span><span fgcolor="#89b4fa">' + icon * (n - fill) + '</span>'
 
-out = f"{row1}\n{row2}"
+out = '<span line_height="0.65">' + f"{row1}\n{row2}" + '</span>'
 print(json.dumps({"text": out, "class": cls}))

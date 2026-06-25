@@ -25,7 +25,7 @@ pct = int(used_gb / total_gb * 100) if total_gb > 0 else 0
 
 # Bar made of SSD icon
 icon = "󰋊"
-n = 5
+n = 4
 fill = round(pct / 100 * n)
 bar = '<span fgcolor="#a6e3a1">' + icon * fill + '</span><span fgcolor="#383838">' + icon * (n - fill) + '</span>'
 

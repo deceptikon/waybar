@@ -35,29 +35,28 @@ tooltip label {
 #custom-compact-ssd {
   background: rgba(20, 20, 28, 0.92);
   border-radius: 4px;
-  padding: 2px 3px;
-  margin: 3px 1px;
-  font-size: 12px;
+  padding: 1px 2px;
+  margin: 9px 1px;
+  font-size: 15px;
   color: #cdd6f4;
-  border-left: 3px solid rgba(203, 166, 247, 0.3);
+  border-top: 3px solid rgba(203, 166, 247, 0.3);
 }
 
-#custom-compact-gpu { border-left-color: #fab387; }
-#custom-compact-cpu { border-left-color: #a6e3a1; }
-#custom-compact-ram { border-left-color: #89b4fa; }
-#custom-compact-ssd { border-left-color: #a6e3a1; }
+#custom-compact-gpu { border-top-color: #fab387; }
+#custom-compact-cpu { border-top-color: #a6e3a1; }
+#custom-compact-ram { border-top-color: #89b4fa; }
+#custom-compact-ssd { border-top-color: #a6e3a1; }
 
 /* CPU rows — tight rows */
 #custom-compact-cpu {
-  font-size: 11px;
-  padding: 1px 3px;
-  margin: 1px 1px 3px;
+  font-size: 14px;
+  padding: 1px 2px;
 }
 
 /* RAM rows */
 #custom-compact-ram {
-  font-size: 12px;
-  padding: 2px 3px;
+  font-size: 15px;
+  padding: 1px 2px;
 }
 
 /* ── Center modules ── */
@@ -71,7 +70,7 @@ tooltip label {
 }
 
 #custom-lang {
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 600;
   color: #cba6f7;
   background: rgba(20, 20, 28, 0.92);
@@ -90,7 +89,7 @@ tooltip label {
   padding: 4px 3px;
   margin: 2px 1px;
   min-height: 16px;
-  font-size: 11px;
+  font-size: 15px;
   color: #a6adc8;
 }
 #idle_inhibitor.activated {
@@ -111,7 +110,7 @@ tooltip label {
   padding: 4px 2px;
   min-height: 16px;
   min-width: 16px;
-  font-size: 11px;
+  font-size: 15px;
   color: #a6adc8;
 }
 

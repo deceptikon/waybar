@@ -1,7 +1,7 @@
 # Waybar Config — AGENTS.md
 
 ## Structure
-- **Config files**: One JSON file per bar (`config-top`, `config-vertical`, `config-vertical-lite`, `config-bottom`).
+- **Config files**: One JSON file per bar (`config-top`, `config-vertical`, `config-vertical-lite`, `config-bottom`). Vertical bars share `config-vertical-base.jsonc` (layer, position, compact-* defs).
 - **Inheritance**: `config-top` is an array with two bar objects (eDP-1 + HDMI-A-1). Both inherit from `config-top-base.jsonc` via `include`. Base holds all shared settings (layer, position, module lists). Each bar overrides only `name`, `output`, and custom modules.
 - **Module files**: `modules-*.json` files hold per-module configs, included via `"include"` inside the base.
 - **CSS**: `style/base.css` (shared layout), `style/top.css` (top bar overrides + inline Catppuccin @define-colors), `style/vertical.css`, `style/vertical-lite.css`, `style/bottom.css`.

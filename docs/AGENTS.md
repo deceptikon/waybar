@@ -20,8 +20,9 @@ Wayland status bar (Waybar) on Sway WM (ASUS ZenBook). 4 bars: top (eDP-1 + HDMI
 ```
 config-top                # Top bar (array: eDP-1 + HDMI-A-1), includes config-top-base.jsonc
 config-top-base.jsonc     # Shared top-bar settings (layer, position, module lists)
-config-vertical           # Vertical bar (bar-vert, right side)
-config-vertical-lite      # Vertical lite bar (bar-vert-lite, hidden, toggleable)
+config-vertical           # Vertical bar (bar-vert, right side), includes config-vertical-base.jsonc + modules-sysmon.json
+config-vertical-lite      # Vertical lite bar (bar-vert-lite, hidden, toggleable), includes config-vertical-base.jsonc
+config-vertical-base.jsonc # Shared vertical settings (layer, position, compact-* defs, controls include)
 config-bottom             # Bottom bar (bar-bottom)
 
 modules-sysmon.json       # Sysmon monitor groups (GPU, CPU, RAM, SSD, ASUS, network)
@@ -37,7 +38,7 @@ style/bottom.css          # Bottom bar
 
 scripts/waybar-start.sh   # Start/reload/stop all 4 bars
 scripts/utils/            # Utility scripts (toggle-vert-lite, fn-lock, dunst, etc.)
-scripts/sysmon/           # Sysmon pipeline (poller, collect, mapper, formatter, icon)
+scripts/sysmon/           # Sysmon pipeline (poller, collect, mapper, formatter, icon, icon.sh)
 scripts/network/          # Network scripts (wifi-info.sh)
 ```
 

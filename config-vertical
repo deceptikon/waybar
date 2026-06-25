@@ -24,6 +24,9 @@
       "custom/recorder",
       "custom/fnlock"
     ],
-    "include": "config-vertical-base.jsonc"
+    "include": [
+      "config-vertical-base.jsonc",
+      "modules-sysmon.json"
+    ]
   }
 ]

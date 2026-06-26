@@ -7,7 +7,7 @@
       "group/qwen-cpu",
       "group/qwen-ram",
       "group/qwen-ssd",
-      "custom/qwen-netfan"
+      "group/qwen-netfan"
     ],
     
     "include": [

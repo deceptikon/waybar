@@ -21,5 +21,5 @@ elif [ "$total" -gt 2097152 ]; then cls="warning"
 elif [ "$total" -gt 512000 ]; then cls="medium"
 else cls="good"; fi
 
-text=$(printf "  ↓%s ↑%s\n󰈐 %s RPM" "$rx_fmt" "$tx_fmt" "$fan")
+text=$(printf "↓%s ↑%s\n󰈐 %s RPM" "$rx_fmt" "$tx_fmt" "$fan")
 jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'

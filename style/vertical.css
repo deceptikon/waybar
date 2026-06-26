@@ -40,7 +40,8 @@ tooltip label {
 #group-qwen-cpu,
 #group-qwen-ram,
 #group-qwen-ssd,
-#group-qwen-asus {
+#group-qwen-asus,
+#group-qwen-netfan {
   background: transparent;
   border: none;
   padding: 3px 0;
@@ -64,7 +65,8 @@ tooltip label {
 #group-qwen-ram > widget,
 #group-qwen-ssd > widget,
 #group-qwen-asus > widget,
-#group-qwen-network > widget {
+#group-qwen-network > widget,
+#group-qwen-netfan > widget {
   margin: 0;
   padding: 0;
 }
@@ -76,6 +78,7 @@ tooltip label {
 #group-qwen-ssd { border-left-color: #a6e3a1; }
 #group-qwen-asus { border-left-color: #94e2d5; }
 #group-qwen-network { border-left-color: #94e2d5; }
+#group-qwen-netfan { border-left-color: #94e2d5; }
 
 /* ── Icons ─ */
 #custom-qwen-gpu-icon,
@@ -83,6 +86,7 @@ tooltip label {
 #custom-qwen-ram-icon,
 #custom-qwen-ssd-icon,
 #custom-qwen-asus-icon,
+#custom-qwen-netfan-icon,
 #network-qwi,
 #network.qwi {
   font-size: 16px;
@@ -98,6 +102,7 @@ tooltip label {
 #custom-qwen-ram-icon { color: #89b4fa; }
 #custom-qwen-ssd-icon { color: #a6e3a1; }
 #custom-qwen-asus-icon { color: #94e2d5; }
+#custom-qwen-netfan-icon { color: #94e2d5; }
 
 /* ── Info cards ── */
 #custom-qwen-gpu,

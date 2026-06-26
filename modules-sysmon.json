@@ -142,6 +142,19 @@
     "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
     "signal": 10
   },
+  "custom/qwen-netfan-icon": {
+    "exec": "~/.config/waybar/scripts/sysmon/icon.sh netfan",
+    "interval": "once",
+    "format": "{}",
+    "return-type": "json"
+  },
+  "group/qwen-netfan": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/qwen-netfan-icon",
+      "custom/qwen-netfan"
+    ]
+  },
   "custom/qwen-netfan": {
     "exec": "~/.config/waybar/scripts/utils/netfan.sh",
     "interval": 2,

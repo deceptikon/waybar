@@ -8,6 +8,6 @@ case "$metric" in
   ssd)  echo '{"text":" 󰋊 ","class":"good"}' ;;
   temp) echo '{"text":" 󰔐 ","class":"good"}' ;;
   asus) echo '{"text":"  ","class":"good"}' ;;
-  netfan) echo '{"text":" 󰤨 ","class":"good"}' ;;
+  netfan) echo '{"text":" 󰛳 ","class":"good"}' ;;
   *)    echo '{"text":"?","class":"good"}' ;;
 esac

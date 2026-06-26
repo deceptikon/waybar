@@ -139,12 +139,13 @@ eval $(jq -r '
 # 3b. Compact RAM (for vertical-lite bar)
 (
   cls="good"; [ "$ram_pct" -ge 50 ] && cls="medium"; [ "$ram_pct" -ge 75 ] && cls="warning"; [ "$ram_pct" -ge 90 ] && cls="critical"
-  n=4; fill=$((ram_pct * n / 100))
-  [ "$fill" -gt "$n" ] && fill=$n; [ "$fill" -lt 0 ] && fill=0
+  n=4; total=$((n * 2))
+  fill=$((ram_pct * total / 100))
+  [ "$fill" -gt "$total" ] && fill=$total; [ "$fill" -lt 0 ] && fill=0
   r1=""; r2=""
   for ((i=0; i<n; i++)); do
     [ "$i" -lt "$fill" ] && r1+="<span fgcolor='#89b4fa'></span>" || r1+="<span fgcolor='#383838'></span>"
-    [ "$i" -lt "$fill" ] && r2+="<span fgcolor='#383838'></span>" || r2+="<span fgcolor='#89b4fa'></span>"
+    [ "$((i + n))" -lt "$fill" ] && r2+="<span fgcolor='#89b4fa'></span>" || r2+="<span fgcolor='#383838'></span>"
   done
   text="${r1}"$'\n'"${r2}"
   jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'

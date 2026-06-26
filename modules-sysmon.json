@@ -141,5 +141,15 @@
     "align": 0.5,
     "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
     "signal": 10
+  },
+  "custom/qwen-netfan": {
+    "exec": "~/.config/waybar/scripts/utils/netfan.sh",
+    "interval": 2,
+    "format": "{}",
+    "return-type": "json",
+    "justify": "center",
+    "align": 0.5,
+    "on-click": "asusctl profile next",
+    "on-right-click": "nm-connection-editor"
   }
 }

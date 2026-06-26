@@ -162,7 +162,8 @@ tooltip label {
   border-radius: 10px;
 }
 
-/* Primary action cards: ppd, ext-display, idle_inhibitor */
+/* Primary action cards: profile, ppd, ext-display, idle_inhibitor */
+#custom-profile,
 #power-profiles-daemon,
 #custom-ext-display,
 #idle_inhibitor {
@@ -193,6 +194,21 @@ tooltip label {
   color: #f38ba8;
 }
 
+#custom-profile.good {
+  border-color: rgba(166, 227, 161, 0.5);
+  background: rgba(0, 128, 128, 0.12);
+  color: #a6e3a1;
+}
+#custom-profile.medium {
+  border-color: rgba(249, 226, 175, 0.5);
+  background: rgba(0, 128, 128, 0.12);
+  color: #f9e2af;
+}
+#custom-profile.warning {
+  border-color: rgba(243, 139, 168, 0.5);
+  background: rgba(0, 128, 128, 0.12);
+  color: #f38ba8;
+}
 #custom-ext-display.off {
   color: #6c7086;
 }

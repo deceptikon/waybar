@@ -71,6 +71,12 @@
     "format": "{}",
     "return-type": "json"
   },
+  "custom/profile": {
+    "exec": "tail -F ~/.config/waybar/feeds/asus.json 2>/dev/null",
+    "return-type": "json",
+    "format": "{}",
+    "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar"
+  },
   "custom/toggle-vert-lite": {
     "format": "󰨞",
     "tooltip": false,

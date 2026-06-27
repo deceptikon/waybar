@@ -4,16 +4,22 @@
   "reload_style_on_change": true,
   "fixed-center": true,
 "modules-center": [
-      "custom/profile",
-      "power-profiles-daemon",
-      "custom/ext-display",
-      "idle_inhibitor"
+      "group/vc-row1",
+      "group/vc-row2"
     ],
+    "group/vc-row1": {
+      "orientation": "horizontal",
+      "modules": ["custom/profile", "idle_inhibitor"]
+    },
+    "group/vc-row2": {
+      "orientation": "horizontal",
+      "modules": ["custom/dunst", "custom/ext-display"]
+    },
     "modules-right": [
       "custom/ollama",
       "custom/llama",
       "custom/checkupdates",
-      "custom/dunst",
+      "power-profiles-daemon",
       "custom/recorder",
       "custom/fnlock"
     ],

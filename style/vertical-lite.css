@@ -153,15 +153,27 @@ tooltip label {
 }
 
 /* LLM pair */
-#custom-ollama.on,
-#custom-llama.on {
+#custom-ollama.on {
   border-color: rgba(148, 226, 213, 0.5);
   background: rgba(0, 128, 128, 0.12);
   color: #94e2d5;
 }
-#custom-ollama.off,
+#custom-ollama.off {
+  color: #585b70;
+}
+
 #custom-llama.off {
   color: #585b70;
+}
+#custom-llama.idle {
+  border-color: rgba(148, 226, 213, 0.5);
+  background: rgba(0, 128, 128, 0.12);
+  color: #94e2d5;
+}
+#custom-llama.active {
+  border-color: rgba(166, 227, 161, 0.5);
+  background: rgba(166, 227, 161, 0.12);
+  color: #a6e3a1;
 }
 
 /* Updates */

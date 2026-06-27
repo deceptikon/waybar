@@ -12,7 +12,7 @@
     border: none;
     border-radius: 0;
     font-family: "Monaspace Krypton Frozen", "JetBrainsMono Nerd Font", monospace;
-    font-size: 10px;
+    font-size: 9px;
 }
 
 /* ════════════════════════════════════════════
@@ -20,7 +20,7 @@
    ═══════════════════════════════════════════ */
 
 window#bar-bottom {
-    background: rgba(30, 30, 46, 0.9);
+    background: rgba(30, 30, 46, 0.6);
 }
 
 .bar-bottom .modules-left,
@@ -38,53 +38,58 @@ window#bar-bottom {
 #workspaces.bottom {
     background: transparent;
 }
+
+#workspaces.bottom button:nth-child(1)  { border-color: #fab387; background-color: #fab387; }
+#workspaces.bottom button:nth-child(2)  { border-color: #89b4fa; background-color: #89b4fa; }
+#workspaces.bottom button:nth-child(3)  { border-color: #B8E1FF;  background-color: #a6e3a1; }
+#workspaces.bottom button:nth-child(4)  { border-color: #91B6AC;  background-color: #cba6f7; }
+#workspaces.bottom button:nth-child(5)  { border-color: #74226C;  background-color: #f9e2af; }
+#workspaces.bottom button:nth-child(6)  { border-color: #AFB3F7;  background-color: #94e2d5; }
+#workspaces.bottom button:nth-child(7)  { border-color: #824C71;  background-color: #89dceb; }
+#workspaces.bottom button:nth-child(8)  { border-color: #0FFF95;  background-color: #74c7ec; }
+#workspaces.bottom button:nth-child(9)  { border-color: #D1C6AD;  background-color: #f5c2e7; }
+#workspaces.bottom button:nth-child(10) { border-color: #EBB9DF;  background-color: #eba0ac; }
+
 #workspaces.bottom button {
     padding: 0;
-    margin: 0 8px;
+    margin: 0 4px;
     min-height: 4px;
-    min-width: 40px;
-    border-radius: 4px;
-    border: none;
-    background-color: white;
-    opacity: 0.25;
-    transition: all 0.25s ease;
-    color: transparent;
-    font-size: 0;
+    min-width: 60px;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 4px solid white;
+    background-color: transparent;
+    opacity: 0.65;
+    transition: all 0.5s ease;
 }
 #workspaces.bottom button:hover {
     min-height: 7px;
-    min-width: 70px;
-    opacity: 0.6;
+    min-width: 110px;
+    opacity: 0.9;
     box-shadow: 0px -1px 4px rgba(148, 226, 213, 0.3);
+    border-bottom: 6px solid #FA824C;
 }
 #workspaces.bottom button.focused,
 #workspaces.bottom button.active {
     opacity: 1;
-    min-width: 80px;
-    min-height: 6px;
+    min-width: 100px;
     box-shadow: 0px -2px 6px rgba(148, 226, 213, 0.5);
+    border-bottom: 6px solid #FA824C;
 }
 #workspaces.bottom button.urgent {
     background-color: #f38ba8;
     opacity: 1;
 }
-#workspaces.bottom button:nth-child(1)  { background-color: #fab387; }
-#workspaces.bottom button:nth-child(2)  { background-color: #89b4fa; }
-#workspaces.bottom button:nth-child(3)  { background-color: #a6e3a1; }
-#workspaces.bottom button:nth-child(4)  { background-color: #cba6f7; }
-#workspaces.bottom button:nth-child(5)  { background-color: #f9e2af; }
-#workspaces.bottom button:nth-child(6)  { background-color: #94e2d5; }
-#workspaces.bottom button:nth-child(7)  { background-color: #89dceb; }
-#workspaces.bottom button:nth-child(8)  { background-color: #74c7ec; }
-#workspaces.bottom button:nth-child(9)  { background-color: #f5c2e7; }
-#workspaces.bottom button:nth-child(10) { background-color: #eba0ac; }
+#workspaces.bottom button.empty {
+    background-color: transparent;
+    border-top: 6px solid transparent;
+}
 
 /* ════════════════════════════════════════════
    BOTTOM BAR MODULES — powerbtn, uptime, ollama, llama
    ════════════════════════════════════════════ */
 
 #custom-powerbtn {
-    font-size: 12px;
+    font-size: 14px;
     color: #fab387;
     opacity: 0.7;
     padding: 0 2px 0 8px;
@@ -97,8 +102,8 @@ window#bar-bottom {
 }
 
 #custom-uptime {
-    color: #585b70;
-    font-size: 8px;
+    color: #e8dbd0;
+    font-size: 9px;
     font-weight: 500;
     padding: 0 4px 0 0;
     min-height: 0;
@@ -131,8 +136,9 @@ window#bar-bottom {
     min-height: 0;
     margin: 0;
 }
-#custom-llama.on  { color: #94e2d5; }
 #custom-llama.off { color: #666; }
+#custom-llama.idle  { color: #94e2d5; }
+#custom-llama.active { color: #a6e3a1; }
 
 #mode {
     font-size: 6px;

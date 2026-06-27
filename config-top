@@ -3,10 +3,10 @@
     "name": "bar-top",
     "output": "eDP-1",
     "modules-left": [
-      "bluetooth#lite",
       "custom/wifi",
-      "custom/lang",
-      "group/audio"
+      "bluetooth#lite",
+      "group/audio",
+      "custom/lang"
     ],
     "modules-right": [
       "group/bright",
@@ -21,10 +21,10 @@
     "name": "bar-top-ext",
     "output": "HDMI-A-1",
     "modules-left": [
-      "group/audio",
-      "bluetooth#lite",
       "custom/wifi",
-      "custom/lang"
+      "bluetooth#lite",
+      "custom/lang",
+      "group/audio"
     ],
     "modules-right": [
       "group/bright-external",

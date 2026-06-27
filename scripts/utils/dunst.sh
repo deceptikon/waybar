@@ -16,7 +16,7 @@ if [ "$status" = "false" ]; then
 else
   unread=$(dunstctl count waiting)
   jq -n --arg cnt "$unread" --compact-output '{
-    text: ("󰂛 <small> " + $cnt + "</small>"),
+    text: ("󰂛 <sup>" + $cnt + "</sup>"),
     tooltip: ("Notifications paused, " + $cnt + " new"),
     class: "paused"
   }'

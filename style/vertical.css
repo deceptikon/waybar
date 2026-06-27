@@ -90,12 +90,12 @@ tooltip label {
 #network-qwi,
 #network.qwi {
   font-size: 16px;
-  min-width: 14px;
-  padding: 0 2px;
+  min-width: 10px;
+  padding: 0px;
   border: none;
   background: transparent;
   border-radius: 0;
-  margin: 0 2px 0 0;
+  margin: 0 0px 0 0;
 }
 #custom-qwen-gpu-icon { color: #fab387; }
 #custom-qwen-cpu-icon { color: #a6e3a1; }
@@ -115,8 +115,8 @@ tooltip label {
   font-weight: 500;
   border-radius: 6px;
   padding: 3px 2px;
-  margin: 0;
-  min-width: 104px;
+  margin: 0 0 4px;
+  min-width: 111px;
   background: rgba(30, 30, 42, 0.85);
 }
 
@@ -169,40 +169,39 @@ tooltip label {
   background: rgba(30, 30, 46, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.06);
   margin: 4px 2px;
-  padding: 8px 4px;
+  padding: 4px 0px 4px 10px;
   border-radius: 10px;
 }
 
-/* Primary action cards: profile, ppd, ext-display, idle_inhibitor */
+/* VC 2x2 grid rows */
+#group-vc-row1,
+#group-vc-row2 {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 2px 0;
+}
+#group-vc-row1 > widget,
+#group-vc-row2 > widget {
+  margin: 0;
+  padding: 0;
+}
+
+/* Primary action cards: profile, dunst, ext-display, idle_inhibitor */
 #custom-profile,
-#power-profiles-daemon,
+#custom-dunst,
 #custom-ext-display,
 #idle_inhibitor {
   font-weight: 600;
   background: rgba(20, 20, 28, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 8px 8px;
-  margin: 4px 4px;
-  min-height: 32px;
-  font-size: 13px;
+  padding: 8px 0;
+  margin: 5px 4px;
+  min-height: 30px;
+  min-width:60px;
+  font-size: 22px;
   color: #a6adc8;
-}
-
-#power-profiles-daemon.power-saver {
-  border-color: rgba(166, 227, 161, 0.5);
-  background: rgba(0, 128, 128, 0.12);
-  color: #a6e3a1;
-}
-#power-profiles-daemon.balanced {
-  border-color: rgba(249, 226, 175, 0.5);
-  background: rgba(0, 128, 128, 0.12);
-  color: #f9e2af;
-}
-#power-profiles-daemon.performance {
-  border-color: rgba(243, 139, 168, 0.5);
-  background: rgba(0, 128, 128, 0.12);
-  color: #f38ba8;
 }
 
 #custom-profile.good {
@@ -234,7 +233,7 @@ tooltip label {
 }
 
 #idle_inhibitor {
-  font-size: 15px;
+  font-size: 18px;
 }
 #idle_inhibitor.activated {
   border-color: rgba(148, 226, 213, 0.5);
@@ -242,7 +241,11 @@ tooltip label {
   color: #94e2d5;
 }
 
-/* ── LLM pair ─ (now in VR, styled with VR compact buttons below) */
+#custom-dunst.paused {
+  border-color: rgba(148, 226, 213, 0.5);
+  background: rgba(0, 128, 128, 0.12);
+  color: #94e2d5;
+}
 
 /* ════════════════════════════════════════════
    VR (right) — tools & alerts
@@ -251,10 +254,10 @@ tooltip label {
 
 #custom-ollama,
 #custom-llama,
-#custom-dunst,
 #custom-recorder,
 #custom-checkupdates,
-#custom-fnlock {
+#custom-fnlock,
+#power-profiles-daemon {
   background: rgba(20, 20, 28, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
@@ -266,12 +269,27 @@ tooltip label {
   color: #a6adc8;
 }
 
-#custom-dunst.paused,
 #custom-checkupdates.notify,
 #custom-fnlock.active {
   border-color: rgba(148, 226, 213, 0.5);
   background: rgba(0, 128, 128, 0.15);
   color: #94e2d5;
+}
+
+#power-profiles-daemon.power-saver {
+  border-color: rgba(166, 227, 161, 0.5);
+  background: rgba(0, 128, 128, 0.15);
+  color: #a6e3a1;
+}
+#power-profiles-daemon.balanced {
+  border-color: rgba(249, 226, 175, 0.5);
+  background: rgba(0, 128, 128, 0.15);
+  color: #f9e2af;
+}
+#power-profiles-daemon.performance {
+  border-color: rgba(243, 139, 168, 0.5);
+  background: rgba(0, 128, 128, 0.15);
+  color: #f38ba8;
 }
 
 #custom-recorder.recording {
@@ -286,17 +304,30 @@ tooltip label {
   color: #a6e3a1;
 }
 
-#custom-ollama.on,
-#custom-llama.on {
+#custom-ollama.on {
   border-color: rgba(148, 226, 213, 0.5);
   background: rgba(0, 128, 128, 0.15);
   color: #94e2d5;
 }
 
-#custom-ollama.off,
+#custom-ollama.off {
+  color: #585b70;
+  border-color: rgba(255, 255, 255, 0.04);
+}
+
 #custom-llama.off {
   color: #585b70;
   border-color: rgba(255, 255, 255, 0.04);
+}
+#custom-llama.idle {
+  border-color: rgba(148, 226, 213, 0.5);
+  background: rgba(0, 128, 128, 0.15);
+  color: #94e2d5;
+}
+#custom-llama.active {
+  border-color: rgba(166, 227, 161, 0.5);
+  background: rgba(166, 227, 161, 0.15);
+  color: #a6e3a1;
 }
 
 

@@ -1,58 +1,57 @@
 #!/bin/bash
-set -euo pipefail
+set -uo pipefail
 
 PORT=22222
-PIDFILE="/tmp/llama-server.pid"
+CLASS="llama-server-term"
 
-toggle() {
-    if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-        kill "$(cat "$PIDFILE")" 2>/dev/null || true
-        rm -f "$PIDFILE"
-    else
-        export OMP_NUM_THREADS=16
-        export GOMP_CPU_AFFINITY="0-15"
-        nohup ~/Q/llama.cpp/build/bin/llama-server \
-            -m "${GGUF_PATH:?GGUF_PATH not set}" \
-            --ctx-size 16384 \
-            --n-gpu-layers 99 \
-            --no-mmap \
-            -fa on \
-            --cache-type-k q8_0 \
-            --cache-type-v q8_0 \
-            --temp 1.0 \
-            --top-p 0.95 \
-            --top-k 64 \
-            --host 127.0.0.1 \
-            --port "$PORT" &>/dev/null &
-        echo $! > "$PIDFILE"
-    fi
-    pkill -SIGRTMIN+22 waybar || true
+health() {
+    curl -sf --max-time 2 "http://127.0.0.1:$PORT/health" 2>/dev/null || true
 }
 
 status() {
-    local running=false
-    if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
-        running=true
-    elif command -v ss &>/dev/null && ss -tln 2>/dev/null | grep -q ":$PORT"; then
-        running=true
+    local hdrs
+    hdrs=$(health)
+    if [ -z "$hdrs" ]; then
+        jq -nc '{text:"󰦞", class:"off", tooltip:"llama-server: OFF"}'
+        return
     fi
-
-    if $running; then
-        jq -n --compact-output \
-            --arg text "󰦝" \
-            --arg class "running" \
-            --arg tooltip "llama-server: Running on port $PORT" \
-            '{text: $text, class: $class, tooltip: $tooltip}'
+    local active
+    active=$(echo "$hdrs" | jq -r '(.slots_processing // 0) > 0' 2>/dev/null)
+    if [ "$active" = "true" ]; then
+        jq -nc '{text:"󰦝", class:"active", tooltip:"llama-server: ACTIVE"}'
     else
-        jq -n --compact-output \
-            --arg text "󰦞" \
-            --arg class "stopped" \
-            --arg tooltip "llama-server: Stopped (click to toggle)" \
-            '{text: $text, class: $class, tooltip: $tooltip}'
+        jq -nc '{text:"󰦝", class:"idle", tooltip:"llama-server: IDLE"}'
     fi
 }
 
+start_server() {
+    if [ ! -r "${GGUF_PATH:-}" ]; then
+        notify-send "llama-server" "GGUF_PATH not readable: ${GGUF_PATH:-unset}"
+        return 1
+    fi
+    stop_server
+    sleep 0.3
+    kitty --hold --class "$CLASS" --title "llama-server" \
+        bash -c '
+            export OMP_NUM_THREADS=16 GOMP_CPU_AFFINITY="0-15"
+            exec ~/Q/llama.cpp/build/bin/llama-server \
+                -m "$GGUF_PATH" --ctx-size 16384 --n-gpu-layers 99 --no-mmap \
+                -fa on --cache-type-k q8_0 --cache-type-v q8_0 \
+                --temp 1.0 --top-p 0.95 --top-k 64 \
+                --host 127.0.0.1 --port '"$PORT"'
+        ' &
+    disown
+}
+
+stop_server() {
+    pkill -f "kitty.*--class $CLASS" 2>/dev/null || true
+    sleep 0.3
+    pkill -f "llama-server.*--port $PORT" 2>/dev/null || true
+}
+
 case "${1:-status}" in
-    toggle) toggle ;;
-    status|*) status ;;
+    start) start_server && { sleep 1; pkill -SIGRTMIN+22 waybar 2>/dev/null || true; } ;;
+    stop) stop_server; pkill -SIGRTMIN+22 waybar 2>/dev/null || true ;;
+    restart) stop_server; sleep 0.5; start_server && { sleep 1; pkill -SIGRTMIN+22 waybar 2>/dev/null || true; } ;;
+    *) status ;;
 esac

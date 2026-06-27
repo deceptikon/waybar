@@ -17,9 +17,16 @@
     "on-click": "~/.config/waybar/scripts/utils/keylight/toggler.sh",
     "signal": 8
   },
+  "custom/mic": {
+    "exec": "~/.config/waybar/scripts/utils/mic-status.sh",
+    "return-type": "json",
+    "format": "{}",
+    "on-click": "~/.config/waybar/scripts/utils/mic-toggle.sh",
+    "signal": 13
+  },
   "group/audio": {
     "orientation": "horizontal",
-    "modules": ["pulseaudio", "pulseaudio/slider"]
+    "modules": ["custom/mic", "pulseaudio", "pulseaudio/slider"]
   },
   "group/bright": {
     "orientation": "horizontal",
@@ -68,16 +75,17 @@
     "interval": 20,
     "full-at": 90,
     "states": {
-      "good": 41,
-      "warning": 40,
-      "critical": 5
+      "good": 100,
+      "warning": 30,
+      "critical": 15,
+      "critical-blink": 10
     },
     "design-capacity": false,
     "format-time": "{H}:{M}",
     "format-good": " {icon}<small> {capacity}%</small>",
     "format-warning": " {icon}<small> {capacity}%</small>",
     "format-critical": " {icon}<small> {capacity}% LOW CHARGE! (off in {time})</small> ",
-    "format": " {icon} ",
+    "format": " {icon}<small> {capacity}%</small>",
     "format-charging": " \uf1e6 {icon} ",
     "format-icons": {
       "default": [

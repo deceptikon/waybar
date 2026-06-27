@@ -21,7 +21,7 @@
 @import "base.css";
 
 /* ════════════════════════════════════════════
-   TL — left zone: powerbtn, bluetooth, wifi, lang, audio
+   TL — left zone: wifi, bluetooth, lang, audio
    ════════════════════════════════════════════ */
 .bar-top .modules-left {
     border-radius: 0 0 12px 0;
@@ -43,6 +43,10 @@
 .bar-top #group-audio {
     margin: 0;
     padding: 0;
+}
+.bar-top #custom-mic {
+    margin: 0 12px 0 0;
+    padding: 3px 8px;
 }
 
 /* ════════════════════════════════════════════
@@ -119,19 +123,15 @@ window#waybar:not(.mode-default) #titlebox-row {
     border-radius: 6px;
     font-size: 15px;
     font-weight: bold;
-}
-#bluetooth-lite.disabled,
-#bluetooth-lite.off {
     color: @text_dim;
     background: transparent;
     border: 1px solid transparent;
 }
-#bluetooth-lite.discoverable,
-#bluetooth-lite.on,
-#bluetooth-lite:not(.disabled):not(.connected) {
+#bluetooth-lite.disabled {
+    opacity: 0.4;
+}
+#bluetooth-lite.on {
     color: @text_primary;
-    background: transparent;
-    border: 1px solid transparent;
 }
 #bluetooth-lite.connected {
     color: @accent_teal;
@@ -186,6 +186,23 @@ window#waybar:not(.mode-default) #titlebox-row {
     border: 1px solid transparent;
 }
 #custom-keylight.active {
+    color: @accent_teal;
+    background: @highlight_bg;
+    border: 1px solid @highlight_border;
+}
+
+#custom-mic {
+    min-width: 32px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+}
+#custom-mic.inactive {
+    color: @text_dim;
+    background: transparent;
+    border: 1px solid transparent;
+}
+#custom-mic.active {
     color: @accent_teal;
     background: @highlight_bg;
     border: 1px solid @highlight_border;

@@ -82,15 +82,20 @@ window#waybar {
     border: 1px solid transparent;
 }
 #battery.warning {
-    color: #a6e3a1;
-    background: rgba(0, 128, 0, 0.15);
-    border: 1px solid rgba(166, 227, 161, 0.5);
+    color: #f9e2af;
+    background: rgba(249, 226, 175, 0.15);
+    border: 1px solid rgba(249, 226, 175, 0.5);
 }
 #battery.critical {
     color: #f38ba8;
-    background: rgba(243, 139, 168, 0.15);
+    background: rgba(243, 139, 168, 0.2);
     border: 1px solid rgba(243, 139, 168, 0.5);
-    animation: blinkred 0.6s linear infinite alternate;
+}
+#battery.critical-blink {
+    color: #f38ba8;
+    background: rgba(243, 139, 168, 0.25);
+    border: 1px solid rgba(243, 139, 168, 0.6);
+    animation: blinkred 0.5s linear infinite alternate;
 }
 #battery.charging {
     color: #94e2d5;

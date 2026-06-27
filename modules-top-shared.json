@@ -41,7 +41,11 @@
       ]
     },
   "clock#date": {
-    "format": "<span text_transform=\"uppercase\">{:%A, %d %B %Y   %H:%M}</span>",
+    "format": "<span text_transform=\"uppercase\">{:%A, %d %B %Y                         %H:%M}</span>",
+    "actions": {"on-click-right": "mode",
+                "on-scroll-up": "shift_up",
+                "on-scroll-down": "shift_down"
+               },
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
   },
   "sway/workspaces": {

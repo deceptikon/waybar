@@ -4,15 +4,16 @@
     "layer": "top",
     "position": "bottom",
     "reload_style_on_change": true,
-    "height": 24,
-    "modules-left": [
+    "height": 10,
+    "fixed-center": true,
+    "modules-center": [
       "sway/workspaces#bottom"
     ],
-    "modules-center": [
-      "custom/powerbtn",
-      "custom/uptime"
-    ],
     "modules-right": [
+      "custom/uptime",
+      "custom/powerbtn"
+    ],
+    "modules-left": [
       "custom/ollama",
       "tray"
     ],
@@ -20,7 +21,7 @@
       "modules-controls.json"
     ],
     "sway/workspaces#bottom": {
-      "disable-scroll": true,
+      "disable-scroll": false,
       "all-outputs": false,
       "format": "{icon} ",
       "active-only": true,
@@ -35,11 +36,9 @@
         "default": ""
       },
       "persistent-workspaces": {
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": [],
-        "5": []
+        "0": [],
+        "1": ["eDP-1", "HDMI-A-1"],
+        "2": ["HDMI-A-1"],
       }
     },
     "sway/mode": {
@@ -51,7 +50,7 @@
       "format": "󰚫 {}"
     },
     "tray": {
-      "icon-size": 15,
+      "icon-size": 10,
       "spacing": 10
     },
     "custom/ollama": {

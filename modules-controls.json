@@ -21,7 +21,7 @@
     "exec": "~/.config/waybar/scripts/utils/dunst.sh refresh",
     "return-type": "json",
     "interval": 1000,
-    "format": "{}<sup></sup>",
+    "format": "{}",
     "on-click": "~/.config/waybar/scripts/utils/dunst.sh",
     "signal": 9
   },
@@ -63,7 +63,13 @@
     "format": "{}",
     "interval": 5,
     "signal": 22,
-    "on-click": "~/.config/waybar/scripts/utils/llama-server.sh toggle"
+    "menu": "on-click",
+    "menu-file": "~/.config/waybar/feeds/llama-menu.xml",
+    "menu-actions": {
+      "start": "~/.config/waybar/scripts/utils/llama-server.sh start",
+      "stop": "~/.config/waybar/scripts/utils/llama-server.sh stop",
+      "restart": "~/.config/waybar/scripts/utils/llama-server.sh restart"
+    }
   },
   "custom/ollama": {
     "exec": "if curl -s http://localhost:11111/api/tags > /dev/null 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps 2>/dev/null | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -cn --arg m \"$models\" '{text:(\"󱚣 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -cn '{text:\"󱚣 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -cn '{text:\"󱚣 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",

@@ -6,15 +6,14 @@
     "reload_style_on_change": true,
     "height": 10,
     "fixed-center": true,
-    "modules-center": [
+    "modules-right": [
       "sway/workspaces#bottom"
     ],
-    "modules-right": [
+    "modules-center": [
       "custom/uptime",
       "custom/powerbtn"
     ],
     "modules-left": [
-      "custom/ollama",
       "tray"
     ],
     "include": [
@@ -41,34 +40,12 @@
         "2": ["HDMI-A-1"],
       }
     },
-    "sway/mode": {
-      "format": "<span style=\"italic\">{}</span>"
-    },
-    "custom/uptime": {
-      "exec": "uptime -p | sed 's/up //'",
-      "interval": 60,
-      "format": "󰚫 {}"
-    },
     "tray": {
-      "icon-size": 10,
-      "spacing": 10
-    },
-    "custom/ollama": {
-      "exec": "if curl -s http://localhost:11111/api/tags > /dev/null 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps 2>/dev/null | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -n --arg m \"$models\" --compact-output '{text:(\"󱚣 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -n --compact-output '{text:\"󱚣 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -n --compact-output '{text:\"󱚣 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
-      "interval": 5,
-      "format": "{}",
-      "return-type": "json"
-    },
-    "custom/powerbtn": {
-      "format": "⏻ ",
-      "tooltip": false,
-      "menu": "on-click",
-      "menu-file": "~/.config/waybar/feeds/powermenu.xml",
-      "menu-actions": {
-        "shutdown": "shutdown",
-        "reboot": "reboot",
-        "suspend": "systemctl suspend",
-        "hibernate": "systemctl hibernate"
+      "icon-size": 11,
+      "spacing": 7,
+      "icons": {
+        "blueman": "bluetooth",
+        "Telegram": "telegram"
       }
     }
   }

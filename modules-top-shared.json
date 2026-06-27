@@ -86,8 +86,8 @@
     "tooltip-format": "{app}: {title}"
   },
   "sway/window": {
-    "format": " {title} \uf17c [{app_id}]",
-    "max-length": "20",
+    "format": "{title} \uf17c  :: ",
+    "max-length": 80,
     "all-outputs": true,
     "offscreen-css": true,
     "offscreen-css-text": "NO FOCUS",

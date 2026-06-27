@@ -30,7 +30,22 @@ tooltip label {
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
-
+#custom-powerbtn {
+    font-size: 16px;
+    color: #fab387;
+    opacity: 0.4;
+    padding: 2px;
+    min-height: 0;
+    margin: 4px 0 0 0;
+    transition: opacity 0.2s ease;
+}
+#custom-powerbtn:hover {
+    opacity: 1;
+    background: rgba(137, 180, 250, 0.15);
+}
+#custom-powerbtn sub {
+  color: red;
+}
 /* ════════════════════════════════════════════
    VL (left) — monitor groups
    Separated blocks with breathing room
@@ -117,6 +132,7 @@ tooltip label {
   padding: 3px 2px;
   margin: 0 0 4px;
   min-width: 111px;
+  font-size: 14px;
   background: rgba(30, 30, 42, 0.85);
 }
 

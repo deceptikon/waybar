@@ -74,9 +74,9 @@ window#waybar {
     font-size: 17px;
     font-weight: bold;
     color: #585b70;
-    min-width: 40px;
+    /* min-width: 40px; */
     margin: 0 4px;
-    padding: 1px 6px;
+    padding: 1px 3px;
     border-radius: 6px;
     background: transparent;
     border: 1px solid transparent;
@@ -99,8 +99,8 @@ window#waybar {
 }
 #battery.charging {
     color: #94e2d5;
-    background: rgba(0, 128, 128, 0.3);
-    border: 1px solid rgba(148, 226, 213, 0.6);
+    /* background: rgba(0, 128, 128, 0.3); */
+    /* border: 1px solid rgba(148, 226, 213, 0.6); */
 }
 
 /* ════════════════════════════════════════════

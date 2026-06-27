@@ -3,11 +3,10 @@
   "position": "top",
   "reload_style_on_change": true,
   "modules-left": [
-    "custom/powerbtn",
-    "bluetooth#lite",
     "custom/wifi",
-    "custom/lang",
-    "group/audio"
+    "bluetooth",
+    "group/audio",
+    "custom/lang"
   ],
   "modules-center": [
     "group/top-center"

@@ -75,7 +75,7 @@
     "interval": 20,
     "full-at": 90,
     "states": {
-      "good": 100,
+      "good": 40,
       "warning": 30,
       "critical": 15,
       "critical-blink": 10
@@ -83,10 +83,11 @@
     "design-capacity": false,
     "format-time": "{H}:{M}",
     "format-good": " {icon}<small> {capacity}%</small>",
-    "format-warning": " {icon}<small> {capacity}%</small>",
-    "format-critical": " {icon}<small> {capacity}% LOW CHARGE! (off in {time})</small> ",
-    "format": " {icon}<small> {capacity}%</small>",
-    "format-charging": " \uf1e6 {icon} ",
+    "format-warning": " {icon} <small>{capacity}%</small>",
+    "format-critical": " {icon} <small>{capacity}%</small> ",
+    "format-critical-blink": " {icon}<small> {capacity}% LOW CHARGE! (off in {time})</small> ",
+    "format": "{icon}",
+    "format-charging": "\uf1e6",
     "format-icons": {
       "default": [
         "\udb80\udc8e",
@@ -118,7 +119,7 @@
     "tooltip-format": "Time remaining: {time}\nCycles: {cycles}\nPower draw: {power}W",
     "tooltip-format-charging": "Time to full: {time}\nCycles: {cycles}\nPower draw: {power}W"
   },
-  "bluetooth#lite": {
+  "bluetooth": {
     "format": " {icon} ",
     "format-icons": {
       "enabled": "\uf293",

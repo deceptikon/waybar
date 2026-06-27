@@ -34,7 +34,7 @@
     margin: 0 12px 0 0;
     padding: 3px 10px;
 }
-.bar-top #bluetooth-lite,
+.bar-top #bluetooth,
 .bar-top #custom-wifi,
 .bar-top #custom-lang {
     margin: 0 12px 0 0;
@@ -118,22 +118,19 @@ window#waybar:not(.mode-default) #titlebox-row {
 .bar-top .modules-right :last-child {
     margin-right: 0;
 }
-#bluetooth-lite {
+#bluetooth{
     min-width: 32px;
     border-radius: 6px;
-    font-size: 15px;
-    font-weight: bold;
-    color: @text_dim;
+    font-size: 16px;
     background: transparent;
     border: 1px solid transparent;
+    color: @accent_green;
 }
-#bluetooth-lite.disabled {
-    opacity: 0.4;
+#bluetooth.disabled {
+    color: @text_dim;
 }
-#bluetooth-lite.on {
-    color: @text_primary;
-}
-#bluetooth-lite.connected {
+
+#bluetooth.connected {
     color: @accent_teal;
     background: @highlight_bg;
     border: 1px solid @highlight_border;
@@ -203,9 +200,10 @@ window#waybar:not(.mode-default) #titlebox-row {
     border: 1px solid transparent;
 }
 #custom-mic.active {
-    color: @accent_teal;
+    color: @accent_red;
     background: @highlight_bg;
-    border: 1px solid @highlight_border;
+    /* border-top:4px solid @accent_red; */
+    border-radius: 0;
 }
 
 #idle_inhibitor {

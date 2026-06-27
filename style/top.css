@@ -238,7 +238,7 @@ window#waybar:not(.mode-default) #titlebox-row {
     margin: 0px;
     padding: 0px 0px;
     font-size: 9px;
-    min-width: 100px;
+    min-width: 120px;
 }
 
 #custom-toggle-vert-lite {

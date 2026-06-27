@@ -128,7 +128,7 @@ window#waybar {
 #pulseaudio-slider trough,
 #backlight-slider trough {
     min-height: 10px;
-    min-width: 80px;
+    min-width: 100px;
     border-radius: 0px;
     background: rgba(30, 30, 40, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.08);

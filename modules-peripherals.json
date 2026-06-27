@@ -57,7 +57,7 @@
   },
   "pulseaudio/slider": {
     "min": 0,
-    "max": 90,
+    "max": 120,
     "orientation": "horizontal",
     "format": "{}"
   },

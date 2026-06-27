@@ -83,11 +83,5 @@
     "format": "{}",
     "interval": 2,
     "on-click": "asusctl profile next"
-  },
-  "custom/toggle-vert-lite": {
-    "format": "󰨞",
-    "tooltip": false,
-    "on-click": "/home/lexx/.config/waybar/scripts/utils/toggle-vert-lite.sh",
-    "interval": 86400
   }
 }

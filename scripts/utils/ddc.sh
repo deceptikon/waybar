@@ -10,7 +10,7 @@ mkdir -p "$CACHE_DIR"
 
 draw_slider() {
     local val=$1
-    local width=11
+    local width=17
     local filled=$(( val * width / 100 ))
     local empty=$(( width - filled ))
     local body=""

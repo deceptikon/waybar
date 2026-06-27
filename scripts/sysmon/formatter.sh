@@ -175,7 +175,7 @@ eval $(jq -r '
     w_icon="<span fgcolor='#585b70'>○</span>"
   fi
 
-  row1="<b><span fgcolor='$ACCENT'>${used_gb}Gb</span> <span fgcolor='#cdd6f4'>of</span> <span fgcolor='#a6e3a1'>${tot}</span></b>"
+  row1="<b><span fgcolor='$ACCENT'>${used_gb}Gb</span><span fgcolor='#cdd6f4' font='7'> of </span><span fgcolor='#ffa6e1'>${tot}</span></b>"
   row2=$(printf "%s <span fgcolor='#cdd6f4'>read </span> <span fgcolor='#89b4fa'>%s</span>" "$r_icon" "$rf")
   row3=$(printf "%s <span fgcolor='#cdd6f4'>write</span> <span fgcolor='#89b4fa'>%s</span>" "$w_icon" "$wf")
 

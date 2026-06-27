@@ -26,7 +26,7 @@ config-vertical-base.jsonc # Shared vertical settings (layer, position, compact-
 config-bottom             # Bottom bar (bar-bottom)
 
 modules-sysmon.json       # Sysmon monitor groups (GPU, CPU, RAM, SSD, ASUS, network)
-modules-controls.json     # Action/toggle controls (ppd, dunst, ollama, ext-display, etc.)
+modules-vc.json     # Action/toggle controls (ppd, dunst, ollama, ext-display, etc.)
 modules-peripherals.json  # Hardware controls (audio, backlight, battery, bluetooth, powerbtn)
 modules-top-shared.json   # Top-bar shared (clock, workspaces, window title, privacy, scratchpad)
 

@@ -15,7 +15,7 @@
 | `custom/qwen-wifi-info` | info | SSID + speeds | nm-connection-editor |
 | `custom/qwen-*-icon` | icon | Static glyphs (6 metrics) | — |
 
-### modules-controls.json
+### modules-vc.json
 | Module | Type | Freq | Shows | Click |
 |---|---|---|---|---|
 | `power-profiles-daemon` | action | HIGH | icon + profile | cycle profile |

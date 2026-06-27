@@ -10,15 +10,11 @@
       "sway/workspaces#bottom"
     ],
     "modules-center": [
-      "custom/uptime",
-      "custom/powerbtn"
-    ],
-    "modules-left": [
       "tray"
     ],
-    "include": [
-      "modules-controls.json"
+    "modules-left": [
     ],
+    "include": [],
     "sway/workspaces#bottom": {
       "disable-scroll": false,
       "all-outputs": false,

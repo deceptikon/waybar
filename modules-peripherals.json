@@ -147,16 +147,5 @@
     "interval": 30,
     "signal": 12
   },
-  "custom/powerbtn": {
-    "format" : "⏻ ",
-    "tooltip": false,
-        "menu": "on-click",
-        "menu-file": "~/.config/waybar/feeds/powermenu.xml",
-        "menu-actions": {
-            "shutdown": "shutdown",
-            "reboot": "reboot",
-            "suspend": "systemctl suspend",
-            "hibernate": "systemctl hibernate"
-        }
-  }
+
 }

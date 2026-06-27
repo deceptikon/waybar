@@ -35,14 +35,6 @@
     "on-right-click": "kill $(pgrep -x wf-recorder)",
     "tooltip": false
   },
-  "custom/checkupdates": {
-    "exec": "~/.config/waybar/scripts/utils/checkupdates.sh",
-    "return-type": "json",
-    "interval": 3600,
-    "format": "{}",
-    "on-click": "wezterm -e yay -Syyu --noconfirm && yay -Sc --noconfirm && pkill -SIGRTMIN+8 waybar && notify-send 'Обновление завершено'",
-    "signal": 8
-  },
   "custom/fnlock": {
     "exec": "~/.config/waybar/scripts/utils/fn-lock.sh refresh",
     "return-type": "json",
@@ -83,9 +75,6 @@
     "format": "{}",
     "interval": 2,
     "on-click": "asusctl profile next"
-  },
-  "custom/uptime": {
-    
   },
   "custom/powerbtn": {
     "exec": "uptime -p | sed 's/up //' | awk '{d=0;h=0;m=0; if($0~/(day)/){match($0,/([0-9]+)[[:space:]]*day/,a);d=a[1]+0} if($0~/(hour)/){match($0,/([0-9]+)[[:space:]]*hour/,a);h=a[1]+0} if($0~/(min)/){match($0,/([0-9]+)[[:space:]]*min/,a);m=a[1]+0} t=d*24*60+h*60+m; printf \" <sub>%dh </sub> ⏻ <sub> %dm</sub>\", int(t/60), t%60}'",

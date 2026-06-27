@@ -19,12 +19,19 @@
       "custom/ollama",
       "custom/llama",
       "custom/checkupdates",
-      "power-profiles-daemon",
       "custom/recorder",
       "custom/fnlock",
       "custom/powerbtn"
     ],
+  "custom/checkupdates": {
+    "exec": "~/.config/waybar/scripts/utils/checkupdates.sh",
+    "return-type": "json",
+    "interval": 3600,
+    "format": "{}",
+    "on-click": "wezterm -e yay -Syyu --noconfirm && yay -Sc --noconfirm && pkill -SIGRTMIN+8 waybar && notify-send 'Обновление завершено'",
+    "signal": 8
+  },
   "include": [
-    "modules-controls.json"
+    "modules-vc.json"
   ]
 }

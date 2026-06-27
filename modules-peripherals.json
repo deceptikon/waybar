@@ -125,10 +125,14 @@
       "enabled": "\uf293",
       "disabled": "\udb80\udcb2"
     },
-    "on-click": "~/.config/waybar/scripts/utils/bt-toggle.sh",
-    "on-click-right": "blueman-manager",
     "format-connected": "\uf294",
     "format-connected-battery": "\uf294<sub>{device_battery_percentage}%</sub>",
+    "menu": "on-click",
+    "menu-file": "~/.config/waybar/feeds/bt-menu.xml",
+    "menu-actions": {
+      "toggle": "~/.config/waybar/scripts/utils/bt-toggle.sh",
+      "manager": "blueman-manager"
+    },
     "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
     "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",

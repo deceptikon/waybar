@@ -9,7 +9,12 @@
       "custom/compact-ram",
       "custom/compact-ssd"
     ],
-    
+    "modules-center": [
+      "custom/profile",
+      "idle_inhibitor",
+      "custom/dunst",
+      "custom/ext-display"
+    ],
     "include": "config-vertical-base.jsonc"
   }
 ]

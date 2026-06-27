@@ -30,8 +30,8 @@
     "orientation": "vertical",
     "modules": [
       "clock#date",
-      "sway/mode",
-      "group/titlebox-row"
+      "group/titlebox-row",
+      "sway/mode"
     ]
   },
   "tray": {

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+#set -euo pipefail
 
 count=$(yay -Qu 2>/dev/null | grep -cv "\[ignored\]")
 

@@ -3,6 +3,7 @@ set -uo pipefail
 
 PORT=22222
 CLASS="llama-server-term"
+export GGUF_PATH="/home/lexx/.MODELS/gemma4-coding-q4_k_m.gguf"
 
 health() {
     curl -sf --max-time 2 "http://127.0.0.1:$PORT/health" 2>/dev/null || true
@@ -12,19 +13,20 @@ status() {
     local hdrs
     hdrs=$(health)
     if [ -z "$hdrs" ]; then
-        jq -nc '{text:"󰦞", class:"off", tooltip:"llama-server: OFF"}'
+        jq -nc '{text:"󱚢", class:"off", tooltip:"llama-server: OFF"}'
         return
     fi
     local active
     active=$(echo "$hdrs" | jq -r '(.slots_processing // 0) > 0' 2>/dev/null)
     if [ "$active" = "true" ]; then
-        jq -nc '{text:"󰦝", class:"active", tooltip:"llama-server: ACTIVE"}'
+        jq -nc '{text:"󱚣", class:"active", tooltip:"llama-server: ACTIVE"}'
     else
-        jq -nc '{text:"󰦝", class:"idle", tooltip:"llama-server: IDLE"}'
+        jq -nc '{text:"󱙺", class:"idle", tooltip:"llama-server: IDLE"}'
     fi
 }
 
 start_server() {
+    notify-send "suka" "$GGUF_PATH"
     if [ ! -r "${GGUF_PATH:-}" ]; then
         notify-send "llama-server" "GGUF_PATH not readable: ${GGUF_PATH:-unset}"
         return 1

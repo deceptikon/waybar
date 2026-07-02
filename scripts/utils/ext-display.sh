@@ -37,10 +37,9 @@ emit() {
 if [ "${1:-}" != "refresh" ]; then
     info=$(get_info)
     if [ -z "$info" ]; then
-      ddcutil setvcp D6 1 2>/dev/null || true
-      (sleep 0.5; swaymsg output "$OUTPUT" enable 2>/dev/null; pkill -SIGRTMIN+11 waybar 2>/dev/null) & disown
+      (sleep 0.5; swaymsg output "$OUTPUT" enable 2>/dev/null; swaymsg output "$OUTPUT" dpms on 2>/dev/null; pkill -SIGRTMIN+11 waybar 2>/dev/null) & disown
     else
-      (sleep 0.2; swaymsg output "$OUTPUT" disable; ddcutil setvcp D6 5 2>/dev/null; pkill -SIGRTMIN+11 waybar 2>/dev/null) & disown
+      (sleep 0.2; swaymsg output "$OUTPUT" dpms off 2>/dev/null; swaymsg output "$OUTPUT" disable; pkill -SIGRTMIN+11 waybar 2>/dev/null) & disown
     fi
     exit 0
 fi

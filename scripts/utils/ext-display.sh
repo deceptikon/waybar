@@ -37,13 +37,13 @@ emit() {
 if [ "${1:-}" != "refresh" ]; then
     info=$(get_info)
     if [ -z "$info" ]; then
-      (set +e; sleep 0.5; swaymsg output "$OUTPUT" dpms on; swaymsg output "$OUTPUT" enable; pkill -SIGRTMIN+11 waybar) & disown
+      (set +e; sleep 0.5; ddcutil setvcp D6 1; swaymsg output "$OUTPUT" dpms on; swaymsg output "$OUTPUT" enable; pkill -SIGRTMIN+11 waybar) & disown
     else
       on=$(echo "$info" | jq -r '.dpms')
       if [ "$on" = "true" ]; then
-        (set +e; sleep 0.2; swaymsg output "$OUTPUT" dpms off; swaymsg output "$OUTPUT" disable; pkill -SIGRTMIN+11 waybar) & disown
+        (set +e; sleep 0.2; swaymsg output "$OUTPUT" dpms off; swaymsg output "$OUTPUT" disable; ddcutil setvcp D6 5; pkill -SIGRTMIN+11 waybar) & disown
       else
-        (set +e; sleep 0.2; swaymsg output "$OUTPUT" dpms on; swaymsg output "$OUTPUT" enable; pkill -SIGRTMIN+11 waybar) & disown
+        (set +e; sleep 0.2; ddcutil setvcp D6 1; swaymsg output "$OUTPUT" dpms on; swaymsg output "$OUTPUT" enable; pkill -SIGRTMIN+11 waybar) & disown
       fi
     fi
     exit 0

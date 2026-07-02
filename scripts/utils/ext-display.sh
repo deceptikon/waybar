@@ -40,12 +40,7 @@ if [ "${1:-}" != "refresh" ]; then
       ddcutil setvcp D6 1 2>/dev/null || true
       (sleep 0.5; swaymsg output "$OUTPUT" enable 2>/dev/null; pkill -SIGRTMIN+11 waybar 2>/dev/null) & disown
     else
-      on=$(echo "$info" | jq -r '.dpms')
-      if [ "$on" = "true" ]; then
-        (sleep 0.2; swaymsg output "$OUTPUT" dpms off; ddcutil setvcp D6 5 2>/dev/null; pkill -SIGRTMIN+11 waybar 2>/dev/null) & disown
-      else
-        (sleep 0.2; ddcutil setvcp D6 1 2>/dev/null; swaymsg output "$OUTPUT" dpms on; pkill -SIGRTMIN+11 waybar 2>/dev/null) & disown
-      fi
+      (sleep 0.2; swaymsg output "$OUTPUT" disable; ddcutil setvcp D6 5 2>/dev/null; pkill -SIGRTMIN+11 waybar 2>/dev/null) & disown
     fi
     exit 0
 fi

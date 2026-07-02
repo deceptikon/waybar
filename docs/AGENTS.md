@@ -69,7 +69,7 @@ All bars consume via tail -F:
 | `SIGRTMIN+8` | Recorder, checkupdates, keyboard backlight |
 | `SIGRTMIN+9` | Dunst toggle |
 | `SIGRTMIN+10` | ASUS profile switch, fnlock |
-| `SIGRTMIN+11` | External display toggle, DDC brightness |
+| `SIGRTMIN+11` | DDC brightness (ext-display uses interval, not signal) |
 | `SIGRTMIN+22` | Llama server toggle |
 
 ## CSS Conventions

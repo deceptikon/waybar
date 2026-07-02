@@ -1,6 +1,7 @@
 [
   {
     "name": "bar-vert-lite",
+    "output": ["eDP-1"],
     "width": 69,
     "start_hidden": true,
     "modules-left": [

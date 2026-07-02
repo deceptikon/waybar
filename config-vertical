@@ -1,6 +1,7 @@
 [
   {
     "name": "bar-vert",
+    "output": ["eDP-1"],
     "width": 138,
     "modules-left": [
       "group/qwen-gpu",

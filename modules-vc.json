@@ -45,7 +45,7 @@
     "exec": "~/.config/waybar/scripts/utils/ext-display.sh refresh",
     "return-type": "json",
     "format": "{}",
-    "interval": 1000,
+    "interval": 1,
     "on-click": "~/.config/waybar/scripts/utils/ext-display.sh",
     "signal": 11
   },

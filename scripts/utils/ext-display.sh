@@ -39,7 +39,12 @@ if [ "${1:-}" != "refresh" ]; then
     if [ -z "$info" ]; then
       (set +e; sleep 0.5; swaymsg output "$OUTPUT" dpms on; swaymsg output "$OUTPUT" enable; pkill -SIGRTMIN+11 waybar) & disown
     else
-      (set +e; sleep 0.2; swaymsg output "$OUTPUT" dpms off; swaymsg output "$OUTPUT" disable; pkill -SIGRTMIN+11 waybar) & disown
+      on=$(echo "$info" | jq -r '.dpms')
+      if [ "$on" = "true" ]; then
+        (set +e; sleep 0.2; swaymsg output "$OUTPUT" dpms off; swaymsg output "$OUTPUT" disable; pkill -SIGRTMIN+11 waybar) & disown
+      else
+        (set +e; sleep 0.2; swaymsg output "$OUTPUT" dpms on; swaymsg output "$OUTPUT" enable; pkill -SIGRTMIN+11 waybar) & disown
+      fi
     fi
     exit 0
 fi

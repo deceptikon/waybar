@@ -348,5 +348,59 @@ tooltip label {
 
 
 /* ════════════════════════════════════════════
-   WORKSPACES (not used in vert, inherited)
-   ═══════════════════════════════════════════ */
+   WORKSPACES — vertical bar (sway/workspaces#vert)
+   Identical to bottom.css but adapted for vertical layout
+   ════════════════════════════════════════════ */
+
+#workspaces.vert {
+    background: transparent;
+    margin: 4px 0;
+}
+
+#workspaces.vert button:nth-child(1)  { border-color: #fab387; }
+#workspaces.vert button:nth-child(2)  { border-color: #89b4fa; }
+#workspaces.vert button:nth-child(3)  { border-color: #B8E1FF;  }
+#workspaces.vert button:nth-child(4)  { border-color: #91B6AC;  }
+#workspaces.vert button:nth-child(5)  { border-color: #74226C;  }
+#workspaces.vert button:nth-child(6)  { border-color: #AFB3F7;  }
+#workspaces.vert button:nth-child(7)  { border-color: #824C71;  }
+#workspaces.vert button:nth-child(8)  { border-color: #0FFF95;  }
+#workspaces.vert button:nth-child(9)  { border-color: #D1C6AD;  }
+#workspaces.vert button:nth-child(10) { border-color: #EBB9DF;  }
+
+#workspaces.vert button {
+    padding: 0;
+    margin: 2px 4px;
+    min-height: 4px;
+    min-width: 110px;
+    border-radius: 0 10px 10px 0;
+    border-right: 4px solid white;
+    background-color: transparent;
+    opacity: 0.65;
+    transition: all 0.3s ease;
+}
+
+#workspaces.vert button:hover {
+    min-height: 7px;
+    opacity: 0.9;
+    box-shadow: -2px 0px 6px rgba(148, 226, 213, 0.3);
+    border-right: 6px solid #FA824C;
+}
+
+#workspaces.vert button.focused,
+#workspaces.vert button.active {
+    opacity: 1;
+    min-width: 130px;
+    box-shadow: -2px 0px 6px rgba(148, 226, 213, 0.5);
+    border-right: 6px solid #FA824C;
+}
+
+#workspaces.vert button.urgent {
+    background-color: #f38ba8;
+    opacity: 1;
+}
+
+#workspaces.vert button.empty {
+    background-color: transparent;
+    border-right: 4px solid transparent;
+}

@@ -98,6 +98,7 @@ mod_gpu() {
   [ "$gpu_pct" -ge 40 ] && cls="medium"
   [ "$gpu_pct" -ge 70 ] && cls="warning"
   [ "$gpu_pct" -ge 90 ] && cls="critical"
+
   local seg=10
   local fil=$((gpu_pct * seg / 100))
   [ "$fil" -gt "$seg" ] && fil=$seg
@@ -105,7 +106,8 @@ mod_gpu() {
   local emp=$((seg - fil))
   local bar="" i
   for ((i = 0; i < fil; i++)); do bar+="▐"; done
-  for ((i = 0; i < emp; i++)); do bar+="░"; done  
+  for ((i = 0; i < emp; i++)); do bar+="░"; done
+
   draw_module "" \
     "<b><span font='9'>${bar}</span> ${gpu_pct}%</b>" \
     "<span size='small' line_height='1.4'>${gpu_freq}MHz 󰔐 ${gpu_temp}°C</span>" \
@@ -117,6 +119,7 @@ mod_compact_gpu() {
   [ "$gpu_pct" -ge 40 ] && cls="medium"
   [ "$gpu_pct" -ge 70 ] && cls="warning"
   [ "$gpu_pct" -ge 90 ] && cls="critical"
+
   local n=4
   local fill=$((gpu_pct * n / 100))
   local i
@@ -208,11 +211,13 @@ mod_ram() {
   ug=$(fmt_gb "$ram_ukb")
   fg=$(fmt_gb "$fkb")
   swap_gb=$(awk -v s="$ram_swp" 'BEGIN{printf "%.1f", s/1048576}')
+
   local n=6
   local seg=$((n * 2))
   local su=$((ram_pct * seg / 100))
   [ "$su" -eq 0 ] && [ "$ram_pct" -gt 0 ] && su=1
   [ "$su" -gt "$seg" ] && su=$seg
+
   local row1 bar="" bar2="" i
   row1=$(printf "<b><span fgcolor='%s'>%2sGb</span><span fgcolor='#a3a3a3' font='8'>  :: </span><span fgcolor='#ffffff'> %2sGb</span></b>" \
     "$ACCENT" "$ug" "$fg")
@@ -222,7 +227,6 @@ mod_ram() {
     if [ "$((i + n))" -lt "$su" ]; then bar2+="$thin_space"
     else bar2+="<span fgcolor='#ffffff'>$thin_space</span>"; fi
   done
-  # draw_module: with row4 set → prints r1, r2, r4, r3
   draw_module "" \
     "<span font='8'>${row1}</span>" \
     "<span font='12' letter_spacing='4000'>${bar}</span>" \
@@ -236,6 +240,7 @@ mod_compact_ram() {
   [ "$ram_pct" -ge 50 ] && cls="medium"
   [ "$ram_pct" -ge 75 ] && cls="warning"
   [ "$ram_pct" -ge 90 ] && cls="critical"
+
   local n=4
   local total=$((n * 2))
   local fill=$((ram_pct * total / 100))
@@ -252,7 +257,7 @@ mod_compact_ram() {
   jq -nc --arg text "${r1}"$'\n'"${r2}" --arg cls "$cls" '{text:$text, class:$cls}'
 }
 
-# ── 4. SSD / IO  (capacity + usage bar from feed used_pct) ─────────────────
+# ── 4. SSD / IO ────────────────────────────────────────────────────────────
 mod_ssd() {
   local ACCENT="#a6e3a1" cls="good" up="$disk_up"
   case "$up" in ''|*[!0-9]*) up=0 ;; esac
@@ -279,13 +284,11 @@ mod_ssd() {
     w_icon="<span fgcolor='#585b70'>○</span>"
   fi
 
-  # usage bar — 12 segments from disk.used_pct
   local n=12
   local fill=$((up * n / 100))
   local i bar=""
   [ "$fill" -gt "$n" ] && fill=$n
   [ "$fill" -lt 0 ] && fill=0
-  # show at least 1 block if up>0 so empty disks aren't "full empty" confusion
   [ "$fill" -eq 0 ] && [ "$up" -gt 0 ] && fill=1
   for ((i = 0; i < fill; i++)); do
     bar+="<span fgcolor='#a6e3a1'>━</span>"
@@ -299,7 +302,6 @@ mod_ssd() {
   row_read=$(printf "%s <span fgcolor='#cdd6f4'>read </span> <span fgcolor='#89b4fa'>%s</span>" "$r_icon" "$rf")
   row_write=$(printf "%s <span fgcolor='#cdd6f4'>write</span> <span fgcolor='#89b4fa'>%s</span>" "$w_icon" "$wf")
 
-  # draw_module order with r4: r1, r2, r4, r3 → capacity, bar, read, write
   draw_module "" \
     "$row1" \
     "<span font='9'>${bar}</span>" \
@@ -314,6 +316,7 @@ mod_compact_ssd() {
   [ "$up" -ge 70 ] && cls="medium"
   [ "$up" -ge 85 ] && cls="warning"
   [ "$up" -ge 95 ] && cls="critical"
+
   local n=4
   local fill=$((up * n / 100))
   local i filled="" dim=""
@@ -352,7 +355,8 @@ mod_compact_netfan() {
   elif [ "$total" -gt 2097152 ]; then cls="warning"
   elif [ "$total" -gt 512000 ];  then cls="medium"
   fi
-  local n=4 fill=0
+  local n=4
+  local fill=0
   if   [ "$total" -gt 5242880 ]; then fill=4
   elif [ "$total" -gt 2097152 ]; then fill=3
   elif [ "$total" -gt 512000 ];  then fill=2

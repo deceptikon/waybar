@@ -1,84 +1,113 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
-LOGS_DIR="$HOME/.local/share/waybar/logs"
-CFG_DIR="$HOME/.config/waybar"
+CFG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
+LOGS_DIR="${CFG_DIR}/logs"
+# keep legacy path if you still use it:
+# LOGS_DIR="${LOGS_DIR:-$HOME/.local/share/waybar/logs}"
+POLLER="${CFG_DIR}/scripts/sysmon/poller.sh"
+PIDFILE="${LOGS_DIR}/sysmon-poller.pid"
+mkdir -p "$LOGS_DIR" "$CFG_DIR/feeds"
 
-# ── Check last N lines of a log for REAL errors (not benign dbus noise) ──────
-check_log() {
-    local bar_name="$1"
-    local log_file="$2"
-    local errors
-    # Grep for [error] lines, then filter out known harmless service errors
-    errors=$(tail -n 8 "$log_file" 2>>/tmp/waybar_errors.log \
-        | grep "\[error\]" \
-        | grep -v "power-profiles-daemon" \
-        | grep -v "desktop appearance" \
-        | grep -v "NameHasNoOwner" \
-        || echo "Command failed [start]: $?" >>/tmp/waybar_errors.log)
-    if [[ -n "$errors" ]]; then
-        dunstify -u critical -t 0 \
-            "⛔ Waybar $bar_name CSS/Config Error" \
-            "$errors"
+log() { printf '%s %s\n' "$(date -Iseconds)" "$*" >>"$LOGS_DIR/waybar-start.log"; }
+
+start_poller() {
+  if [[ -f "$PIDFILE" ]]; then
+    local old
+    old=$(cat "$PIDFILE" 2>/dev/null || true)
+    if [[ -n "$old" ]] && kill -0 "$old" 2>/dev/null; then
+      if tr '\0' ' ' <"/proc/$old/cmdline" 2>/dev/null | grep -q 'sysmon/poller'; then
+        log "poller already pid=$old"
+        return 0
+      fi
     fi
+  fi
+  pkill -f "${CFG_DIR}/scripts/sysmon/poller.sh" 2>/dev/null || true
+  rm -f "$CFG_DIR/feeds/.poller.lock" "$PIDFILE"
+  sleep 0.2
+  nohup bash "$POLLER" >>"$LOGS_DIR/sysmon.log" 2>&1 &
+  echo $! >"$PIDFILE"
+  log "poller started pid=$!"
 }
 
-# ── Post-launch: wait 2s then check all logs ─────────────────────────────────
-check_all_logs_deferred() {
-    sleep 2
-    check_log "top"      "$LOGS_DIR/waybar-top.log"
-    check_log "vertical"      "$LOGS_DIR/waybar-vertical.log"
-    check_log "vertical-lite" "$LOGS_DIR/waybar-vertical-lite.log"
-    check_log "bottom"        "$LOGS_DIR/waybar-bottom.log"
+stop_poller() {
+  if [[ -f "$PIDFILE" ]]; then
+    kill "$(cat "$PIDFILE")" 2>/dev/null || true
+    rm -f "$PIDFILE"
+  fi
+  pkill -f "${CFG_DIR}/scripts/sysmon/poller.sh" 2>/dev/null || true
+  rm -f "$CFG_DIR/feeds/.poller.lock"
+  log "poller stopped"
 }
 
-# ── Reload mode (full restart — SIGUSR2 is too flaky on multi-bar) ────────────
-if [[ "${1:-}" == "reload" ]]; then
-    pkill -x waybar 2>>/tmp/waybar_errors.log || echo "REload failed: $?" >>/tmp/waybar_errors.log
-    sleep 0.3
-    waybar -c "$CFG_DIR/config-top"      -s "$CFG_DIR/style/top.css"     >> "$LOGS_DIR/waybar-top.log"    2>&1 &
+start_bars() {
+  waybar -c "$CFG_DIR/config-top" -s "$CFG_DIR/style/top.css" \
+    >>"$LOGS_DIR/waybar-top.log" 2>&1 &
+  sleep 0.4
+  waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style/vertical.css" \
+    >>"$LOGS_DIR/waybar-vertical.log" 2>&1 &
+  sleep 0.4
+  waybar -c "$CFG_DIR/config-vertical-lite" -s "$CFG_DIR/style/vertical-lite.css" \
+    >>"$LOGS_DIR/waybar-vertical-lite.log" 2>&1 &
+  sleep 0.4
+  waybar -c "$CFG_DIR/config-bottom" -s "$CFG_DIR/style/bottom.css" \
+    >>"$LOGS_DIR/waybar-bottom.log" 2>&1 &
+}
+
+stop_bars() {
+  pkill -x waybar 2>/dev/null || true
+  sleep 0.3
+}
+
+check_log() {
+  local name="$1" file="$2" errors
+  errors=$(tail -n 8 "$file" 2>/dev/null \
+    | grep '\[error\]' \
+    | grep -v 'power-profiles-daemon' \
+    | grep -v 'desktop appearance' \
+    | grep -v 'NameHasOwner' \
+    | grep -v 'NameHasNoOwner' || true)
+  if [[ -n "$errors" ]]; then
+    command -v dunstify >/dev/null 2>&1 && \
+      dunstify -u critical -t 0 "Waybar $name" "$errors" || true
+    log "bar error $name: $errors"
+  fi
+}
+
+deferred_checks() {
+  sleep 2
+  check_log top "$LOGS_DIR/waybar-top.log"
+  check_log vertical "$LOGS_DIR/waybar-vertical.log"
+  check_log vertical-lite "$LOGS_DIR/waybar-vertical-lite.log"
+  check_log bottom "$LOGS_DIR/waybar-bottom.log"
+}
+
+case "${1:-start}" in
+  start)
+    start_poller
+    start_bars
+    deferred_checks &
     disown
-    sleep 0.5
-    waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style/vertical.css" >> "$LOGS_DIR/waybar-vertical.log" 2>&1 &
+    ;;
+  stop)
+    stop_bars
+    stop_poller
+    ;;
+  reload)
+    stop_bars
+    stop_poller
+    sleep 0.2
+    start_poller
+    start_bars
+    deferred_checks &
     disown
-    sleep 0.5
-    waybar -c "$CFG_DIR/config-vertical-lite" -s "$CFG_DIR/style/vertical-lite.css" >> "$LOGS_DIR/waybar-vertical-lite.log" 2>&1 &
-    disown
-    sleep 0.5
-    waybar -c "$CFG_DIR/config-bottom"   -s "$CFG_DIR/style/bottom.css"  >> "$LOGS_DIR/waybar-bottom.log"   2>&1 &
-    disown
-    check_all_logs_deferred &
-    disown
-    exit 0
-fi
-
-# ── Full restart ──────────────────────────────────────────────────────────────
-pkill -x waybar 2>>/tmp/waybar_errors.log || echo "Restart failed: $?" >>/tmp/waybar_errors.log
-
-# Aggressively clean up background bash scripts to prevent duplicates
-pkill -f "sysmon/poller.sh"   2>>/tmp/waybar_errors.log || echo "Cln failed: $?" >>/tmp/waybar_errors.log
-pkill -f "keywatcher.sh"      2>>/tmp/waybar_errors.log || echo "Cln failed: $?" >>/tmp/waybar_errors.log
-pkill -f "wifi-info.sh"       2>>/tmp/waybar_errors.log || echo "Cln failed: $?" >>/tmp/waybar_errors.log
-
-# Start/restart the sysmon data poller (background data collection)
-~/.config/waybar/scripts/sysmon/poller.sh &
-disown
-
-waybar -c "$CFG_DIR/config-top"      -s "$CFG_DIR/style/top.css"     >> "$LOGS_DIR/waybar-top.log"      2>&1 &
-disown
-
-sleep 0.5
-waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style/vertical.css" >> "$LOGS_DIR/waybar-vertical.log"  2>&1 &
-disown
-
-sleep 0.5
-waybar -c "$CFG_DIR/config-vertical-lite" -s "$CFG_DIR/style/vertical-lite.css" >> "$LOGS_DIR/waybar-vertical-lite.log" 2>&1 &
-disown
-
-sleep 0.5
-waybar -c "$CFG_DIR/config-bottom"   -s "$CFG_DIR/style/bottom.css"  >> "$LOGS_DIR/waybar-bottom.log"    2>&1 &
-disown
-
-# Deferred log check after all bars have had time to start
-check_all_logs_deferred &
-disown
+    ;;
+  poller-restart)
+    stop_poller
+    start_poller
+    ;;
+  *)
+    echo "usage: $0 start|stop|reload|poller-restart" >&2
+    exit 1
+    ;;
+esac

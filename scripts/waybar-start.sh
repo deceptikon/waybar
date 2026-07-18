@@ -2,12 +2,19 @@
 set -euo pipefail
 
 CFG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
-LOGS_DIR="${CFG_DIR}/logs"
-# keep legacy path if you still use it:
-# LOGS_DIR="${LOGS_DIR:-$HOME/.local/share/waybar/logs}"
+# The correct XDG standard for logs is ~/.local/state
+LOGS_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/waybar"
 POLLER="${CFG_DIR}/scripts/sysmon/poller.sh"
 PIDFILE="${LOGS_DIR}/sysmon-poller.pid"
+
+# Now we create the folders (feeds still lives in config/cache though)
 mkdir -p "$LOGS_DIR" "$CFG_DIR/feeds"
+
+# Ensure the general start log doesn't grow infinitely (keeps last 50 lines)
+if [[ -f "$LOGS_DIR/waybar-start.log" ]]; then
+  tail -n 50 "$LOGS_DIR/waybar-start.log" > "$LOGS_DIR/waybar-start.log.tmp" 2>/dev/null && \
+  mv "$LOGS_DIR/waybar-start.log.tmp" "$LOGS_DIR/waybar-start.log"
+fi
 
 log() { printf '%s %s\n' "$(date -Iseconds)" "$*" >>"$LOGS_DIR/waybar-start.log"; }
 
@@ -25,7 +32,9 @@ start_poller() {
   pkill -f "${CFG_DIR}/scripts/sysmon/poller.sh" 2>/dev/null || true
   rm -f "$CFG_DIR/feeds/.poller.lock" "$PIDFILE"
   sleep 0.2
-  nohup bash "$POLLER" >>"$LOGS_DIR/sysmon.log" 2>&1 &
+  
+  # Changed >> to > to overwrite the poller log on fresh starts
+  nohup bash "$POLLER" >"$LOGS_DIR/sysmon.log" 2>&1 &
   echo $! >"$PIDFILE"
   log "poller started pid=$!"
 }
@@ -41,17 +50,18 @@ stop_poller() {
 }
 
 start_bars() {
+  # Changed >> to > to overwrite logs on fresh starts (stops infinite growth)
   waybar -c "$CFG_DIR/config-top" -s "$CFG_DIR/style/top.css" \
-    >>"$LOGS_DIR/waybar-top.log" 2>&1 &
+    >"$LOGS_DIR/waybar-top.log" 2>&1 &
   sleep 0.4
   waybar -c "$CFG_DIR/config-vertical" -s "$CFG_DIR/style/vertical.css" \
-    >>"$LOGS_DIR/waybar-vertical.log" 2>&1 &
+    >"$LOGS_DIR/waybar-vertical.log" 2>&1 &
   sleep 0.4
   waybar -c "$CFG_DIR/config-vertical-lite" -s "$CFG_DIR/style/vertical-lite.css" \
-    >>"$LOGS_DIR/waybar-vertical-lite.log" 2>&1 &
+    >"$LOGS_DIR/waybar-vertical-lite.log" 2>&1 &
   sleep 0.4
   waybar -c "$CFG_DIR/config-bottom" -s "$CFG_DIR/style/bottom.css" \
-    >>"$LOGS_DIR/waybar-bottom.log" 2>&1 &
+    >"$LOGS_DIR/waybar-bottom.log" 2>&1 &
 }
 
 stop_bars() {

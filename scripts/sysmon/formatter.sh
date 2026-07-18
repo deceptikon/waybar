@@ -98,12 +98,14 @@ mod_gpu() {
   [ "$gpu_pct" -ge 40 ] && cls="medium"
   [ "$gpu_pct" -ge 70 ] && cls="warning"
   [ "$gpu_pct" -ge 90 ] && cls="critical"
-  local seg=10 fil=$((gpu_pct * seg / 100))
+  local seg=10
+  local fil=$((gpu_pct * seg / 100))
   [ "$fil" -gt "$seg" ] && fil=$seg
   [ "$fil" -lt 0 ] && fil=0
-  local emp=$((seg - fil)) bar="" i
+  local emp=$((seg - fil))
+  local bar="" i
   for ((i = 0; i < fil; i++)); do bar+="▐"; done
-  for ((i = 0; i < emp; i++)); do bar+="░"; done
+  for ((i = 0; i < emp; i++)); do bar+="░"; done  
   draw_module "" \
     "<b><span font='9'>${bar}</span> ${gpu_pct}%</b>" \
     "<span size='small' line_height='1.4'>${gpu_freq}MHz 󰔐 ${gpu_temp}°C</span>" \
@@ -115,7 +117,9 @@ mod_compact_gpu() {
   [ "$gpu_pct" -ge 40 ] && cls="medium"
   [ "$gpu_pct" -ge 70 ] && cls="warning"
   [ "$gpu_pct" -ge 90 ] && cls="critical"
-  local n=4 fill=$((gpu_pct * n / 100)) i
+  local n=4
+  local fill=$((gpu_pct * n / 100))
+  local i
   [ "$fill" -gt "$n" ] && fill=$n
   [ "$fill" -lt 0 ] && fill=0
   local filled="" dim=""
@@ -204,7 +208,9 @@ mod_ram() {
   ug=$(fmt_gb "$ram_ukb")
   fg=$(fmt_gb "$fkb")
   swap_gb=$(awk -v s="$ram_swp" 'BEGIN{printf "%.1f", s/1048576}')
-  local n=6 seg=$((n * 2)) su=$((ram_pct * seg / 100))
+  local n=6
+  local seg=$((n * 2))
+  local su=$((ram_pct * seg / 100))
   [ "$su" -eq 0 ] && [ "$ram_pct" -gt 0 ] && su=1
   [ "$su" -gt "$seg" ] && su=$seg
   local row1 bar="" bar2="" i
@@ -230,7 +236,10 @@ mod_compact_ram() {
   [ "$ram_pct" -ge 50 ] && cls="medium"
   [ "$ram_pct" -ge 75 ] && cls="warning"
   [ "$ram_pct" -ge 90 ] && cls="critical"
-  local n=4 total=$((n * 2)) fill=$((ram_pct * total / 100)) i
+  local n=4
+  local total=$((n * 2))
+  local fill=$((ram_pct * total / 100))
+  local i
   [ "$fill" -gt "$total" ] && fill=$total
   [ "$fill" -lt 0 ] && fill=0
   local r1="" r2=""
@@ -271,7 +280,9 @@ mod_ssd() {
   fi
 
   # usage bar — 12 segments from disk.used_pct
-  local n=12 fill=$((up * n / 100)) i bar=""
+  local n=12
+  local fill=$((up * n / 100))
+  local i bar=""
   [ "$fill" -gt "$n" ] && fill=$n
   [ "$fill" -lt 0 ] && fill=0
   # show at least 1 block if up>0 so empty disks aren't "full empty" confusion
@@ -303,7 +314,9 @@ mod_compact_ssd() {
   [ "$up" -ge 70 ] && cls="medium"
   [ "$up" -ge 85 ] && cls="warning"
   [ "$up" -ge 95 ] && cls="critical"
-  local n=4 fill=$((up * n / 100)) i filled="" dim=""
+  local n=4
+  local fill=$((up * n / 100))
+  local i filled="" dim=""
   [ "$fill" -gt "$n" ] && fill=$n
   [ "$fill" -lt 0 ] && fill=0
   [ "$fill" -eq 0 ] && [ "$up" -gt 0 ] && fill=1
@@ -333,7 +346,8 @@ mod_netfan() {
 }
 
 mod_compact_netfan() {
-  local cls="good" total=$((net_rx + net_tx))
+  local cls="good"
+  local total=$((net_rx + net_tx))
   if   [ "$total" -gt 5242880 ]; then cls="critical"
   elif [ "$total" -gt 2097152 ]; then cls="warning"
   elif [ "$total" -gt 512000 ];  then cls="medium"

@@ -15,7 +15,6 @@ STATE_FILE="${FEEDS}/.state"
 mkdir -p "$FEEDS" "$LOG_DIR"
 
 if [ -f "$ENV_FILE" ]; then
-  # optional SYSMON_* overrides — see sysmon.env at config root
   . "$ENV_FILE"
 fi
 
@@ -125,7 +124,6 @@ disk_dev="${SYSMON_DISK_DEV:-}"
 df_fs=""
 
 if [ -n "$df_lines" ]; then
-  # df -B1 -P: Filesystem 1B-blocks Used Available Capacity Mounted
   df_row=$(awk 'NR==2 {
     gsub(/%/, "", $5)
     printf "%s %d %d %d %d %s\n", $1, $2+0, $3+0, $4+0, $5+0, $6
@@ -151,7 +149,6 @@ if [ -z "$disk_dev" ] && [ -n "$df_fs" ]; then
       base=$pk
     fi
   else
-    # nvme0n1p5 → nvme0n1 ; sda1 → sda
     base=$(printf '%s\n' "$base" | sed -E 's/p?[0-9]+$//')
   fi
   disk_dev=$base
@@ -161,7 +158,6 @@ if [ -z "$disk_dev" ]; then
   log "disk: no device (set SYSMON_DISK_DEV or check DF_RAW)"
 fi
 
-# always emits: ok|miss <read_sectors> <write_sectors>
 disk_counters=$(awk -v dev="$disk_dev" '
   BEGIN { if (dev == "") { print "miss 0 0"; exit } }
   $3 == dev { printf "ok %d %d\n", $6+0, $10+0; found=1; exit }
@@ -203,7 +199,6 @@ if [ -z "$net_iface" ]; then
   log "net: no iface (set SYSMON_NET_IF or check default route / NET_RAW)"
 fi
 
-# always emits: ok|miss <rx> <tx>
 net_counters=$(awk -v iface="$net_iface" '
   BEGIN { if (iface == "") { print "miss 0 0"; exit } }
   NR > 2 {
@@ -220,27 +215,33 @@ if [ -n "$net_iface" ] && [ "$net_cnt_status" != "ok" ]; then
 fi
 
 # ── Rate state ─────────────────────────────────────────────────────────────
-# always emits five numbers (missing/corrupt state → zeros)
-prev_line="0 0 0 0 0"
+# Timestamp must stay a full-precision *string*. Never print epoch through
+# awk default OFMT (%.6g) — that turns 1784371234.56 into 1.78437e+09
+# and permanently kills dt / d_ok.
+prev_ts=0
+prev_d_r=0
+prev_d_w=0
+prev_n_rx=0
+prev_n_tx=0
 if [ -f "$STATE_FILE" ]; then
-  prev_line=$(awk '{
-    printf "%s %d %d %d %d\n", $1+0, $2+0, $3+0, $4+0, $5+0
-    exit
-  }' "$STATE_FILE")
+  prev_ts=$(awk '{ print $1; exit }' "$STATE_FILE")
+  prev_d_r=$(awk '{ printf "%d\n", $2+0; exit }' "$STATE_FILE")
+  prev_d_w=$(awk '{ printf "%d\n", $3+0; exit }' "$STATE_FILE")
+  prev_n_rx=$(awk '{ printf "%d\n", $4+0; exit }' "$STATE_FILE")
+  prev_n_tx=$(awk '{ printf "%d\n", $5+0; exit }' "$STATE_FILE")
 fi
-prev_ts=$(awk '{ print $1 }' <<< "$prev_line")
-prev_d_r=$(awk '{ print $2 }' <<< "$prev_line")
-prev_d_w=$(awk '{ print $3 }' <<< "$prev_line")
-prev_n_rx=$(awk '{ print $4 }' <<< "$prev_line")
-prev_n_tx=$(awk '{ print $5 }' <<< "$prev_line")
+: "${prev_ts:=0}"
+: "${prev_d_r:=0}"
+: "${prev_d_w:=0}"
+: "${prev_n_rx:=0}"
+: "${prev_n_tx:=0}"
 
-current_ts=$(awk '{ print $2+0 }' <<< "${timestamp_line:-}")
+current_ts=$(awk '{ print $2 }' <<< "${timestamp_line:-}")
 if [ -z "$current_ts" ] || [ "$current_ts" = "0" ]; then
   current_ts=$(date +%s.%N)
   log "ts: TIMESTAMP missing — using date +%s.%N"
 fi
 
-# always emits: d_ok rs ws rx tx
 rate_line=$(awk \
   -v ts="$current_ts" -v pts="$prev_ts" \
   -v dr="$disk_read_sectors" -v pdr="$prev_d_r" \
@@ -248,8 +249,8 @@ rate_line=$(awk \
   -v nr="$net_rx_bytes" -v pnr="$prev_n_rx" \
   -v nt="$net_tx_bytes" -v pnt="$prev_n_tx" \
   'BEGIN {
-    dt = ts - pts
-    ok = (dt > 0.05 && pts > 0) ? 1 : 0
+    dt = (ts + 0) - (pts + 0)
+    ok = (dt > 0.05 && (pts + 0) > 0) ? 1 : 0
     r = w = rx = tx = 0
     if (ok) {
       r  = (dr - pdr) * 512 / dt; if (r  < 0) r  = 0
@@ -257,15 +258,16 @@ rate_line=$(awk \
       rx = (nr - pnr) / dt;       if (rx < 0) rx = 0
       tx = (nt - pnt) / dt;       if (tx < 0) tx = 0
     }
-    printf "%d %.0f %.0f %.0f %.0f\n", ok, r, w, rx, tx
+    printf "%d %.0f %.0f %.0f %.0f %.6f\n", ok, r, w, rx, tx, dt
   }')
 delta_ok=$(awk '{ print $1 }' <<< "$rate_line")
 disk_read_speed=$(awk '{ print $2 }' <<< "$rate_line")
 disk_write_speed=$(awk '{ print $3 }' <<< "$rate_line")
 net_rx_speed=$(awk '{ print $4 }' <<< "$rate_line")
 net_tx_speed=$(awk '{ print $5 }' <<< "$rate_line")
+dt_show=$(awk '{ print $6 }' <<< "$rate_line")
 
-log "disk=${disk_dev:-?} rs=${disk_read_speed} ws=${disk_write_speed} net=${net_iface:-?} rx=${net_rx_speed} tx=${net_tx_speed} d_ok=${delta_ok} raw_d=${disk_read_sectors}/${disk_write_sectors} raw_n=${net_rx_bytes}/${net_tx_bytes} dt=${current_ts}-${prev_ts}"
+log "disk=${disk_dev:-?} rs=${disk_read_speed} ws=${disk_write_speed} net=${net_iface:-?} rx=${net_rx_speed} tx=${net_tx_speed} d_ok=${delta_ok} raw_d=${disk_read_sectors}/${disk_write_sectors} raw_n=${net_rx_bytes}/${net_tx_bytes} dt=${dt_show}"
 
 # ── GPU sysfs ──────────────────────────────────────────────────────────────
 gpu_busy_pct=0 gpu_mem_used=0 gpu_mem_total=0
@@ -316,19 +318,8 @@ fi
 # ── Fans ───────────────────────────────────────────────────────────────────
 fan1=0 fan2=0
 if [ -n "$fan_lines" ]; then
-  idx=0
   while IFS=' ' read -r path val; do
     [ -z "${path:-}" ] && continue
-    case "$path" in
-      *fan*_input)
-        if [ "$idx" -eq 0 ]; then fan1=$((val + 0))
-        elif [ "$idx" -eq 1 ]; then fan2=$((val + 0))
-        fi
-        idx=$((idx + 1))
-        ;;
-    esac
-  done <<< "$fan_lines"
-  while IFS=' ' read -r path val; do
     case "$path" in
       *fan1_input) fan1=$((val + 0)) ;;
       *fan2_input) fan2=$((val + 0)) ;;
@@ -400,7 +391,7 @@ jq -n \
     temp: { cpu_c: $cpu_temp, fan1: $fan1, fan2: $fan2 }
   }'
 
-# persist counters only after successful JSON emit
+# Write state with full-precision timestamp string (no awk OFMT on ts)
 printf '%s %s %s %s %s\n' \
   "$current_ts" "$disk_read_sectors" "$disk_write_sectors" "$net_rx_bytes" "$net_tx_bytes" \
   >"${STATE_FILE}.tmp"

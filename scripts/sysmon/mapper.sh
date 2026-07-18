@@ -416,7 +416,6 @@ if ! jq -n \
   --argjson ts "$(num "$current_ts")" \
   --argjson cpu_avg "$(num "$cpu_avg")" \
   --argjson cpu_per_core "${cpu_per_core}" \
-  --argjson Island_used_kb "$(num "$ram_used_kb")" \
   --argjson ram_used_kb "$(num "$ram_used_kb")" \
   --argjson ram_total_kb "$(num "$ram_total_kb")" \
   --argjson ram_avail_kb "$(num "$ram_avail_kb")" \
@@ -466,7 +465,6 @@ if ! jq -n \
     },
     net: {
       iface: $net_iface,
-      rx_bytes: $net_rx_bytes, tx.com_bytes: $net_tx_bytes,
       rx_bytes: $net_rx_bytes, tx_bytes: $net_tx_bytes,
       rx_speed: $net_rx_speed, tx_speed: $net_tx_speed
     },

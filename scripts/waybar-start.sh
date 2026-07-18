@@ -55,8 +55,20 @@ start_bars() {
 }
 
 stop_bars() {
+  # kill every waybar we own, by absolute config path first, then name
+  pkill -f "${CFG_DIR}/config-" 2>/dev/null || true
   pkill -x waybar 2>/dev/null || true
-  sleep 0.3
+  # wait until gone (max ~2s)
+  local i=0
+  while pgrep -x waybar >/dev/null 2>&1 && [ "$i" -lt 20 ]; do
+    sleep 0.1
+    i=$((i + 1))
+  done
+  if pgrep -x waybar >/dev/null 2>&1; then
+    pkill -9 -x waybar 2>/dev/null || true
+    sleep 0.2
+  fi
+  log "bars stopped; remaining=$(pgrep -c -x waybar 2>/dev/null || echo 0)"
 }
 
 check_log() {
@@ -96,7 +108,7 @@ case "${1:-start}" in
   reload)
     stop_bars
     stop_poller
-    sleep 0.2
+    sleep 0.3
     start_poller
     start_bars
     deferred_checks &

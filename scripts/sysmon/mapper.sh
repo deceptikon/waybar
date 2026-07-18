@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# mapper.sh — stdin (collect sections) → unified sysmon JSON on stdout
-# Side effect: feeds/.state for rate deltas
+# mapper.sh — stdin (collect sections) → sysmon JSON on stdout
+# Side effect: $FEEDS/.state for disk/net rates
 set -uo pipefail
 export LC_ALL=C
 
@@ -21,22 +21,24 @@ mkdir -p "$FEEDS" "$LOG_DIR"
 LOG="$LOG_DIR/sysmon.log"
 log() { printf '%s mapper: %s\n' "$(date -Iseconds)" "$*" >>"$LOG"; }
 
+num() { awk -v v="${1:-0}" 'BEGIN{printf "%s", (v+0)}'; }
+
 section=""
 cpu1_lines="" cpu2_lines="" mem_lines="" disk_lines="" df_lines=""
 net_lines="" sensors_json="" gpu_lines="" fan_lines="" timestamp_line=""
 
 while IFS= read -r line || [ -n "$line" ]; do
   case "$line" in
-    TIMESTAMP*)        timestamp_line="$line"; section=""; continue ;;
-    "CPU_SNAP_1")      section="cpu1";    continue ;;
-    "CPU_SNAP_2")      section="cpu2";    continue ;;
-    "MEM_RAW")         section="mem";     continue ;;
-    "DISK_RAW")        section="disk";    continue ;;
-    "DF_RAW")          section="df";      continue ;;
-    "NET_RAW")         section="net";     continue ;;
-    "SENSORS_JSON")    section="sensors"; continue ;;
-    "GPU_RAW")         section="gpu";     continue ;;
-    "FAN_RAW")         section="fan";     continue ;;
+    TIMESTAMP*)     timestamp_line="$line"; section=""; continue ;;
+    "CPU_SNAP_1")   section="cpu1";     continue ;;
+    "CPU_SNAP_2")   section="cpu2";     continue ;;
+    "MEM_RAW")      section="mem";      continue ;;
+    "DISK_RAW")     section="disk";     continue ;;
+    "DF_RAW")       section="df";       continue ;;
+    "NET_RAW")      section="net";      continue ;;
+    "SENSORS_JSON") section="sensors";  continue ;;
+    "GPU_RAW")      section="gpu";      continue ;;
+    "FAN_RAW")      section="fan";      continue ;;
     "SWAP_RAW"|"ASUS_PROFILE"|"WORKSPACE_RAW") section="skip"; continue ;;
   esac
   case "$section" in
@@ -82,8 +84,7 @@ if [ -n "$cpu1_lines" ] && [ -n "$cpu2_lines" ]; then
   ) || data="avg 0"
   cpu_avg=$(awk '/^avg /{print $2}' <<< "$data")
   cpu_per_core=$(awk '/^core /{print $2}' <<< "$data" \
-    | jq -Rs 'split("\n")|map(select(length>0)|tonumber)' 2>/dev/null \
-    || echo '[]')
+    | jq -Rs 'split("\n")|map(select(length>0)|tonumber)' 2>/dev/null || echo '[]')
 fi
 cpu_avg=${cpu_avg:-0}
 cpu_per_core=${cpu_per_core:-[]}
@@ -108,10 +109,11 @@ if [ -n "$mem_lines" ]; then
   [ "$swap_total_kb" -gt 0 ] && swap_pct=$((swap_used_kb * 100 / swap_total_kb))
 fi
 
-# ── DF + disk autodetect ───────────────────────────────────────────────────
+# ── DF ─────────────────────────────────────────────────────────────────────
 disk_used_bytes=0 disk_total_bytes=0 disk_used_pct=0
 disk_used_human="0G" disk_total_human="0G"
 disk_dev="${SYSMON_DISK_DEV:-}"
+df_fs=""
 
 human_bytes() {
   awk -v u="${1:-0}" 'BEGIN{
@@ -124,42 +126,95 @@ human_bytes() {
 }
 
 if [ -n "$df_lines" ]; then
-  # df -B1 -P: Filesystem 1B-blocks Used Available Capacity Mounted
-  fs=""; blocks=0; used=0; cap=0
   df_line=$(awk 'NR==2 {
     gsub(/%/,"",$5)
     printf "%s %s %s %s\n", $1, $2+0, $3+0, $5+0
   }' <<< "$df_lines" 2>/dev/null || true)
   if [ -n "$df_line" ]; then
-    read -r fs blocks used cap <<<"$df_line" || true
+    read -r df_fs blocks used cap <<<"$df_line" || true
+    disk_total_bytes=${blocks:-0}
+    disk_used_bytes=${used:-0}
+    disk_used_pct=${cap:-0}
   fi
-  disk_total_bytes=${blocks:-0}
-  disk_used_bytes=${used:-0}
-  disk_used_pct=${cap:-0}
-  # clamp pct
-  case "$disk_used_pct" in
-    ''|*[!0-9]*) disk_used_pct=0 ;;
-  esac
-  [ "$disk_used_pct" -gt 100 ] && disk_used_pct=100
+  case "$disk_used_pct" in ''|*[!0-9]*) disk_used_pct=0 ;; esac
+  [ "$disk_used_pct" -gt 100 ] 2>/dev/null && disk_used_pct=100
   disk_used_human=$(human_bytes "$disk_used_bytes")
   disk_total_human=$(human_bytes "$disk_total_bytes")
-
-  if [ -z "$disk_dev" ] && [ -n "${fs:-}" ]; then
-    base=$(basename "$fs")
-    if command -v lsblk >/dev/null 2>&1 && [ -b "$fs" ]; then
-      pk=$(lsblk -no PKNAME "$fs" 2>>"$LOG" | head -1 | tr -d '[:space:]' || true)
-      [ -n "${pk:-}" ] && base=$pk
-    else
-      base=$(echo "$base" | sed -E 's/p?[0-9]+$//')
-    fi
-    disk_dev=$base
-  fi
 fi
+
+# ── Disk device for /proc/diskstats ────────────────────────────────────────
+# Prefer SYSMON_DISK_DEV; else map df source → diskstats name; else busiest whole-disk.
+pick_disk_dev() {
+  local want="$1" fs="$2" lines="$3" cand="" base pk
+
+  if [ -n "$want" ]; then
+    if awk -v d="$want" '$3==d {found=1} END{exit !found}' <<< "$lines"; then
+      echo "$want"
+      return
+    fi
+  fi
+
+  if [ -n "$fs" ]; then
+    base=$(basename "$fs")
+    # exact name in diskstats (dm-0, nvme0n1p2, sda1, …)
+    if awk -v d="$base" '$3==d {found=1} END{exit !found}' <<< "$lines"; then
+      echo "$base"
+      return
+    fi
+    # parent disk via lsblk
+    if command -v lsblk >/dev/null 2>&1; then
+      if [ -b "$fs" ]; then
+        pk=$(lsblk -no PKNAME "$fs" 2>/dev/null | head -1 | tr -d '[:space:]' || true)
+        [ -z "$pk" ] && pk=$(lsblk -no PKNAME "$base" 2>/dev/null | head -1 | tr -d '[:space:]' || true)
+        if [ -n "$pk" ] && awk -v d="$pk" '$3==d {found=1} END{exit !found}' <<< "$lines"; then
+          echo "$pk"
+          return
+        fi
+      fi
+      # mapper/luks → backing disk
+      pk=$(lsblk -no PKNAME,NAME,TYPE 2>/dev/null \
+        | awk -v n="$base" '$2==n || $2==n {print $1; exit}' || true)
+      # walk up: NAME that matches, get top disk
+      pk=$(lsblk -ndo NAME,TYPE 2>/dev/null | awk -v n="$base" '
+        $1==n { hit=1 }
+      ' || true)
+      top=$(lsblk -npslo NAME,TYPE "$fs" 2>/dev/null \
+        | awk '$2=="disk"{print $1; exit}' || true)
+      top=$(basename "${top:-}")
+      if [ -n "$top" ] && awk -v d="$top" '$3==d {found=1} END{exit !found}' <<< "$lines"; then
+        echo "$top"
+        return
+      fi
+    fi
+    # strip partition suffix
+    cand=$(echo "$base" | sed -E 's/p?[0-9]+$//')
+    if [ -n "$cand" ] && awk -v d="$cand" '$3==d {found=1} END{exit !found}' <<< "$lines"; then
+      echo "$cand"
+      return
+    fi
+  fi
+
+  # busiest whole-disk (skip ram/loop/dm/partitions heuristically)
+  awk '
+    {
+      name=$3
+      if (name ~ /^(loop|ram|fd)/) next
+      # prefer whole disks: nvme0n1, sda, vda — not nvme0n1p1 / sda1
+      if (name ~ /nvme[0-9]+n[0-9]+p[0-9]+$/) next
+      if (name ~ /[a-z]+[0-9]+$/ && name !~ /nvme/) next
+      io=$6+$10
+      if (io >= best) { best=io; pick=name }
+    }
+    END { if (pick!="") print pick }
+  ' <<< "$lines"
+}
+
+disk_dev=$(pick_disk_dev "$disk_dev" "${df_fs:-}" "$disk_lines")
 disk_dev=${disk_dev:-nvme0n1}
 
 disk_read_sectors=0 disk_write_sectors=0
 if [ -n "$disk_lines" ]; then
-  dline=$(awk -v dev="$disk_dev" '$3==dev {print $6+0, $10+0; exit}' <<< "$disk_lines" 2>/dev/null || true)
+  dline=$(awk -v dev="$disk_dev" '$3==dev {print $6+0, $10+0; exit}' <<< "$disk_lines" || true)
   if [ -n "$dline" ]; then
     read -r disk_read_sectors disk_write_sectors <<<"$dline" || true
   fi
@@ -167,28 +222,63 @@ fi
 disk_read_sectors=${disk_read_sectors:-0}
 disk_write_sectors=${disk_write_sectors:-0}
 
-# ── Net autodetect ─────────────────────────────────────────────────────────
+# ── Net iface ──────────────────────────────────────────────────────────────
+# Prefer SYSMON_NET_IF → default route → operstate up with max traffic → life max
 net_iface="${SYSMON_NET_IF:-}"
 net_rx_bytes=0 net_tx_bytes=0
-if [ -n "$net_lines" ]; then
-  if [ -z "$net_iface" ]; then
-    net_iface=$(awk '
-      NR>2 {
-        gsub(/:/,"",$1)
-        if ($1=="lo") next
-        s=$2+$10
-        if (s>best) { best=s; iface=$1 }
-      }
-      END { if (iface!="") print iface }
-    ' <<< "$net_lines" 2>/dev/null || true)
+
+pick_net_iface() {
+  local want="$1" lines="$2" r=""
+  if [ -n "$want" ]; then
+    if awk -v i="$want" 'NR>2 {gsub(/:/,"",$1); if($1==i) f=1} END{exit !f}' <<< "$lines"; then
+      echo "$want"
+      return
+    fi
   fi
+  # default route
+  r=$(ip -4 route show default 2>/dev/null | awk '/default/ {for(i=1;i<NF;i++) if($i=="dev"){print $(i+1); exit}}' || true)
+  if [ -n "$r" ] && awk -v i="$r" 'NR>2 {gsub(/:/,"",$1); if($1==i) f=1} END{exit !f}' <<< "$lines"; then
+    echo "$r"
+    return
+  fi
+  # interfaces with carrier / operstate up
+  r=$(awk '
+    NR>2 {
+      gsub(/:/,"",$1)
+      if ($1=="lo") next
+      print $1, $2+0, $10+0
+    }
+  ' <<< "$lines" | while read -r ifc rx tx; do
+      st=""
+      [ -r "/sys/class/net/$ifc/operstate" ] && st=$(cat "/sys/class/net/$ifc/operstate" 2>/dev/null || true)
+      [ "$st" = "up" ] || continue
+      echo "$((rx+tx)) $ifc"
+    done | sort -nr | head -1 | awk '{print $2}')
+  if [ -n "$r" ]; then
+    echo "$r"
+    return
+  fi
+  # lifetime max traffic
+  awk '
+    NR>2 {
+      gsub(/:/,"",$1)
+      if ($1=="lo") next
+      s=$2+$10
+      if (s>best) { best=s; iface=$1 }
+    }
+    END { if (iface!="") print iface }
+  ' <<< "$lines"
+}
+
+if [ -n "$net_lines" ]; then
+  net_iface=$(pick_net_iface "$net_iface" "$net_lines")
   net_iface=${net_iface:-wlan0}
   nline=$(awk -v iface="$net_iface" '
     NR>2 {
       gsub(/:/,"",$1)
       if ($1==iface) { print $2+0, $10+0; exit }
     }
-  ' <<< "$net_lines" 2>/dev/null || true)
+  ' <<< "$net_lines" || true)
   if [ -n "$nline" ]; then
     read -r net_rx_bytes net_tx_bytes <<<"$nline" || true
   fi
@@ -197,11 +287,12 @@ net_rx_bytes=${net_rx_bytes:-0}
 net_tx_bytes=${net_tx_bytes:-0}
 net_iface=${net_iface:-wlan0}
 
-# ── Rates ──────────────────────────────────────────────────────────────────
+# ── Rates (need previous .state) ───────────────────────────────────────────
 state_file="$FEEDS/.state"
-prev_ts=0 prev_d_r=0 prev_d_w=0 prev_n_rx=0 prev_n_tx=0
+prev_ts=0 prev_d_r=0 prev_d_w=0 prev_n_rx=0 prev_n_tx=0 prev_disk="" prev_if=""
 if [ -f "$state_file" ]; then
-  read -r prev_ts prev_d_r prev_d_w prev_n_rx prev_n_tx <"$state_file" || true
+  # ts dr dw nrx ntx [disk_dev] [net_iface]
+  read -r prev_ts prev_d_r prev_d_w prev_n_rx prev_n_tx prev_disk prev_if <"$state_file" || true
 fi
 prev_ts=${prev_ts:-0}
 prev_d_r=${prev_d_r:-0}
@@ -215,8 +306,17 @@ if [ -z "${current_ts:-}" ] || [ "$current_ts" = "0" ]; then
 fi
 
 disk_read_speed=0 disk_write_speed=0 net_rx_speed=0 net_tx_speed=0
+
+# reset baselines if device/iface changed (avoid huge bogus spikes)
+if [ -n "${prev_disk:-}" ] && [ "$prev_disk" != "$disk_dev" ]; then
+  prev_d_r=0; prev_d_w=0; prev_ts=0
+fi
+if [ -n "${prev_if:-}" ] && [ "$prev_if" != "$net_iface" ]; then
+  prev_n_rx=0; prev_n_tx=0; prev_ts=0
+fi
+
 delta_ok=$(awk -v dt="$current_ts" -v pt="$prev_ts" 'BEGIN{
-  d=dt-pt; print (d>0.05 && pt+0>0)?1:0
+  d=dt-pt; print (d>0.2 && pt+0>0)?1:0
 }')
 if [ "$delta_ok" = "1" ]; then
   rates=$(awk -v ts="$current_ts" -v pts="$prev_ts" \
@@ -225,11 +325,11 @@ if [ "$delta_ok" = "1" ]; then
     -v nr="$net_rx_bytes" -v pnr="$prev_n_rx" \
     -v nt="$net_tx_bytes" -v pnt="$prev_n_tx" 'BEGIN{
       dt=ts-pts
-      if (dt<=0) dt=1
-      r=(dr-pdr)*512/dt; if(r<0) r=0
-      w=(dw-pdw)*512/dt; if(w<0) w=0
-      rx=(nr-pnr)/dt;    if(rx<0) rx=0
-      tx=(nt-pnt)/dt;    if(tx<0) tx=0
+      if (dt < 0.2) dt=0.2
+      r=(dr-pdr)*512.0/dt; if(r<0) r=0
+      w=(dw-pdw)*512.0/dt; if(w<0) w=0
+      rx=(nr-pnr)*1.0/dt;   if(rx<0) rx=0
+      tx=(nt-pnt)*1.0/dt;   if(tx<0) tx=0
       printf "%.0f %.0f %.0f %.0f\n", r, w, rx, tx
     }' 2>/dev/null || true)
   if [ -n "${rates:-}" ]; then
@@ -284,9 +384,6 @@ gpu_freq=${gpu_freq:-0}
 gpu_power=${gpu_power:-0}
 cpu_temp=${cpu_temp:-0}
 
-# jq --argjson needs bare numbers; coerce floats/empty
-num() { awk -v v="${1:-0}" 'BEGIN{printf "%s", (v+0)}'; }
-
 # ── Fans ───────────────────────────────────────────────────────────────────
 fan1=0 fan2=0
 if [ -n "$fan_lines" ]; then
@@ -298,7 +395,6 @@ if [ -n "$fan_lines" ]; then
       *fan2_input) fan2=$((val+0)) ;;
     esac
   done <<< "$fan_lines"
-  # fallback: first two fan*_input if named ones missing
   if [ "$fan1" -eq 0 ] && [ "$fan2" -eq 0 ]; then
     idx=0
     while IFS=' ' read -r path val || [ -n "${path:-}" ]; do
@@ -315,11 +411,12 @@ if [ -n "$fan_lines" ]; then
   fi
 fi
 
-# ── Emit JSON ──────────────────────────────────────────────────────────────
+# ── Emit ───────────────────────────────────────────────────────────────────
 if ! jq -n \
   --argjson ts "$(num "$current_ts")" \
   --argjson cpu_avg "$(num "$cpu_avg")" \
   --argjson cpu_per_core "${cpu_per_core}" \
+  --argjson Island_used_kb "$(num "$ram_used_kb")" \
   --argjson ram_used_kb "$(num "$ram_used_kb")" \
   --argjson ram_total_kb "$(num "$ram_total_kb")" \
   --argjson ram_avail_kb "$(num "$ram_avail_kb")" \
@@ -369,6 +466,7 @@ if ! jq -n \
     },
     net: {
       iface: $net_iface,
+      rx_bytes: $net_rx_bytes, tx.com_bytes: $net_tx_bytes,
       rx_bytes: $net_rx_bytes, tx_bytes: $net_tx_bytes,
       rx_speed: $net_rx_speed, tx_speed: $net_tx_speed
     },
@@ -383,6 +481,11 @@ then
   exit 1
 fi
 
-printf '%s %s %s %s %s\n' \
-  "$current_ts" "$disk_read_sectors" "$disk_write_sectors" "$net_rx_bytes" "$net_tx_bytes" \
+# persist for next delta (include dev/iface so we can reset on change)
+printf '%s %s %s %s %s %s %s\n' \
+  "$current_ts" "$disk_read_sectors" "$disk_write_sectors" \
+  "$net_rx_bytes" "$net_tx_bytes" "$disk_dev" "$net_iface" \
   >"$state_file.tmp" && mv "$state_file.tmp" "$state_file"
+
+# periodic debug (every cycle is fine; small)
+log "disk=${disk_dev} rsec=${disk_read_sectors} wsec=${disk_write_sectors} rs=${disk_read_speed} ws=${disk_write_speed} net=${net_iface} rx=${net_rx_speed} tx=${net_tx_speed} d_ok=${delta_ok}

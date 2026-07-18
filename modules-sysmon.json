@@ -31,15 +31,11 @@
     "on-click": "nm-connection-editor",
     "on-right-click": "nm-applet --indicator"
   },
-  "custom/qwen-gpu-icon": {
-    "format": " 󰢮 "
-  },
+
+  "custom/qwen-gpu-icon": { "format": " 󰢮 " },
   "group/qwen-gpu": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-gpu-icon",
-      "custom/qwen-gpu"
-    ]
+    "modules": ["custom/qwen-gpu-icon", "custom/qwen-gpu"]
   },
   "custom/qwen-gpu": {
     "exec": "tail -F ~/.config/waybar/feeds/gpu.json",
@@ -50,15 +46,11 @@
     "on-click": "gpustat",
     "on-right-click": "nvtop"
   },
-  "custom/qwen-cpu-icon": {
-    "format": " 󰍛 "
-  },
+
+  "custom/qwen-cpu-icon": { "format": " 󰍛 " },
   "group/qwen-cpu": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-cpu-icon",
-      "custom/qwen-cpu"
-    ]
+    "modules": ["custom/qwen-cpu-icon", "custom/qwen-cpu"]
   },
   "custom/qwen-cpu": {
     "exec": "tail -F ~/.config/waybar/feeds/cpu.json",
@@ -69,15 +61,11 @@
     "on-click": "htop",
     "on-right-click": "gnome-system-monitor"
   },
-  "custom/qwen-ram-icon": {
-    "format": "  "
-  },
+
+  "custom/qwen-ram-icon": { "format": "  " },
   "group/qwen-ram": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-ram-icon",
-      "custom/qwen-ram"
-    ]
+    "modules": ["custom/qwen-ram-icon", "custom/qwen-ram"]
   },
   "custom/qwen-ram": {
     "exec": "tail -F ~/.config/waybar/feeds/ram.json",
@@ -88,15 +76,11 @@
     "on-click": "gnome-system-monitor",
     "on-right-click": "free -h"
   },
-  "custom/qwen-ssd-icon": {
-    "format": " 󰋊 "
-  },
+
+  "custom/qwen-ssd-icon": { "format": " 󰋊 " },
   "group/qwen-ssd": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-ssd-icon",
-      "custom/qwen-ssd"
-    ]
+    "modules": ["custom/qwen-ssd-icon", "custom/qwen-ssd"]
   },
   "custom/qwen-ssd": {
     "exec": "tail -F ~/.config/waybar/feeds/ssd.json",
@@ -107,44 +91,70 @@
     "on-click": "gnome-disks",
     "on-right-click": "lsblk"
   },
-  "custom/qwen-asus-icon": {
-    "format": "  "
-  },
-  "group/qwen-asus": {
-    "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-asus-icon",
-      "custom/qwen-asus"
-    ]
-  },
-  "custom/qwen-asus": {
-    "exec": "cat ~/.config/waybar/feeds/asus.json",
-    "interval": 2,
-    "format": "{}",
-    "return-type": "json",
-    "justify": "center",
-    "align": 0.5,
-    "on-click": "asusctl profile next && pkill -SIGRTMIN+10 waybar",
-    "signal": 10
-  },
-  "custom/qwen-netfan-icon": {
-    "format": " 󰛳 "
-  },
+
+  "custom/qwen-netfan-icon": { "format": " 󰛳 " },
   "group/qwen-netfan": {
     "orientation": "horizontal",
-    "modules": [
-      "custom/qwen-netfan-icon",
-      "custom/qwen-netfan"
-    ]
+    "modules": ["custom/qwen-netfan-icon", "custom/qwen-netfan"]
   },
   "custom/qwen-netfan": {
-    "exec": "~/.config/waybar/scripts/utils/netfan.sh",
-    "interval": 2,
+    "exec": "tail -F ~/.config/waybar/feeds/netfan.json",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
     "align": 0.5,
-    "on-click": "asusctl profile next",
+    "on-click": "nm-connection-editor",
     "on-right-click": "nm-connection-editor"
+  },
+
+  "custom/compact-gpu": {
+    "exec": "tail -F ~/.config/waybar/feeds/compact-gpu.json",
+    "format": "{}",
+    "return-type": "json",
+    "justify": "center",
+    "align": 0.5
+  },
+  "custom/compact-cpu": {
+    "exec": "tail -F ~/.config/waybar/feeds/compact-cpu.json",
+    "format": "{}",
+    "return-type": "json",
+    "justify": "center",
+    "align": 0.5
+  },
+  "custom/compact-ram": {
+    "exec": "tail -F ~/.config/waybar/feeds/compact-ram.json",
+    "format": "{}",
+    "return-type": "json",
+    "justify": "center",
+    "align": 0.5
+  },
+  "custom/compact-ssd": {
+    "exec": "tail -F ~/.config/waybar/feeds/compact-ssd.json",
+    "format": "{}",
+    "return-type": "json",
+    "justify": "center",
+    "align": 0.5
+  },
+  "custom/compact-netfan": {
+    "exec": "tail -F ~/.config/waybar/feeds/compact-netfan.json",
+    "format": "{}",
+    "return-type": "json",
+    "justify": "center",
+    "align": 0.5
+  },
+
+  "custom/qwen-asus-icon": { "format": "  " },
+  "group/qwen-asus": {
+    "orientation": "horizontal",
+    "modules": ["custom/qwen-asus-icon", "custom/qwen-asus"]
+  },
+  "custom/qwen-asus": {
+    "exec": "echo '{\"text\":\"\",\"class\":\"good\"}'",
+    "interval": 3600,
+    "format": "{}",
+    "return-type": "json",
+    "justify": "center",
+    "align": 0.5,
+    "tooltip": "ASUS/profile module stubbed (out of sysmon scope)"
   }
 }

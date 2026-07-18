@@ -36,7 +36,7 @@
   "custom/toggle-vert-lite": {
     "format": "󰨞",
     "tooltip": false,
-    "on-click": "/home/lexx/.config/waybar/scripts/utils/toggle-vert-lite.sh",
+    "on-click": "~/.config/waybar/scripts/utils/toggle-vert-lite.sh",
     "interval": 86400
   },
   "tray": {

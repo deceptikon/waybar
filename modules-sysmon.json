@@ -42,7 +42,7 @@
     ]
   },
   "custom/qwen-gpu": {
-    "exec": "tail -F ~/.config/waybar/feeds/gpu.json 2>/dev/null",
+    "exec": "tail -F ~/.config/waybar/feeds/gpu.json",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -61,7 +61,7 @@
     ]
   },
   "custom/qwen-cpu": {
-    "exec": "tail -F ~/.config/waybar/feeds/cpu.json 2>/dev/null",
+    "exec": "tail -F ~/.config/waybar/feeds/cpu.json",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -80,7 +80,7 @@
     ]
   },
   "custom/qwen-ram": {
-    "exec": "tail -F ~/.config/waybar/feeds/ram.json 2>/dev/null",
+    "exec": "tail -F ~/.config/waybar/feeds/ram.json",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -99,7 +99,7 @@
     ]
   },
   "custom/qwen-ssd": {
-    "exec": "tail -F ~/.config/waybar/feeds/ssd.json 2>/dev/null",
+    "exec": "tail -F ~/.config/waybar/feeds/ssd.json",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -118,7 +118,7 @@
     ]
   },
   "custom/qwen-asus": {
-    "exec": "cat ~/.config/waybar/feeds/asus.json 2>/dev/null",
+    "exec": "cat ~/.config/waybar/feeds/asus.json",
     "interval": 2,
     "format": "{}",
     "return-type": "json",

@@ -23,5 +23,5 @@ else
 fi
 
 if [ "${1:-}" != "refresh" ]; then
-  pkill -SIGRTMIN+9 waybar || true
+  pkill -SIGRTMIN+9 waybar || echo "Command failed: [dunst] $?" >>/tmp/waybar_errors.log
 fi

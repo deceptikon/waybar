@@ -1,5 +1,5 @@
 #!/bin/bash
-if rfkill list wifi 2>/dev/null | grep -q "Soft blocked: yes"; then
+if rfkill list wifi 2>>/tmp/waybar_errors.log | grep -q "Soft blocked: yes"; then
     rfkill unblock wifi
     notify-send "WiFi" "Enabled"
 else

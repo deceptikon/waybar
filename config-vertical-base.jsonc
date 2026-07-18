@@ -9,7 +9,7 @@
     ],
     "group/vc-row1": {
       "orientation": "horizontal",
-      "modules": ["custom/profile", "idle_inhibitor"]
+      "modules": ["power-profiles-daemon", "idle_inhibitor"]
     },
     "group/vc-row2": {
       "orientation": "horizontal",
@@ -24,26 +24,52 @@
       "custom/fnlock",
       "custom/powerbtn"
     ],
-    "sway/workspaces#vert": {
-      "disable-scroll": false,
-      "all-outputs": false,
-      "format": "{icon} ",
-      "active-only": true,
-      "format-icons": {
-        "0": "",
-        "1": ": I",
-        "2": ": II",
-        "3": ": III",
-        "4": ": IV",
-        "5": ": V",
-        "urgent": "",
-        "active": "",
-        "default": ""
-      },
-      "persistent-workspaces": {
-        "0": [],
-        "1": ["eDP-1", "HDMI-A-1"],
-        "2": ["HDMI-A-1"]
+    // "sway/workspaces#vert": {
+    //   "disable-scroll": false,
+    //   "all-outputs": false,
+    //   // "format": "{icon} ",
+    //   // "active-only": true,
+    //   "format-icons": {
+    //     "0": "",
+    //     "1": ": I",
+    //     "2": ": II",
+    //     "3": ": III",
+    //     "4": ": IV",
+    //     "5": ": V",
+    //     "urgent": "",
+    //     "active": "",
+    //     "default": ""
+    //   },
+    //   "persistent-workspaces": {
+    //     "0": [],
+    //     "1": ["eDP-1", "HDMI-A-1"],
+    //     "2": ["HDMI-A-1"]
+    //   },
+    //   "format": "<span size='larger'>{name}</span> {windows}",
+    //    "format-window-separator": " | ",
+    //    "window-rewrite-default": "{name}",
+    //    "window-rewrite": {
+    //      "title<*firefox>": "",
+    //       "app_id<firefox>": "",
+    //       "class<kitty>": "🖳",
+    //       "app-id<.*ghostty>": "🖳",
+    //       "app-id<foot>": "🦶",
+    //       "title<.*youtube.*>": ""
+    //    }
+    // },
+    "sway/workspaces": {
+      "format": "<span size='larger'>{name}</span> {windows}",
+      "format-window-separator": " | ",
+
+      // КРИТИЧЕСКИЙ КОСТЫЛЬ ДЛЯ АКТИВАЦИИ REWRITE (Баг #3797)
+      "window-format": "{value}",
+
+      "window-rewrite-default": "🪟",
+      "window-rewrite": {
+        "firefox": "",
+        "ghostty": "🖳",
+        "zed": "📝",
+        "thunar": "📁"
       }
     },
   "custom/checkupdates": {

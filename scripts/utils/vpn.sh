@@ -19,4 +19,4 @@ else
   sudo kvpnc start
   echo '{"class": "on"}'
 fi
-pkill -SIGRTMIN+3 waybar || true
+pkill -SIGRTMIN+3 waybar || echo "Command failed: [vpn]$?" >>/tmp/waybar_errors.log

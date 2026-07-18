@@ -7,20 +7,20 @@ CHECKER_PID_FILE="/tmp/keywatcher_checker.pid"
 cleanup() {
     local pid
     if [ -f "$CHECKER_PID_FILE" ]; then
-        pid=$(cat "$CHECKER_PID_FILE" 2>/dev/null)
-        [ -n "$pid" ] && kill "$pid" 2>/dev/null || true
+        pid=$(cat "$CHECKER_PID_FILE" 2>>/tmp/waybar_errors.log)
+        if [ -n "$pid" ] && kill -0 "$pid" >>/tmp/waybar_errors.log 2>&1; then kill "$pid"; fi
         rm -f "$CHECKER_PID_FILE"
     fi
     if [ -f "$PID_FILE" ]; then
-        pid=$(cat "$PID_FILE" 2>/dev/null)
-        [ -n "$pid" ] && kill "$pid" 2>/dev/null || true
+        pid=$(cat "$PID_FILE" 2>>/tmp/waybar_errors.log)
+        if [ -n "$pid" ] && kill -0 "$pid" >>/tmp/waybar_errors.log 2>&1; then kill "$pid"; fi
         rm -f "$PID_FILE"
     fi
-    pkill -f "keylight/keywatcher.sh" 2>/dev/null || true
-    pkill -f "evtest.*platform-i8042" 2>/dev/null || true
+    pkill -f "keylight/keywatcher.sh" 2>>/tmp/waybar_errors.log || echo "Command failed: [keywatch] $?" >>/tmp/waybar_errors.log
+    pkill -f "evtest.*platform-i8042" 2>>/tmp/waybar_errors.log || echo "Command failed: [keywatch] $?" >>/tmp/waybar_errors.log
 }
 
-if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
+if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>>/tmp/waybar_errors.log; then
     cleanup
     echo 0 > "$KBD_LED"
 else
@@ -30,4 +30,4 @@ else
 fi
 
 sleep 0.2
-pkill -SIGRTMIN+8 waybar || true
+pkill -SIGRTMIN+8 waybar || echo "Command failed [pkill]: $?" >>/tmp/waybar_errors.log

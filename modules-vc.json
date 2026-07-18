@@ -14,7 +14,7 @@
       "default": "",
       "performance": "",
       "balanced": "",
-      "power-saver": ""
+      "power-saver": "󱤅"
     }
   },
   "custom/dunst": {
@@ -29,7 +29,7 @@
     "format": "{}",
     "interval": "once",
     "return-type": "json",
-    "exec": "echo \"$(pgrep -x wf-recorder > /dev/null && echo '{\"text\":\"󰨜 <sup>󰑊</sup>\",\"class\":\"recording\"}' || echo '{\"text\":\"󰨜 <sup></sup>\",\"class\":\"stopped\"}')\"",
+    "exec": "echo \"$(pgrep -x wf-recorder > /tmp/wf_pgrep.log && echo '{\"text\":\"󰨜 <sup>󰑊</sup>\",\"class\":\"recording\"}' || echo '{\"text\":\"󰨜 <sup></sup>\",\"class\":\"stopped\"}')\"",
     "signal": 8,
     "on-click": "~/.config/waybar/scripts/utils/capturer.sh",
     "on-right-click": "kill $(pgrep -x wf-recorder)",
@@ -64,7 +64,7 @@
     }
   },
   "custom/ollama": {
-    "exec": "if curl -s http://localhost:11111/api/tags > /dev/null 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps 2>/dev/null | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -cn --arg m \"$models\" '{text:(\"󱚣 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -cn '{text:\"󱚣 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -cn '{text:\"󱚣 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
+    "exec": "if curl -s http://localhost:11111/api/tags > /tmp/llama_curl.log 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -cn --arg m \"$models\" '{text:(\"󱚣 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -cn '{text:\"󱚣 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -cn '{text:\"󱚣 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
     "interval": 5,
     "format": "{}",
     "return-type": "json"

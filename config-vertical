@@ -1,7 +1,7 @@
 [
   {
     "name": "bar-vert",
-    "output": ["eDP-1"],
+    "output": ["eDP-1", "HDMI-A-1"],
     "width": 138,
     "modules-left": [
       "group/qwen-gpu",
@@ -10,7 +10,7 @@
       "group/qwen-ssd",
       "group/qwen-netfan"
     ],
-    
+
     "include": [
       "config-vertical-base.jsonc",
       "modules-sysmon.json"

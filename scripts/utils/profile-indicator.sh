@@ -1,5 +1,5 @@
 #!/bin/bash
-profile=$(asusctl profile get 2>/dev/null | awk -F': ' '/Active profile:/{print $2}' | tr '[:upper:]' '[:lower:]')
+profile=$(powerprofilesctl get 2>>/tmp/waybar_errors.log | awk -F': ' '/Active profile:/{print $2}' | tr '[:upper:]' '[:lower:]')
 case "$profile" in
   *quiet*)       icon=""; cls="good" ;;
   *balanced*)    icon=" "; cls="medium" ;;

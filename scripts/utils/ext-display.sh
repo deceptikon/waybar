@@ -3,6 +3,14 @@ set -euo pipefail
 
 OUTPUT="HDMI-A-1"
 
+# Gracefully skip if ddcutil or swaymsg are missing
+for cmd in ddcutil swaymsg jq; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo '{"text":"󰍹<sup>?</sup>","tooltip":"Missing: '$cmd'","class":"unknown"}'
+    exit 0
+  fi
+done
+
 get_info() {
   swaymsg -t get_outputs | jq --arg o "$OUTPUT" '.[] | select(.name==$o)'
 }
@@ -22,13 +30,13 @@ emit() {
   if [ "$on" = "true" ]; then
     jq -n --compact-output '{
       text: "󰍹<sup>󰄬</sup>",
-      tooltip: "External display: ON (HDMI-A-1)",
+      tooltip: "External display: ON ('$OUTPUT')",
       class: "on"
     }'
   else
     jq -n --compact-output '{
       text: "󰍺<sup>󰄭</sup>",
-      tooltip: "External display: OFF (HDMI-A-1)",
+      tooltip: "External display: OFF ('$OUTPUT')",
       class: "off"
     }'
   fi

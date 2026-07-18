@@ -205,6 +205,7 @@ tooltip label {
 
 /* Primary action cards: profile, dunst, ext-display, idle_inhibitor */
 #custom-profile,
+#power-profiles-daemon,
 #custom-dunst,
 #custom-ext-display,
 #idle_inhibitor {
@@ -273,7 +274,7 @@ tooltip label {
 #custom-recorder,
 #custom-checkupdates,
 #custom-fnlock,
-#power-profiles-daemon {
+#power-profiles-daemo {
   background: rgba(20, 20, 28, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
@@ -297,7 +298,7 @@ tooltip label {
   background: rgba(0, 128, 128, 0.15);
   color: #a6e3a1;
 }
-#power-profiles-daemon.balanced {
+#power-profiles-daemo.balanced {
   border-color: rgba(249, 226, 175, 0.5);
   background: rgba(0, 128, 128, 0.15);
   color: #f9e2af;
@@ -357,42 +358,43 @@ tooltip label {
     margin: 4px 0;
 }
 
-#workspaces.vert button:nth-child(1)  { border-color: #fab387; }
-#workspaces.vert button:nth-child(2)  { border-color: #89b4fa; }
-#workspaces.vert button:nth-child(3)  { border-color: #B8E1FF;  }
-#workspaces.vert button:nth-child(4)  { border-color: #91B6AC;  }
-#workspaces.vert button:nth-child(5)  { border-color: #74226C;  }
-#workspaces.vert button:nth-child(6)  { border-color: #AFB3F7;  }
-#workspaces.vert button:nth-child(7)  { border-color: #824C71;  }
-#workspaces.vert button:nth-child(8)  { border-color: #0FFF95;  }
-#workspaces.vert button:nth-child(9)  { border-color: #D1C6AD;  }
-#workspaces.vert button:nth-child(10) { border-color: #EBB9DF;  }
+#workspaces.vert button:nth-child(1)  { border-color: #fab387; background-color: #fab387; }
+#workspaces.vert button:nth-child(2)  { border-color: #89b4fa; background-color: #89b4fa; }
+#workspaces.vert button:nth-child(3)  { border-color: #B8E1FF;  background-color: #a6e3a1; }
+#workspaces.vert button:nth-child(4)  { border-color: #91B6AC;  background-color: #cba6f7; }
+#workspaces.vert button:nth-child(5)  { border-color: #74226C;  background-color: #f9e2af; }
+#workspaces.vert button:nth-child(6)  { border-color: #AFB3F7;  background-color: #94e2d5; }
+#workspaces.vert button:nth-child(7)  { border-color: #824C71;  background-color: #89dceb; }
+#workspaces.vert button:nth-child(8)  { border-color: #0FFF95;  background-color: #74c7ec; }
+#workspaces.vert button:nth-child(9)  { border-color: #D1C6AD;  background-color: #f5c2e7; }
+#workspaces.vert button:nth-child(10) { border-color: #EBB9DF;  background-color: #eba0ac; }
 
 #workspaces.vert button {
     padding: 0;
-    margin: 2px 4px;
+    margin: 0 4px;
     min-height: 4px;
-    min-width: 110px;
-    border-radius: 0 10px 10px 0;
-    border-right: 4px solid white;
+    min-width: 60px;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 4px solid white;
     background-color: transparent;
     opacity: 0.65;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
 }
 
 #workspaces.vert button:hover {
     min-height: 7px;
+    min-width: 110px;
     opacity: 0.9;
-    box-shadow: -2px 0px 6px rgba(148, 226, 213, 0.3);
-    border-right: 6px solid #FA824C;
+    box-shadow: 0px -1px 4px rgba(148, 226, 213, 0.3);
+    border-bottom: 6px solid #FA824C;
 }
 
 #workspaces.vert button.focused,
 #workspaces.vert button.active {
     opacity: 1;
-    min-width: 130px;
-    box-shadow: -2px 0px 6px rgba(148, 226, 213, 0.5);
-    border-right: 6px solid #FA824C;
+    min-width: 100px;
+    box-shadow: 0px -2px 6px rgba(148, 226, 213, 0.5);
+    border-bottom: 6px solid #FA824C;
 }
 
 #workspaces.vert button.urgent {
@@ -402,5 +404,5 @@ tooltip label {
 
 #workspaces.vert button.empty {
     background-color: transparent;
-    border-right: 4px solid transparent;
+    border-top: 6px solid transparent;
 }

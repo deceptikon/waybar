@@ -40,7 +40,7 @@ echo
 echo "4. Checking Sway exec programs..."
 missing=()
 for cmd in nm-applet udiskie dunst wob swaylock swayidle; do
-  if command -v $cmd >/dev/null 2>&1; then
+  if command -v $cmd >>/tmp/waybar_errors.log 2>&1; then
     echo "   ✓ $cmd"
   else
     echo "   ⚠ $cmd (not found)"
@@ -52,7 +52,7 @@ echo
 # Check optional programs
 echo "5. Optional programs (disabled in config)..."
 for cmd in autotiling gammastep poweralertd libinput-gestures ydotoold polkit-gnome-authentication-agent-1; do
-  if command -v $cmd >/dev/null 2>&1; then
+  if command -v $cmd >>/tmp/waybar_errors.log 2>&1; then
     echo "   ✓ $cmd (available, currently disabled)"
   else
     echo "   ✗ $cmd (not installed)"

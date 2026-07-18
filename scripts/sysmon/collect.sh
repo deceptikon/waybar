@@ -22,7 +22,7 @@ echo "NET_RAW"
 cat /proc/net/dev
 
 echo "SENSORS_JSON"
-sensors -j 2>/dev/null || sensors || true
+sensors -j 2>>/tmp/waybar_errors.log || sensors || echo "Sensors Command failed: $?" >>/tmp/waybar_errors.log
 
 echo "GPU_RAW"
 for d in /sys/class/drm/card*/device; do
@@ -32,7 +32,7 @@ for d in /sys/class/drm/card*/device; do
 done
 
 echo "ASUS_PROFILE"
-asusctl profile get 2>/dev/null || true
+powerprofilesctl get 2>>/tmp/waybar_errors.log || echo "Profile Command failed: $?" >>/tmp/waybar_errors.log
 
 echo "FAN_RAW"
 for f in /sys/class/hwmon/hwmon*/fan*_input; do

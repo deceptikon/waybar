@@ -18,25 +18,25 @@
     ],
     "include": "config-vertical-base.jsonc",
     "custom/compact-gpu": {
-      "exec": "tail -F ~/.config/waybar/feeds/compact-gpu.json 2>/dev/null",
+      "exec": "tail -F ~/.config/waybar/feeds/compact-gpu.json",
       "return-type": "json",
       "on-click": "gpustat",
       "on-right-click": "nvtop"
     },
     "custom/compact-cpu": {
-      "exec": "tail -F ~/.config/waybar/feeds/compact-cpu.json 2>/dev/null",
+      "exec": "tail -F ~/.config/waybar/feeds/compact-cpu.json",
       "return-type": "json",
       "on-click": "htop",
       "on-right-click": "gnome-system-monitor"
     },
     "custom/compact-ram": {
-      "exec": "tail -F ~/.config/waybar/feeds/compact-ram.json 2>/dev/null",
+      "exec": "tail -F ~/.config/waybar/feeds/compact-ram.json",
       "return-type": "json",
       "on-click": "gnome-system-monitor",
       "on-right-click": "free -h"
     },
     "custom/compact-ssd": {
-      "exec": "tail -F ~/.config/waybar/feeds/compact-ssd.json 2>/dev/null",
+      "exec": "tail -F ~/.config/waybar/feeds/compact-ssd.json",
       "return-type": "json",
       "on-click": "gnome-disks",
       "on-right-click": "lsblk"

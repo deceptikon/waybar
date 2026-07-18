@@ -4,7 +4,7 @@ export LC_ALL=C
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$DIR/../lib/draw-module.sh"
-FEEDS="/home/lexx/.config/waybar/feeds"
+FEEDS="$HOME/.config/waybar/feeds"
 
 mkdir -p "$FEEDS"
 
@@ -48,7 +48,7 @@ eval $(jq -r '
   cls="good"; [ "$gpu_pct" -ge 40 ] && cls="medium"; [ "$gpu_pct" -ge 70 ] && cls="warning"; [ "$gpu_pct" -ge 90 ] && cls="critical"
   seg=10; fil=$((gpu_pct*seg/100)); [ "$fil" -gt "$seg" ] && fil=$seg; [ "$fil" -lt 0 ] && fil=0; emp=$((seg-fil))
   bar=""; for ((i=0; i<fil; i++)); do bar+="▐"; done; for ((i=0; i<emp; i++)); do bar+="░"; done
-  draw_module "" "<b><span font='8'>${bar}</span> ${gpu_pct}%</b>" "<span size='small'>${gpu_freq}MHz 󰔐 ${gpu_temp}°C</span>" "$ACCENT" "$cls"
+  draw_module "" "<b><span font='9'>${bar}</span> ${gpu_pct}%</b>" "<span size='small' line_height='1.4'>${gpu_freq}MHz 󰔐 ${gpu_temp}°C</span>" "$ACCENT" "$cls"
 ) > "$FEEDS/gpu.json.tmp" && mv "$FEEDS/gpu.json.tmp" "$FEEDS/gpu.json"
 
 # 1b. Compact GPU (for vertical-lite bar)
@@ -66,7 +66,8 @@ eval $(jq -r '
 # 2. CPU
 (
   ACCENT="#a6e3a1"
-  thin_space=$(printf '\xe2\x80\x89')
+  thin_space=$(printf '\xe2\x80\x8b')
+  # thin_space=$(printf '')
   cls="good"; [ "$cpu_avg" -ge 40 ] && cls="medium"; [ "$cpu_avg" -ge 70 ] && cls="warning"; [ "$cpu_avg" -ge 90 ] && cls="critical"
   bar1=""; bar2=""
   
@@ -75,7 +76,7 @@ eval $(jq -r '
   for p in $cores_str; do
     if [ "$p" -ge 90 ]; then col="#f38ba8"
     elif [ "$p" -ge 70 ]; then col="#fab387"
-    elif [ "$p" -ge 40 ]; then col="#f9e2af"
+    elif [ "$p" -ge 40 ]; then col="#09e2af"
     elif [ "$p" -ge 15 ]; then col="#89b4fa"
     elif [ "$p" -ge 1 ]; then col="#484848"
     elif [ "$p" -ge 0 ]; then col="#383838"
@@ -83,16 +84,16 @@ eval $(jq -r '
     
     if [ "$c" -lt 8 ]; then
       [ -n "$bar1" ] && bar1+="$thin_space"
-      bar1+="<span fgcolor=\"$col\">󰘚</span>"
+      bar1+="<span fgcolor=\"$col\" font='9' line_height='0.4'></span>"
     else
       [ -n "$bar2" ] && bar2+="$thin_space"
-      bar2+="<span fgcolor=\"$col\">󰘚</span>"
+      bar2+="<span fgcolor=\"$col\" font='9' line_height='0.4'></span>"
     fi
     c=$((c+1))
   done
   
   tc_fmt=$(printf "%.0f" "$cpu_tc")
-  draw_module "" "<span font='11'>${bar1}"$'\n'"${bar2}</span>" "<span size='small'><span fgcolor=\"#a6e3a1\">AVG ${cpu_avg}%</span> 󰔐 ${tc_fmt}°C</span>" "$ACCENT" "$cls"
+  draw_module "" "<span  line_height='0.8' letter_spacing='3000'>${bar1}"$'\n'"${bar2}</span>" "<span  line_height='1.4' size='small'><span fgcolor=\"#a6e3a1\">AVG ${cpu_avg}%</span> 󰔐 ${tc_fmt}°C</span>" "$ACCENT" "$cls"
 ) > "$FEEDS/cpu.json.tmp" && mv "$FEEDS/cpu.json.tmp" "$FEEDS/cpu.json"
 
 # 2b. Compact CPU (for vertical-lite bar)
@@ -123,17 +124,19 @@ eval $(jq -r '
 # 3. RAM
 (
   ACCENT="#89b4fa"
-  thin_space=$(printf '\xe2\x80\x89')
+  thin_space=$(printf '\xe2\x80\x8b')
+  
   cls="good"; [ "$ram_pct" -ge 50 ] && cls="medium"; [ "$ram_pct" -ge 75 ] && cls="warning"; [ "$ram_pct" -ge 90 ] && cls="critical"
   fkb=$((ram_tkb - ram_ukb))
   ug=$(fmt_gb "$ram_ukb"); fg=$(fmt_gb "$fkb")
   swap_gb=$(awk "BEGIN {printf \"%.1f\", $ram_swp / 1048576}")
-  seg=7; su=$((ram_pct*seg/100)); [ "$su" -eq 0 ] && su=1; [ "$su" -gt "$seg" ] && su=$seg
+  n=6; seg=$((n * 2)); su=$((ram_pct*seg/100)); [ "$su" -eq 0 ] && su=1; [ "$su" -gt "$seg" ] && su=$seg
   row1=$(printf "<b><span fgcolor='%s'>%2sGb</span><span fgcolor='#a3a3a3' font='8'>  :: </span><span fgcolor='#ffffff'> %2sGb</span></b>" "$ACCENT" "$ug" "$fg")
-  bar=""; for ((i=0; i<seg; i++)); do
-    if [ "$i" -lt "$su" ]; then bar+="$thin_space"; else bar+="<span fgcolor='#ffffff'>$thin_space</span>"; fi
+  bar=""; bar2=""; for ((i=0; i< n; i++)); do
+    if [ "$i" -lt "$su" ]; then bar+="$thin_space"; else bar+="<span fgcolor='#ffffff'>$thin_space</span>"; fi
+    if [ "$((i + n))" -lt "$su" ]; then bar2+="$thin_space"; else bar2+="<span fgcolor='#ffffff'>$thin_space</span>"; fi
   done
-  draw_module "" "<span font='8'>${row1}</span>" "<span font='12'>${bar}</span>" "$ACCENT" "$cls" "<span size='small'>swapped: ${swap_gb}Gb</span>"
+  draw_module "" "<span font='8'>${row1}</span>" "<span font='12' letter_spacing='4000'>${bar}</span>" "$ACCENT" "$cls" "<span size='small'>swapped: ${swap_gb}Gb</span>" "<span font='12'  line_height='0.5'letter_spacing='4000'>${bar2}</span>"
 ) > "$FEEDS/ram.json.tmp" && mv "$FEEDS/ram.json.tmp" "$FEEDS/ram.json"
 
 # 3b. Compact RAM (for vertical-lite bar)
@@ -166,7 +169,6 @@ eval $(jq -r '
     rf=$(printf "%6s" "-" | sed 's/ /\&#160;/g')
     r_icon="<span fgcolor='#585b70'>○</span>"
   fi
-
   if [ "$disk_w" -gt 0 ]; then
     wf=$(printf "%6s" "$(fmt_io "$disk_w")/s" | sed 's/ /\&#160;/g')
     w_icon="<span fgcolor='#f38ba8'>●</span>"
@@ -175,11 +177,12 @@ eval $(jq -r '
     w_icon="<span fgcolor='#585b70'>○</span>"
   fi
 
-  row1="<b><span fgcolor='$ACCENT'>${used_gb}Gb</span><span fgcolor='#cdd6f4' font='7'> of </span><span fgcolor='#ffa6e1'>${tot}</span></b>"
+  row1="<b><span fgcolor='$ACCENT'>${x}Gb</span><span fgcolor='#cdd6f4' font='7'> of </span><span fgcolor='#ffa6e1'>${tot}</span></b>"
+  row4="============......-"
   row2=$(printf "%s <span fgcolor='#cdd6f4'>read </span> <span fgcolor='#89b4fa'>%s</span>" "$r_icon" "$rf")
   row3=$(printf "%s <span fgcolor='#cdd6f4'>write</span> <span fgcolor='#89b4fa'>%s</span>" "$w_icon" "$wf")
 
-  draw_module "" "$row1" "<span font='7'>$row2</span>" "$ACCENT" "$cls" "<span font='7'>$row3</span>"
+  draw_module "" "$row1" "<span font='7'>$row4</span>" "$ACCENT" "$cls" "<span font='7'>$row2</span>" "<span font='7'>$row3</span>"  
 ) > "$FEEDS/ssd.json.tmp" && mv "$FEEDS/ssd.json.tmp" "$FEEDS/ssd.json"
 
 # 4b. Compact SSD (for vertical-lite bar)

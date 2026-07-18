@@ -1,5 +1,5 @@
 #!/bin/bash
-data=$(cat /tmp/sysmon.json 2>/dev/null || echo '{}')
+data=$(cat /tmp/sysmon.json 2>>/tmp/waybar_errors.log || echo '{}')
 eval "$(jq -r '
   [.net.rx_speed // 0, .net.tx_speed // 0, .temp.fan1 // 0]
   | @sh "rx=\(.[0]); tx=\(.[1]); fan=\(.[2])"

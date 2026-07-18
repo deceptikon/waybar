@@ -20,9 +20,12 @@ draw_module() {
   local color="$4"
   local cls="${5:-good}"
   local row3="${6:-}"
+  local row4="${7:-}"
 
   if [ -z "$icon" ]; then
-    if [ -n "$row3" ]; then
+    if [ -n "$row4" ]; then
+      text=$(printf "<span fgcolor='%s'>%s\n%s\n%s\n%s</span>" "$color" "$row1" "$row2" "$row4" "$row3")
+    elif [ -n "$row3" ]; then
       text=$(printf "<span fgcolor='%s'>%s\n%s\n%s</span>" "$color" "$row1" "$row2" "$row3")
     else
       text=$(printf "<span fgcolor='%s'>%s\n%s</span>" "$color" "$row1" "$row2")

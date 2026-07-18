@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -uo pipefail
 # ~/.config/waybar/scripts/utils/ddc.sh [brightness|contrast|combo] [get|up|down]
 
 FEATURE=${1:-}
@@ -36,7 +36,7 @@ apply_vcp() {
         flock 200
         if [ -f "$target" ]; then
             sleep 0.2
-            T=$(cat "$target" 2>/dev/null)
+            T=$(cat "$target" 2>>/tmp/waybar_errors.log)
             if [ -n "$T" ]; then
                 rm -f "$target"
                 ddcutil setvcp "$vcp" "$T" --noverify
@@ -59,13 +59,13 @@ if [ "$FEATURE" = "combo" ]; then
         (
             exec 200>"$BRIGHTNESS_LOCK"
             if flock -n 200; then
-                VAL=$(ddcutil getvcp 10 -t 2>/dev/null | awk '{print $4}')
+                VAL=$(ddcutil getvcp 10 -t 2>>/tmp/waybar_errors.log | awk '{print $4}')
                 [ -n "$VAL" ] && echo "$VAL" > "$BRIGHTNESS_CACHE"
             fi
         )
     fi
 
-    CURRENT=$(cat "$BRIGHTNESS_CACHE" 2>/dev/null || echo 50)
+    CURRENT=$(cat "$BRIGHTNESS_CACHE" 2>>/tmp/waybar_errors.log || echo 50)
 
     if [ "$ACTION" = "up" ]; then
         CURRENT=$((CURRENT + 1))
@@ -121,7 +121,7 @@ if [ ! -f "$CACHE_FILE" ] || [ "$ACTION" = "get" ]; then
     (
         exec 200>"$LOCK_FILE"
         if flock -n 200; then
-            VAL=$(ddcutil getvcp $VCP -t 2>/dev/null | awk '{print $4}')
+            VAL=$(ddcutil getvcp $VCP -t 2>>/tmp/waybar_errors.log | awk '{print $4}')
             if [ -n "$VAL" ]; then
                 echo "$VAL" > "$CACHE_FILE"
             fi
@@ -129,7 +129,7 @@ if [ ! -f "$CACHE_FILE" ] || [ "$ACTION" = "get" ]; then
     )
 fi
 
-CURRENT=$(cat "$CACHE_FILE" 2>/dev/null)
+CURRENT=$(cat "$CACHE_FILE" 2>>/tmp/waybar_errors.log)
 if [ -z "$CURRENT" ]; then
     CURRENT=50
 fi

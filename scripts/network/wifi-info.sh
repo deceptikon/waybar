@@ -3,8 +3,8 @@ set -euo pipefail
 export LC_ALL=C
 
 # Net info — two-row output: SSID (bold large) + speeds (small italic below)
-wifi_info=$(nmcli -t -f active,ssid,signal,device dev wifi 2>/dev/null \
-  | grep '^yes' | head -1 || true)
+wifi_info=$(nmcli -t -f active,ssid,signal,device dev wifi 2>>/tmp/waybar_errors.log \
+  | grep '^yes' | head -1 || echo "Command failed: [wifi] $?" >>/tmp/waybar_errors.log)
 
 if [ -z "$wifi_info" ]; then
   jq -n --compact-output '{"text": "", "class": "disconnected"}'
@@ -18,10 +18,10 @@ iface=$(printf '%s' "$wifi_info" | cut -d: -f4)
 [ ${#ssid} -gt 16 ] && ssid="${ssid:0:13}…"
 
 # Signal-based class for info tile
-if   [ "$signal" -ge 80 ] 2>/dev/null; then sig_cls="good"
-elif [ "$signal" -ge 60 ] 2>/dev/null; then sig_cls="medium"
-elif [ "$signal" -ge 40 ] 2>/dev/null; then sig_cls="warning"
-elif [ "$signal" -ge 20 ] 2>/dev/null; then sig_cls="critical"
+if   [ "$signal" -ge 80 ] 2>>/tmp/waybar_errors.log; then sig_cls="good"
+elif [ "$signal" -ge 60 ] 2>>/tmp/waybar_errors.log; then sig_cls="medium"
+elif [ "$signal" -ge 40 ] 2>>/tmp/waybar_errors.log; then sig_cls="warning"
+elif [ "$signal" -ge 20 ] 2>>/tmp/waybar_errors.log; then sig_cls="critical"
 else sig_cls="disconnected"; fi
 
 # Speed sampling — read real-time rate from background poller cache
@@ -30,7 +30,7 @@ if [ -n "$iface" ] && [ "$iface" != "lo" ]; then
   rx_speed=0
   tx_speed=0
   if [ -f "$HOME/.config/waybar/feeds/sysmon.json" ]; then
-    read -r rx_speed tx_speed <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0] | @tsv' "$HOME/.config/waybar/feeds/sysmon.json" 2>/dev/null || echo "0 0")"
+    read -r rx_speed tx_speed <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0] | @tsv' "$HOME/.config/waybar/feeds/sysmon.json" 2>>/tmp/waybar_errors.log || echo "0 0")"
   fi
 
   total=$((rx_speed + tx_speed))

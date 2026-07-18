@@ -43,23 +43,55 @@ while IFS= read -r line; do
 done
 
 # ── CPU — delta between two /proc/stat snaps ──
-cpu_avg=0; cpu_per_core="[]"
+cpu_avg=0
+cpu_per_core="[]"
+
 if [ -n "$cpu1_lines" ] && [ -n "$cpu2_lines" ]; then
-  data=$(awk '
-    FNR==NR { tot1[$1]=$2+$3+$4+$5+$6+$7+$8; idle1[$1]=$5; next }
-    /^cpu[0-9]+ / {
-      n=$1; dt=$2+$3+$4+$5+$6+$7+$8-tot1[n]; di=$5-idle1[n];
-      if (dt<=0) dt=1;
-      p=int((dt-di)*100/dt);
-      if (p<0) p=0; if (p>100) p=100;
-      printf "core %d\n", p;
-      sum+=p; cnt++;
-    }
-    END { if (cnt>0) printf "avg %d\n", int(sum/cnt); else printf "avg 0\n" }
-  ' <(printf '%s' "$cpu1_lines") <(printf '%s' "$cpu2_lines"))
+  data=$(
+    awk '
+      FNR==NR && /^cpu[0-9]+ / {
+        total[$1] = 0
+        for (i=2; i<=NF; i++) total[$1] += $i
+        idle[$1] = $5 + $6
+        next
+      }
+
+      /^cpu[0-9]+ / {
+        n = $1
+        t2 = 0
+        for (i=2; i<=NF; i++) t2 += $i
+        i2 = $5 + $6
+
+        dt = t2 - total[n]
+        di = i2 - idle[n]
+
+        if (dt <= 0) dt = 1
+        used = dt - di
+        p = int((used * 100) / dt)
+
+        if (p < 0) p = 0
+        if (p > 100) p = 100
+
+        print "core " p
+
+        sum_used += used
+        sum_total += dt
+        cnt++
+      }
+
+      END {
+        if (sum_total > 0)
+          printf "avg %d\n", int((sum_used * 100) / sum_total)
+        else
+          printf "avg 0\n"
+      }
+    ' <(printf '%s\n' "$cpu1_lines") <(printf '%s\n' "$cpu2_lines")
+  )
+
   cpu_avg=$(awk '/^avg /{print $2}' <<< "$data")
   cpu_per_core=$(awk '/^core /{print $2}' <<< "$data" | jq -Rs 'split("\n") | map(select(length>0) | tonumber)')
-  : "${cpu_avg:=0}"; : "${cpu_per_core:=[]}"
+  : "${cpu_avg:=0}"
+  : "${cpu_per_core:=[]}"
 fi
 
 # ── RAM (/proc/meminfo) ──
@@ -94,8 +126,8 @@ prev_d_write=0
 prev_n_rx=0
 prev_n_tx=0
 
-if [ -f "/home/lexx/.config/waybar/feeds/.state" ]; then
-  read -r prev_ts prev_d_read prev_d_write prev_n_rx prev_n_tx < "/home/lexx/.config/waybar/feeds/.state"
+if [ -f "$HOME/.config/waybar/feeds/.state" ]; then
+  read -r prev_ts prev_d_read prev_d_write prev_n_rx prev_n_tx < "$HOME/.config/waybar/feeds/.state"
 fi
 
 # Parse timestamp from stream or fallback to command
@@ -127,10 +159,10 @@ if (( $(awk "BEGIN {print ($delta_t > 0.05 && $prev_ts > 0) ? 1 : 0}") )); then
   net_tx_speed=$(awk "BEGIN {printf \"%.0f\", ($net_tx_bytes - $prev_n_tx) / $delta_t}")
 fi
 
-[ "$disk_read_speed" -lt 0 ] 2>/dev/null && disk_read_speed=0
-[ "$disk_write_speed" -lt 0 ] 2>/dev/null && disk_write_speed=0
-[ "$net_rx_speed" -lt 0 ] 2>/dev/null && net_rx_speed=0
-[ "$net_tx_speed" -lt 0 ] 2>/dev/null && net_tx_speed=0
+[ "$disk_read_speed" -lt 0 ] 2>>/tmp/waybar_errors.log && disk_read_speed=0
+[ "$disk_write_speed" -lt 0 ] 2>>/tmp/waybar_errors.log && disk_write_speed=0
+[ "$net_rx_speed" -lt 0 ] 2>>/tmp/waybar_errors.log && net_rx_speed=0
+[ "$net_tx_speed" -lt 0 ] 2>>/tmp/waybar_errors.log && net_tx_speed=0
 
 # ── GPU sysfs ──
 gpu_busy_pct=0; gpu_mem_used=0; gpu_mem_total=0
@@ -147,10 +179,10 @@ fi
 # ── Sensors JSON ──
 gpu_temp_c=0; gpu_freq=0; gpu_power=0; cpu_temp=0
 if [ -n "$sensors_json" ]; then
-  gpu_temp_c=$(jq '.["amdgpu-pci-6300"].edge.temp1_input // 0 | floor' <<< "$sensors_json" 2>/dev/null)
-  gpu_freq=$(jq '.["amdgpu-pci-6300"].sclk.freq1_input // 0 | . / 1000000 | floor' <<< "$sensors_json" 2>/dev/null)
-  gpu_power=$(jq '.["amdgpu-pci-6300"].PPT.power1_average // 0' <<< "$sensors_json" 2>/dev/null)
-  cpu_temp=$(jq '.["k10temp-pci-00c3"].Tctl.temp1_input // 0' <<< "$sensors_json" 2>/dev/null)
+  gpu_temp_c=$(jq '.["amdgpu-pci-6300"].edge.temp1_input // 0 | floor' <<< "$sensors_json" 2>>/tmp/waybar_errors.log)
+  gpu_freq=$(jq '.["amdgpu-pci-6300"].sclk.freq1_input // 0 | . / 1000000 | floor' <<< "$sensors_json" 2>>/tmp/waybar_errors.log)
+  gpu_power=$(jq '.["amdgpu-pci-6300"].PPT.power1_average // 0' <<< "$sensors_json" 2>>/tmp/waybar_errors.log)
+  cpu_temp=$(jq '.["k10temp-pci-00c3"].Tctl.temp1_input // 0' <<< "$sensors_json" 2>>/tmp/waybar_errors.log)
 fi
 
 # ── Fan ──
@@ -172,7 +204,7 @@ if [ -n "$asus_line" ]; then
 fi
 
 # ── Workspace ──
-ws_num=$(swaymsg -t get_workspaces 2>/dev/null \
+ws_num=$(swaymsg -t get_workspaces 2>>/tmp/waybar_errors.log \
     | jq '.[] | select(.focused==true) | .num' \
     || echo 1)
 ws_num=${ws_num:-1}
@@ -220,4 +252,4 @@ jq -n \
     workspace: { num: $ws_num }
   }'
 
-echo "$current_ts $disk_read_sectors $disk_write_sectors $net_rx_bytes $net_tx_bytes" > /home/lexx/.config/waybar/feeds/.state
+echo "$current_ts $disk_read_sectors $disk_write_sectors $net_rx_bytes $net_tx_bytes" > $HOME/.config/waybar/feeds/.state

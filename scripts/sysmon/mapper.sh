@@ -488,4 +488,4 @@ printf '%s %s %s %s %s %s %s\n' \
   >"$state_file.tmp" && mv "$state_file.tmp" "$state_file"
 
 # periodic debug (every cycle is fine; small)
-log "disk=${disk_dev} rsec=${disk_read_sectors} wsec=${disk_write_sectors} rs=${disk_read_speed} ws=${disk_write_speed} net=${net_iface} rx=${net_rx_speed} tx=${net_tx_speed} d_ok=${delta_ok}
+log "disk=${disk_dev} rsec=${disk_read_sectors} wsec=${disk_write_sectors} rs=${disk_read_speed} ws=${disk_write_speed} net=${net_iface} rx=${net_rx_speed} tx=${net_tx_speed} d_ok=${delta_ok}"

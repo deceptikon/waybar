@@ -1,58 +1,67 @@
 #!/usr/bin/env bash
-# poller.sh — single writer: collect|map → feeds/sysmon.json → formatter
-set -uo pipefail   # no -e: one bad cycle must not kill the daemon
+# poller.sh — single writer for feeds/sysmon.json + module feeds
+set -euo pipefail
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
-WAYBAR_ROOT="$(cd "$DIR/../.." && pwd)"
-CFG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
+WAYBAR_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
+FEEDS="${WAYBAR_HOME}/feeds"
+LOG_DIR="${WAYBAR_HOME}/logs"
+ENV_FILE="${WAYBAR_HOME}/sysmon.env"
+SYSMON_LOG="${SYSMON_LOG:-$LOG_DIR/sysmon.log}"
 
-# prefer live config location for feeds (waybar always tails here)
-FEEDS="${SYSMON_FEEDS:-$CFG_HOME/feeds}"
-LOG_DIR="${SYSMON_LOG_DIR:-$CFG_HOME/logs}"
 mkdir -p "$FEEDS" "$LOG_DIR"
-LOG="$LOG_DIR/sysmon.log"
 
-# root sysmon.env then optional local override
-# shellcheck disable=SC1091
-[ -f "$CFG_HOME/sysmon.env" ] && . "$CFG_HOME/sysmon.env"
-# shellcheck disable=SC1091
-[ -f "$WAYBAR_ROOT/sysmon.env" ] && . "$WAYBAR_ROOT/sysmon.env"
-# shellcheck disable=SC1091
-[ -f "$DIR/sysmon.env" ] && . "$DIR/sysmon.env"
+if [ -f "$ENV_FILE" ]; then
+  # Optional SYSMON_* overrides (see sysmon.env)
+  . "$ENV_FILE"
+fi
 
 SLEEP="${SYSMON_POLL_SLEEP:-2}"
-log() { printf '%s %s\n' "$(date -Iseconds)" "$*" >>"$LOG"; }
 
-for f in gpu cpu ram ssd netfan compact-gpu compact-cpu compact-ram compact-ssd compact-netfan; do
-  [ -f "$FEEDS/$f.json" ] || printf '%s\n' '{"text":"…","class":"good"}' >"$FEEDS/$f.json"
+log() {
+  printf '%s poller: %s\n' "$(date -Iseconds)" "$*" >>"$SYSMON_LOG"
+}
+
+# Seed feeds so waybar tail -F always has a target
+seed_modules=(
+  gpu cpu ram ssd netfan
+  compact-gpu compact-cpu compact-ram compact-ssd compact-netfan
+)
+for name in "${seed_modules[@]}"; do
+  if [ ! -f "$FEEDS/${name}.json" ]; then
+    printf '%s\n' '{"text":"…","class":"good"}' >"$FEEDS/${name}.json"
+  fi
 done
-[ -f "$FEEDS/sysmon.json" ] || echo '{}' >"$FEEDS/sysmon.json"
+if [ ! -f "$FEEDS/sysmon.json" ]; then
+  printf '%s\n' '{}' >"$FEEDS/sysmon.json"
+fi
 
+# One poller only
 exec 9>"$FEEDS/.poller.lock"
 if ! flock -n 9; then
-  msg="poller: already running (lock $FEEDS/.poller.lock)"
-  log "$msg"
-  echo "$msg" >&2
+  log "already running — exit"
   exit 0
 fi
-log "poller start pid=$$ feeds=$FEEDS dir=$DIR"
+
+printf '%s\n' $$ >"$LOG_DIR/sysmon-poller.pid"
+log "start pid=$$ sleep=${SLEEP}s env=$ENV_FILE feeds=$FEEDS"
+
+cleanup() {
+  rm -f "$LOG_DIR/sysmon-poller.pid"
+}
+trap cleanup EXIT
 
 while true; do
-  t0=$(date +%s)
-  if ! "$DIR/collect.sh" 2>>"$LOG" \
-      | "$DIR/mapper.sh" >"$FEEDS/sysmon.json.tmp" 2>>"$LOG"; then
-    log "collect|map failed"
+  rc=0
+  if ! "$DIR/collect.sh" | "$DIR/mapper.sh" >"$FEEDS/sysmon.json.tmp"; then
+    rc=$?
+    log "collect|map failed rc=$rc"
     rm -f "$FEEDS/sysmon.json.tmp"
-    sleep "$SLEEP"
-    continue
+  else
+    mv "$FEEDS/sysmon.json.tmp" "$FEEDS/sysmon.json"
+    if ! bash "$DIR/formatter.sh" <"$FEEDS/sysmon.json"; then
+      log "formatter failed rc=$?"
+    fi
   fi
-  mv "$FEEDS/sysmon.json.tmp" "$FEEDS/sysmon.json"
-
-  if ! bash "$DIR/formatter.sh" <"$FEEDS/sysmon.json" >>"$LOG" 2>&1; then
-    log "formatter failed"
-  fi
-
-  avg=$(jq -r '.cpu.avg // "?"' "$FEEDS/sysmon.json" 2>/dev/null || echo '?')
-  log "ok $(( $(date +%s) - t0 ))s cpu=${avg}"
   sleep "$SLEEP"
 done

@@ -212,7 +212,7 @@ mod_ram() {
   fg=$(fmt_gb "$fkb")
   swap_gb=$(awk -v s="$ram_swp" 'BEGIN{printf "%.1f", s/1048576}')
 
-  local n=6
+  local n=8
   local seg=$((n * 2))
   local su=$((ram_pct * seg / 100))
   [ "$su" -eq 0 ] && [ "$ram_pct" -gt 0 ] && su=1
@@ -229,10 +229,10 @@ mod_ram() {
   done
   draw_module "" \
     "<span font='8'>${row1}</span>" \
-    "<span font='12' letter_spacing='4000'>${bar}</span>" \
+    "<span font='8' letter_spacing='3000'>${bar}</span>" \
     "$ACCENT" "$cls" \
     "<span size='small'>swapped: ${swap_gb}Gb</span>" \
-    "<span font='12' line_height='0.5' letter_spacing='4000'>${bar2}</span>"
+    "<span font='8' line_height='0.5' letter_spacing='3000'>${bar2}</span>"
 }
 
 mod_compact_ram() {
@@ -271,30 +271,30 @@ mod_ssd() {
   local rf wf r_icon w_icon
   if [ "$disk_r" -gt 0 ]; then
     rf=$(printf "%6s" "$(fmt_io "$disk_r")/s" | sed 's/ /\&#160;/g')
-    r_icon="<span fgcolor='#a6e3a1'>●</span>"
+    r_icon="<span fgcolor='#a6e3a1'>⭅●</span>"
   else
     rf=$(printf "%6s" "-" | sed 's/ /\&#160;/g')
-    r_icon="<span fgcolor='#585b70'>○</span>"
+    r_icon="<span fgcolor='#585b70'>⭅○</span>"
   fi
   if [ "$disk_w" -gt 0 ]; then
     wf=$(printf "%6s" "$(fmt_io "$disk_w")/s" | sed 's/ /\&#160;/g')
-    w_icon="<span fgcolor='#f38ba8'>●</span>"
+    w_icon="<span fgcolor='#f38ba8'>⭆●</span>"
   else
     wf=$(printf "%6s" "-" | sed 's/ /\&#160;/g')
-    w_icon="<span fgcolor='#585b70'>○</span>"
+    w_icon="<span fgcolor='#585b70'>⭆○</span>"
   fi
 
-  local n=12
+  local n=18
   local fill=$((up * n / 100))
   local i bar=""
   [ "$fill" -gt "$n" ] && fill=$n
   [ "$fill" -lt 0 ] && fill=0
   [ "$fill" -eq 0 ] && [ "$up" -gt 0 ] && fill=1
   for ((i = 0; i < fill; i++)); do
-    bar+="<span fgcolor='#a6e3a1'>━</span>"
+    bar+="<span fgcolor='#a6e3a1'>●</span>"
   done
   for ((i = fill; i < n; i++)); do
-    bar+="<span fgcolor='#45475a'>━</span>"
+    bar+="<span fgcolor='#45475a'>○</span>"
   done
 
   local row1 row_read row_write
@@ -304,7 +304,7 @@ mod_ssd() {
 
   draw_module "" \
     "$row1" \
-    "<span font='9'>${bar}</span>" \
+    "<span font='7' letter_spacing='1'>${bar}</span>" \
     "$ACCENT" "$cls" \
     "<span font='7'>${row_write}</span>" \
     "<span font='7'>${row_read}</span>"

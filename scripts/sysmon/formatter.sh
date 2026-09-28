@@ -32,6 +32,7 @@ fi
 printf '%s\n' "$data" >"$FEEDS/sysmon.json.tmp" && mv "$FEEDS/sysmon.json.tmp" "$FEEDS/sysmon.json"
 
 fmt_gb() { awk -v val="${1:-0}" 'BEGIN{printf "%.0f", val/1048576}'; }
+fmt_gb_flt() { awk -v val="${1:-0}" 'BEGIN{printf "%.1f", val/1048576}'; }
 fmt_io() {
   local b=${1:-0}
   if [ "$b" -ge 1073741824 ]; then awk -v v="$b" 'BEGIN{printf "%.1fG", v/1073741824}'
@@ -208,9 +209,9 @@ mod_ram() {
   [ "$ram_pct" -ge 90 ] && cls="critical"
   local fkb=$((ram_tkb - ram_ukb))
   local ug fg swap_gb
-  ug=$(fmt_gb "$ram_ukb")
+  ug=$(fmt_gb_flt "$ram_ukb")
   fg=$(fmt_gb "$fkb")
-  swap_gb=$(awk -v s="$ram_swp" 'BEGIN{printf "%.1f", s/1048576}')
+  swap_gb=$(fmt_gb_flt "$ram_swp")
 
   local n=8
   local seg=$((n * 2))
@@ -219,7 +220,7 @@ mod_ram() {
   [ "$su" -gt "$seg" ] && su=$seg
 
   local row1 bar="" bar2="" i
-  row1=$(printf "<b><span fgcolor='%s'>%2sGb</span><span fgcolor='#a3a3a3' font='8'>  :: </span><span fgcolor='#ffffff'> %2sGb</span></b>" \
+  row1=$(printf "<b><span fgcolor='%s'>%2sG</span><span fgcolor='#a3a3a3' font='8'> :: </span><span fgcolor='#ffffff'>%2sG</span></b>" \
     "$ACCENT" "$ug" "$fg")
   for ((i = 0; i < n; i++)); do
     if [ "$i" -lt "$su" ]; then bar+="$thin_space"
@@ -231,7 +232,7 @@ mod_ram() {
     "<span font='8'>${row1}</span>" \
     "<span font='8' letter_spacing='3000'>${bar}</span>" \
     "$ACCENT" "$cls" \
-    "<span size='small'>swapped: ${swap_gb}Gb</span>" \
+    "<span size='small'>swapped: ${swap_gb}G</span>" \
     "<span font='8' line_height='0.5' letter_spacing='3000'>${bar2}</span>"
 }
 

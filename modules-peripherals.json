@@ -146,7 +146,6 @@
     "menu-file": "~/.config/waybar/feeds/wifi-menu.xml",
     "menu-actions": {
       "wifi-toggle": "~/.config/waybar/scripts/utils/wifi-toggle.sh",
-      "wifi-rescan": "~/.config/waybar/scripts/utils/wifi-rescan.sh",
       "vpn-toggle": "~/.config/waybar/scripts/utils/wg-vpn.sh"
     },
     "interval": 30,

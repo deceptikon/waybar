@@ -10,7 +10,7 @@ VPN_CONF="${VPN_CONF:-$HOME/vpn.conf}"
 VPN_IF="${VPN_IF:-$(basename "$VPN_CONF" .conf)}"
 VPN_IF="${VPN_IF:0:15}"
 # nf-md-vpn (U+F0582). Export VPN_GLYPH to swap it if the font renders tofu.
-VPN_GLYPH="${VPN_GLYPH:-󰖂}"
+VPN_GLYPH="${VPN_GLYPH:-󱚿}"
 # Written by wg-vpn.sh while a toggle is in flight.
 VPN_STATE_FILE="${VPN_STATE_FILE:-/tmp/waybar_vpn_state}"
 
@@ -48,12 +48,12 @@ vpn_state() {
 }
 
 if rfkill list wifi 2>>"$ERRLOG" | grep -q "Soft blocked: yes"; then
-    wifi_icon=󰤮
+    wifi_icon=󰖪
     wifi_class="disabled"
     wifi_tip="WiFi disabled"
 else
     ssid=$(iwgetid -r 2>>"$ERRLOG")
-    wifi_icon=󰤨
+    wifi_icon=󰖩
     if [ -n "$ssid" ]; then
         wifi_class="connected"
         wifi_tip="Connected to $ssid"
@@ -65,13 +65,21 @@ fi
 
 # The tunnel glyph is full-size, not <sup>: superscript at 15px rendered too
 # small to notice, so an active VPN looked like a plain wifi icon.
-vstate=$(vpn_state)
+#vstate=$(vpn_state)
 text="$wifi_icon"
-case "$vstate" in
-    busy)    vpn_class="vpn-connecting"; text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN toggle in progress ($VPN_IF)" ;;
-    on)      vpn_class="vpn-on";      text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN up ($VPN_IF)" ;;
-    pending) vpn_class="vpn-pending"; text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN link $VPN_IF exists but has no carrier" ;;
-    *)       vpn_class="vpn-off";     vpn_tip="VPN down" ;;
-esac
+## case "$vstate" in
+##     busy)    vpn_class="vpn-connecting"; text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN toggle in progress ($VPN_IF)" ;;
+##     on)      vpn_class="vpn-on";      text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN up ($VPN_IF)" ;;
+##     pending) vpn_class="vpn-pending"; text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN link $VPN_IF exists but has no carrier" ;;
+##     *)       vpn_class="vpn-off";     vpn_tip="VPN down" ;;
+## esac
+
+if ip a | grep -q -F ".vpn"; then
+    vpn_class="vpn-on";  vpn_tip="VPN up"; 
+    text="$VPN_GLYPH";
+else
+    vpn_class="vpn-off";  vpn_tip="";
+fi
+
 
 jq -cn --arg text "$text" --arg tooltip "$wifi_tip · $vpn_tip" --arg wifi "$wifi_class" --arg vpn "$vpn_class" '{text: $text, class: [$wifi, $vpn], tooltip: $tooltip}'

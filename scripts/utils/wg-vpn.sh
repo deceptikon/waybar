@@ -1,21 +1,28 @@
 #!/bin/bash
-# Connect / disconnect the WireGuard tunnel defined by VPN_CONF (default ~/vpn.conf)
-# with wg-quick up|down.
+# Connect / disconnect the WireGuard tunnel defined by VPN_CONF (default
+# ~/vpn.conf) with wg-quick up|down.
 #
-# wg-quick re-execs itself through sudo when it is not root (auto_su in
-# wireguard-tools src/wg-quick/linux.bash), and a waybar menu action has no
-# terminal to answer that prompt with. Running it under pkexec makes it root,
-# so wg-quick skips auto_su and pkexec performs the authorisation itself.
-# Set VPN_PRIV=sudo for a NOPASSWD setup, VPN_PRIV=direct when already root.
+# Two facts shape this script:
+#   - wg-quick re-execs itself through sudo when it is not root (auto_su in
+#     wireguard-tools src/wg-quick/linux.bash), so the toggle must start as root;
+#   - a waybar menu action has no controlling terminal, so pkexec cannot ask for a
+#     password there: it prints "Error creating textual authentication agent: Error
+#     opening current controlling terminal for the process (/dev/tty)" and exits 127
+#     (polkit src/programs/pkexec.c:864-868, ret = 127 set at :502).
+# So the waybar-side call only opens a terminal window and re-runs itself inside it,
+# where pkexec can prompt. Set VPN_TERM=none to skip the window (useful with
+# VPN_PRIV=sudo plus a NOPASSWD rule, or once a polkit agent is registered).
 set -euo pipefail
 
+SELF="$(readlink -f "$0")"
 LOG=/tmp/waybar_vpn.log
 VPN_CONF="${VPN_CONF:-$HOME/vpn.conf}"
 VPN_PRIV="${VPN_PRIV:-pkexec}"
+VPN_TERM="${VPN_TERM:-auto}"
 IFACE="${VPN_IF:-$(basename "$VPN_CONF" .conf)}"
 IFACE="${IFACE:0:15}"
 
-log() { printf "%s %s\n" "$(date -Iseconds)" "$*" >>"$LOG"; }
+log() { printf '%s %s\n' "$(date -Iseconds)" "$*" >>"$LOG"; }
 
 # Notifications are advisory: a failure is logged, never fatal to the toggle.
 notify() {
@@ -43,40 +50,127 @@ run_wg() {
     esac
 }
 
-if [ ! -f "$VPN_CONF" ]; then
-    log "config $VPN_CONF not found - nothing to do"
-    notify "WireGuard" "Config not found: $VPN_CONF"
-    exit 1
-fi
+# First available terminal emulator; prints nothing when there is none.
+pick_terminal() {
+    local t
+    for t in foot alacritty ghostty kitty wezterm xterm; do
+        if command -v "$t" >/dev/null; then
+            printf '%s' "$t"
+            break
+        fi
+    done
+    return 0
+}
 
-if [ "$VPN_PRIV" != "direct" ] && ! command -v "$VPN_PRIV" >/dev/null; then
-    log "privilege helper $VPN_PRIV not installed"
-    notify "WireGuard" "$VPN_PRIV not available - set VPN_PRIV in wg-vpn.sh"
-    exit 1
-fi
+open_terminal() {
+    local term="$1"
+    shift
+    case "$term" in
+        foot) exec foot --wait -- "$@" ;;
+        alacritty) exec alacritty -e "$@" ;;
+        ghostty) exec ghostty -e "$@" ;;
+        kitty) exec kitty -e "$@" ;;
+        wezterm) exec wezterm start -- "$@" ;;
+        xterm) exec xterm -e "$@" ;;
+        *)
+            log "no launcher known for terminal '$term' - add it to open_terminal()"
+            return 1
+            ;;
+    esac
+}
 
-if [ -d "/sys/class/net/$IFACE" ]; then
-    action="down"
-    step="Disconnecting $IFACE"
-else
-    action="up"
-    step="Connecting $IFACE"
-fi
-log "toggling: $VPN_PRIV wg-quick $action $VPN_CONF (iface $IFACE)"
-notify "WireGuard" "$step"
+checks() {
+    if [ ! -f "$VPN_CONF" ]; then
+        log "config $VPN_CONF not found - nothing to do"
+        notify "WireGuard" "Config not found: $VPN_CONF"
+        exit 1
+    fi
+    if [ "$VPN_PRIV" != "direct" ] && ! command -v "$VPN_PRIV" >/dev/null; then
+        log "privilege helper $VPN_PRIV not installed"
+        notify "WireGuard" "$VPN_PRIV not available - set VPN_PRIV in $SELF"
+        exit 1
+    fi
+}
 
-rc=0
-run_wg "$action" "$VPN_CONF" 2>>"$LOG" || rc=$?
+# The real work. Run where a terminal is attached so authentication can happen.
+mode_run() {
+    local action step out rc
+    checks
 
-if [ "$rc" -eq 0 ]; then
-    log "wg-quick $action succeeded"
-else
-    log "wg-quick $action failed rc=$rc - last lines in $LOG"
-    notify "WireGuard" "wg-quick $action failed (rc=$rc), see $LOG"
-fi
+    if [ -d "/sys/class/net/$IFACE" ]; then
+        action="down"
+        step="Disconnecting $IFACE"
+    else
+        action="up"
+        step="Connecting $IFACE"
+    fi
+    log "toggling: $VPN_PRIV wg-quick $action $VPN_CONF (iface $IFACE)"
+    printf '==> %s: %s wg-quick %s %s\n' "$step" "$VPN_PRIV" "$action" "$VPN_CONF"
 
-if ! pkill -SIGRTMIN+12 waybar; then
-    log "no waybar process matched SIGRTMIN+12 - icon not refreshed"
-fi
+    out=""
+    rc=0
+    out=$(run_wg "$action" "$VPN_CONF" 2>&1) || rc=$?
+    if [ -n "$out" ]; then
+        printf '%s\n' "$out"
+        printf '%s\n' "$out" >>"$LOG"
+    fi
+    if [ "$rc" -eq 0 ]; then
+        log "wg-quick $action succeeded"
+        printf '==> wg-quick %s succeeded\n' "$action"
+        notify "WireGuard" "$IFACE $action ok"
+    else
+        log "wg-quick $action failed rc=$rc"
+        printf '==> wg-quick %s FAILED (rc=%s), log: %s\n' "$action" "$rc" "$LOG"
+        notify "WireGuard" "$IFACE $action failed rc=$rc, see $LOG"
+    fi
 
-exit "$rc"
+    if ! pkill -SIGRTMIN+12 waybar; then
+        log "no waybar process matched SIGRTMIN+12 - icon not refreshed"
+    fi
+
+    # stdin is the terminal window: only pause when one is really attached, and a
+    # closed stdin is fine either way - the window goes away regardless.
+    if [ -t 0 ]; then
+        printf '\nPress Enter to close this window. '
+        read -r _ || printf 'stdin closed\n'
+    fi
+
+    exit "$rc"
+}
+
+# What waybar calls: no tty here, so hand everything to a terminal window.
+mode_launch() {
+    local term
+    checks
+
+    if [ "$VPN_TERM" = "none" ]; then
+        log "VPN_TERM=none - authenticating without a terminal window"
+        mode_run
+    fi
+
+    if [ "$VPN_TERM" = "auto" ]; then
+        term=$(pick_terminal)
+    elif command -v "$VPN_TERM" >/dev/null; then
+        term="$VPN_TERM"
+    else
+        term=""
+    fi
+
+    if [ -z "$term" ]; then
+        log "no terminal emulator found (tried foot alacritty ghostty kitty wezterm xterm) - set VPN_TERM"
+        notify "WireGuard" "No terminal to authenticate in - set VPN_TERM"
+        exit 1
+    fi
+
+    log "opening $term to authenticate the wg-quick toggle"
+    open_terminal "$term" "$SELF" run
+}
+
+case "${1:-launch}" in
+    run) mode_run ;;
+    launch) mode_launch ;;
+    *)
+        printf 'usage: %s [launch|run]\n' "$SELF" >&2
+        exit 2
+        ;;
+esac

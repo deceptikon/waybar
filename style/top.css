@@ -192,11 +192,20 @@ window#waybar:not(.mode-default) #titlebox-row {
         background-color: @accent_peach;
     }
 }
+@keyframes vpn-on {
+    from {
+        color: @accent_yellow;
+    }
+    to {
+        color: @accent_red;
+    }
+}
 
 #custom-wifi.vpn-on {
     color: #ff0000;
-    background: @accent_red;
+    background: @accent_yellow;
     border: 1px solid @accent_pink;
+    animation: vpn-on 2s linear infinite alternate;
 }
 #custom-lang {
     font-size: 13px;

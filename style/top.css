@@ -175,9 +175,9 @@ window#waybar:not(.mode-default) #titlebox-row {
    differ by colour and that was unreadable at a glance. Declared last so these
    win over #custom-wifi.connected at equal specificity (id + one class). */
 #custom-wifi.vpn-on {
-    color: #11111b;
-    background: @accent_mauve;
-    border: 1px solid @accent_rose;
+    color: #ffffff;
+    background: @accent_red;
+    border: 1px solid @accent_pink;
 }
 #custom-wifi.vpn-pending {
     color: @accent_yellow;

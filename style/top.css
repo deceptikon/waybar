@@ -171,6 +171,14 @@ window#waybar:not(.mode-default) #titlebox-row {
     background: @highlight_bg;
     border: 1px solid @highlight_border;
 }
+/* WireGuard tunnel state, appended to the wifi icon by wifi-indicator.sh.
+   Declared after the wifi states so it wins at equal specificity. */
+#custom-wifi.vpn-on {
+    color: @accent_mauve;
+}
+#custom-wifi.vpn-pending {
+    color: @accent_yellow;
+}
 
 #custom-lang {
     font-size: 13px;

@@ -142,10 +142,14 @@
     "exec": "~/.config/waybar/scripts/utils/wifi-indicator.sh",
     "return-type": "json",
     "format": "{}",
-    "on-click": "~/.config/waybar/scripts/utils/wifi-toggle.sh",
-    "on-click-right": "nm-connection-editor",
+    "menu": "on-click",
+    "menu-file": "~/.config/waybar/feeds/wifi-menu.xml",
+    "menu-actions": {
+      "wifi-toggle": "~/.config/waybar/scripts/utils/wifi-toggle.sh",
+      "wifi-rescan": "~/.config/waybar/scripts/utils/wifi-rescan.sh",
+      "vpn-toggle": "~/.config/waybar/scripts/utils/wg-vpn.sh"
+    },
     "interval": 30,
     "signal": 12
-  },
-
+  }
 }

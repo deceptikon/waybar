@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkMenu" id="menu">
+    <child>
+      <object class="GtkMenuItem" id="wifi-header">
+        <property name="label">Wi-Fi</property>
+        <property name="sensitive">false</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="wifi-toggle">
+        <property name="label">Enable / disable radio</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="wifi-rescan">
+        <property name="label">Rescan networks</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="delimiter-vpn"/>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="vpn-header">
+        <property name="label">WireGuard VPN</property>
+        <property name="sensitive">false</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="vpn-toggle">
+        <property name="label">Connect / disconnect</property>
+      </object>
+    </child>
+  </object>
+</interface>

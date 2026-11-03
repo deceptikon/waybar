@@ -1,7 +1,8 @@
 .aider*
 .qwen/
 
-feeds/
+feeds/*
+!feeds/wifi-menu.xml
 logs/
 
 __pycache__/

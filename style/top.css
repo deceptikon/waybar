@@ -174,11 +174,6 @@ window#waybar:not(.mode-default) #titlebox-row {
 /* WireGuard tunnel state. A filled pill, because the wifi states above only
    differ by colour and that was unreadable at a glance. Declared last so these
    win over #custom-wifi.connected at equal specificity (id + one class). */
-#custom-wifi.vpn-on {
-    color: #ffffff;
-    background: @accent_red;
-    border: 1px solid @accent_pink;
-}
 #custom-wifi.vpn-pending {
     color: @accent_yellow;
     background: rgba(249, 226, 175, 0.18);
@@ -198,6 +193,11 @@ window#waybar:not(.mode-default) #titlebox-row {
     }
 }
 
+#custom-wifi.vpn-on {
+    color: #ff0000;
+    background: @accent_red;
+    border: 1px solid @accent_pink;
+}
 #custom-lang {
     font-size: 13px;
     font-weight: 600;

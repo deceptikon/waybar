@@ -11,9 +11,21 @@ VPN_IF="${VPN_IF:-$(basename "$VPN_CONF" .conf)}"
 VPN_IF="${VPN_IF:0:15}"
 # nf-md-vpn (U+F0582). Export VPN_GLYPH to swap it if the font renders tofu.
 VPN_GLYPH="${VPN_GLYPH:-󰖂}"
+# Written by wg-vpn.sh while a toggle is in flight.
+VPN_STATE_FILE="${VPN_STATE_FILE:-/tmp/waybar_vpn_state}"
 
+# A toggle in progress outranks the sysfs read: the bar should react the moment
+# the menu item is clicked, not only when the kernel link appears.
 vpn_state() {
-    local dir="/sys/class/net/$VPN_IF" state=""
+    local dir="/sys/class/net/$VPN_IF" state="" age
+    if [ -f "$VPN_STATE_FILE" ]; then
+        age=$(( $(date +%s) - $(stat -c %Y "$VPN_STATE_FILE") ))
+        if [ "$age" -lt 180 ]; then
+            printf busy
+            return
+        fi
+        printf '%s vpn-indicator: stale toggle state (%ss old) ignored: %s\n' "$(date -Iseconds)" "$age" "$VPN_STATE_FILE" >>"$ERRLOG"
+    fi
     if [ ! -d "$dir" ]; then
         printf off
         return
@@ -48,6 +60,7 @@ fi
 vstate=$(vpn_state)
 text="$wifi_icon"
 case "$vstate" in
+    busy)    vpn_class="vpn-connecting"; text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN toggle in progress ($VPN_IF)" ;;
     on)      vpn_class="vpn-on";      text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN up ($VPN_IF)" ;;
     pending) vpn_class="vpn-pending"; text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN link $VPN_IF exists but has no carrier" ;;
     *)       vpn_class="vpn-off";     vpn_tip="VPN down" ;;

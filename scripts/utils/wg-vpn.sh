@@ -17,7 +17,12 @@ set -euo pipefail
 SELF="$(readlink -f "$0")"
 LOG=/tmp/waybar_vpn.log
 VPN_CONF="${VPN_CONF:-$HOME/vpn.conf}"
-VPN_PRIV="${VPN_PRIV:-pkexec}"
+# sudo authenticates as the invoking user, so it asks for one password. pkexec
+# authenticates as any admin (polkit returns every admin identity when the
+# action needs auth_admin), which is why it listed "myeel" and "alex" and asked
+# "Choose identity to authenticate as". Keep VPN_PRIV=pkexec only if you want that.
+VPN_PRIV="${VPN_PRIV:-sudo}"
+STATE_FILE="${VPN_STATE_FILE:-/tmp/waybar_vpn_state}"
 VPN_TERM="${VPN_TERM:-auto}"
 IFACE="${VPN_IF:-$(basename "$VPN_CONF" .conf)}"
 IFACE="${IFACE:0:15}"
@@ -107,9 +112,20 @@ mode_run() {
     log "toggling: $VPN_PRIV wg-quick $action $VPN_CONF (iface $IFACE)"
     printf '==> %s: %s wg-quick %s %s\n' "$step" "$VPN_PRIV" "$action" "$VPN_CONF"
 
+    # Publish the in-progress state and redraw now, so the icon changes colour
+    # while authenticating/connecting instead of only once the tunnel exists.
+    # wifi-indicator.sh ages this out if we die before removing it.
+    printf '%s %s\n' "$action" "$IFACE" > "$STATE_FILE"
+    trap 'rm -f "$STATE_FILE"' EXIT
+    if ! pkill -SIGRTMIN+12 waybar; then
+        log "no waybar process matched SIGRTMIN+12 - connecting state not drawn"
+    fi
+
     out=""
     rc=0
     out=$(run_wg "$action" "$VPN_CONF" 2>&1) || rc=$?
+    rm -f "$STATE_FILE"
+    trap - EXIT
     if [ -n "$out" ]; then
         printf '%s\n' "$out"
         printf '%s\n' "$out" >>"$LOG"

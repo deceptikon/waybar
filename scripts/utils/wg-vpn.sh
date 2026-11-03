@@ -53,7 +53,7 @@ run_wg() {
 # First available terminal emulator; prints nothing when there is none.
 pick_terminal() {
     local t
-    for t in foot alacritty ghostty kitty wezterm xterm; do
+    for t in ghostty foot alacritty kitty wezterm xterm; do
         if command -v "$t" >/dev/null; then
             printf '%s' "$t"
             break
@@ -157,7 +157,7 @@ mode_launch() {
     fi
 
     if [ -z "$term" ]; then
-        log "no terminal emulator found (tried foot alacritty ghostty kitty wezterm xterm) - set VPN_TERM"
+        log "no terminal emulator found (tried ghostty foot alacritty kitty wezterm xterm) - set VPN_TERM"
         notify "WireGuard" "No terminal to authenticate in - set VPN_TERM"
         exit 1
     fi

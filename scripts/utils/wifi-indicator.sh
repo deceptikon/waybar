@@ -43,11 +43,13 @@ else
     fi
 fi
 
+# The tunnel glyph is full-size, not <sup>: superscript at 15px rendered too
+# small to notice, so an active VPN looked like a plain wifi icon.
 vstate=$(vpn_state)
 text="$wifi_icon"
 case "$vstate" in
-    on)      vpn_class="vpn-on";      text+="<sup>$VPN_GLYPH</sup>"; vpn_tip="VPN up ($VPN_IF)" ;;
-    pending) vpn_class="vpn-pending"; text+="<sup>$VPN_GLYPH</sup>"; vpn_tip="VPN link $VPN_IF exists but has no carrier" ;;
+    on)      vpn_class="vpn-on";      text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN up ($VPN_IF)" ;;
+    pending) vpn_class="vpn-pending"; text="$wifi_icon$VPN_GLYPH"; vpn_tip="VPN link $VPN_IF exists but has no carrier" ;;
     *)       vpn_class="vpn-off";     vpn_tip="VPN down" ;;
 esac
 

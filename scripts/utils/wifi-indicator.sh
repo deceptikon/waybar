@@ -33,9 +33,17 @@ vpn_state() {
     if [ -r "$dir/operstate" ]; then
         state=$(cat "$dir/operstate" 2>>"$ERRLOG")
     fi
+    # Check for connected state - include 'up' and 'unknown' which are both valid connected states
     case "$state" in
-        up|unknown) printf on ;;
-        *) printf pending ;;
+        up|unknown) 
+            # Additional check: verify the interface has an IP address and carrier to confirm it's truly connected
+            if [ -f "$dir/carrier" ] && [ "$(cat "$dir/carrier" 2>>"$ERRLOG")" = "1" ]; then
+                printf on
+            else
+                printf pending
+            fi
+            ;;
+        *) printf pending ;;     
     esac
 }
 

@@ -128,7 +128,7 @@
     "format-connected": "\uf294",
     "format-connected-battery": "\uf294<sub>{device_battery_percentage}%</sub>",
     "menu": "on-click",
-    "menu-file": "~/.config/waybar/feeds/bt-menu.xml",
+    "menu-file": "~/.config/waybar/feeds/btmenu.xml",
     "menu-actions": {
       "toggle": "~/.config/waybar/scripts/utils/bt-toggle.sh",
       "manager": "blueman-manager"

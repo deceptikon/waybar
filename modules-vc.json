@@ -84,10 +84,10 @@
     "menu": "on-click",
     "menu-file": "~/.config/waybar/feeds/powermenu.xml",
     "menu-actions": {
-      "shutdown": "shutdown",
-      "reboot": "reboot",
-      "suspend": "systemctl suspend",
-      "hibernate": "systemctl hibernate"
+      "shutdown": "loginctl shutdown",
+      "reboot": "loginctl reboot",
+      "suspend": "loginctl suspend",
+      "": "loginctl hibernate"
     }
   }
 }

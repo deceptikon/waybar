@@ -1,22 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
+source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
 
 echo "=== Waybar/Sway Configuration Verification ==="
 echo
 
-# Check JSON validity
 echo "1. Checking Waybar config JSON..."
-if python3 -m json.tool ~/.config/waybar/config > /dev/null 2>&1; then
+if python3 -m json.tool "$WAYBAR_HOME/config" > /dev/null 2>&1; then
   echo "   ✓ JSON is valid"
 else
   echo "   ✗ JSON has errors:"
-  python3 -m json.tool ~/.config/waybar/config 2>&1 | tail -5
+  python3 -m json.tool "$WAYBAR_HOME/config" 2>&1 | tail -5
 fi
 echo
 
-# Check scripts
 echo "2. Checking scripts..."
-for script in checkupdates.sh fan-speed.sh lang-monitor.sh shutdown-dmenu.sh toggleDunst.sh toggle-vpn.sh; do
-  path=~/.config/waybar/scripts/$script
+for script in checkupdates.sh lang-monitor.sh shutdown-dmenu.sh; do
+  path="$WAYBAR_HOME/scripts/$script"
   if [ -x "$path" ]; then
     echo "   ✓ $script"
   else
@@ -25,10 +24,9 @@ for script in checkupdates.sh fan-speed.sh lang-monitor.sh shutdown-dmenu.sh tog
 done
 echo
 
-# Check for removed files
 echo "3. Checking removed files..."
 for file in waybar-ddcutil.py config-right; do
-  if [ -f ~/.config/waybar/$file ]; then
+  if [ -f "$WAYBAR_HOME/$file" ]; then
     echo "   ✗ $file still exists (should be removed)"
   else
     echo "   ✓ $file removed"
@@ -36,11 +34,10 @@ for file in waybar-ddcutil.py config-right; do
 done
 echo
 
-# Check Sway dependencies
-echo "4. Checking Sway exec programs..."
+echo "4. Checking Sway dependencies..."
 missing=()
 for cmd in nm-applet udiskie dunst wob swaylock swayidle; do
-  if command -v $cmd >>/tmp/waybar_errors.log 2>&1; then
+  if command -v "$cmd" >>"$ERRLOG" 2>&1; then
     echo "   ✓ $cmd"
   else
     echo "   ⚠ $cmd (not found)"
@@ -49,10 +46,9 @@ for cmd in nm-applet udiskie dunst wob swaylock swayidle; do
 done
 echo
 
-# Check optional programs
 echo "5. Optional programs (disabled in config)..."
 for cmd in autotiling gammastep poweralertd libinput-gestures ydotoold polkit-gnome-authentication-agent-1; do
-  if command -v $cmd >>/tmp/waybar_errors.log 2>&1; then
+  if command -v "$cmd" >>"$ERRLOG" 2>&1; then
     echo "   ✓ $cmd (available, currently disabled)"
   else
     echo "   ✗ $cmd (not installed)"
@@ -60,7 +56,6 @@ for cmd in autotiling gammastep poweralertd libinput-gestures ydotoold polkit-gn
 done
 echo
 
-# Summary
 echo "=== Summary ==="
 if [ ${#missing[@]} -eq 0 ]; then
   echo "✓ All required programs found"
@@ -69,5 +64,3 @@ else
   echo "  Install with: yay -S ${missing[*]}"
 fi
 echo
-echo "Backup location: ~/.config/backup_20260108_162957/"
-echo "Changes documented in: ~/.config/CHANGES_SUMMARY.md"

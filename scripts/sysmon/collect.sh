@@ -2,6 +2,8 @@
 # collect.sh — RAW samples only. No JSON, no rates, no formatting.
 set -euo pipefail
 
+source "$(cd "$(dirname "$0")" && pwd)/../lib/common.sh"
+
 echo "TIMESTAMP $(date +%s.%N)"
 
 echo "CPU_SNAP_1"
@@ -18,15 +20,15 @@ cat /proc/diskstats
 
 echo "DF_RAW"
 # 1-byte blocks for stable math in mapper
-df -B1 -P / 2>>/tmp/waybar_errors.log || df -P /
+df -B1 -P / 2>>"$ERRLOG" || df -P /
 
 echo "NET_RAW"
 cat /proc/net/dev
 
 echo "SENSORS_JSON"
-if ! sensors -j 2>>/tmp/waybar_errors.log; then
+if ! sensors -j 2>>"$ERRLOG"; then
   echo "{}"
-  echo "collect: sensors -j failed: $?" >>/tmp/waybar_errors.log
+  log_error "collect" "sensors -j failed: $?"
 fi
 
 echo "GPU_RAW"

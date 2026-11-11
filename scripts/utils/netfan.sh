@@ -1,9 +1,10 @@
-#!/bin/bash
-data=$(cat /tmp/sysmon.json 2>>/tmp/waybar_errors.log || echo '{}')
-eval "$(jq -r '
-  [.net.rx_speed // 0, .net.tx_speed // 0, .temp.fan1 // 0]
-  | @sh "rx=\(.[0]); tx=\(.[1]); fan=\(.[2])"
-' <<< "$data")"
+#!/usr/bin/env bash
+source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+
+data=$(cat "$WAYBAR_HOME/feeds/sysmon.json" 2>>"$ERRLOG" || echo '{}')
+read -r rx tx fan <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0, .temp.fan1 // 0] | @tsv' <<< "$data")"
+
+: "${rx:=0}"; : "${tx:=0}"; : "${fan:=0}"
 
 fmt_spd() {
   local b=$1
@@ -22,4 +23,4 @@ elif [ "$total" -gt 512000 ]; then cls="medium"
 else cls="good"; fi
 
 text=$(printf "↓%s ↑%s\n󰈐 %s RPM" "$rx_fmt" "$tx_fmt" "$fan")
-jq -nc --arg text "$text" --arg cls "$cls" '{text: $text, class: $cls}'
+emit_json "$text" "$cls"

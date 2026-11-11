@@ -5,9 +5,8 @@
 set -euo pipefail
 export LC_ALL=C
 
-WAYBAR_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
-FEEDS="${WAYBAR_HOME}/feeds"
-LOG_DIR="${WAYBAR_HOME}/logs"
+source "$(cd "$(dirname "$0")" && pwd)/../lib/common.sh"
+
 ENV_FILE="${WAYBAR_HOME}/sysmon.env"
 SYSMON_LOG="${SYSMON_LOG:-${LOG_DIR}/sysmon.log}"
 STATE_FILE="${FEEDS}/.state"
@@ -15,6 +14,7 @@ STATE_FILE="${FEEDS}/.state"
 mkdir -p "$FEEDS" "$LOG_DIR"
 
 if [ -f "$ENV_FILE" ]; then
+  # shellcheck disable=SC1091
   . "$ENV_FILE"
 fi
 
@@ -288,7 +288,7 @@ cpu_re="${SYSMON_SENSORS_CPU_REGEX:-k10temp|zenpower|coretemp}"
 gpu_temp_c=0 gpu_freq=0 gpu_power=0 cpu_temp=0
 
 if [ -n "$sensors_json" ]; then
-  if jq empty <<< "$sensors_json" 2>>"$SYSMON_LOG"; then
+  if jq empty <<< "$sensors_json" 2>>"$SYSMON_LOG" >/dev/null; then
     gpu_temp_c=$(jq --arg re "$gpu_re" '
       [to_entries[] | select(.key|test($re)) | .value]
       | .[0].edge.temp1_input // .[0].junction.temp1_input // 0 | floor

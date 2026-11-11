@@ -5,18 +5,17 @@ set -uo pipefail
 export LC_ALL=C
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
-CFG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
-WAYBAR_ROOT="$(cd "$DIR/../.." && pwd)"
 
 # shellcheck disable=SC1091
-[ -f "$CFG_HOME/sysmon.env" ] && . "$CFG_HOME/sysmon.env"
+source "$DIR/../lib/common.sh"
 # shellcheck disable=SC1091
-[ -f "$WAYBAR_ROOT/sysmon.env" ] && . "$WAYBAR_ROOT/sysmon.env"
+[ -f "$WAYBAR_HOME/sysmon.env" ] && . "$WAYBAR_HOME/sysmon.env"
+# shellcheck disable=SC1091
+[ -f "$(cd "$DIR/../.." && pwd)/sysmon.env" ] && . "$(cd "$DIR/../.." && pwd)/sysmon.env"
 # shellcheck disable=SC1091
 source "$DIR/../lib/draw-module.sh"
 
-FEEDS="${SYSMON_FEEDS:-$CFG_HOME/feeds}"
-LOG_DIR="${SYSMON_LOG_DIR:-$CFG_HOME/logs}"
+FEEDS="${SYSMON_FEEDS:-$WAYBAR_HOME/feeds}"
 mkdir -p "$FEEDS" "$LOG_DIR"
 LOG="$LOG_DIR/sysmon.log"
 log() { printf '%s formatter: %s\n' "$(date -Iseconds)" "$*" >>"$LOG"; }
@@ -57,41 +56,30 @@ safe_mod() {
   mv "$FEEDS/${name}.json.tmp" "$FEEDS/${name}.json"
 }
 
-eval "$(jq -r '
-  [
-    (.gpu.busy_pct // 0 | floor),
-    (.gpu.temp_c // 0 | floor),
-    (.gpu.freq // 0 | floor),
-    (.cpu.avg // 0 | floor),
-    (.temp.cpu_c // 0),
-    (.ram.used_kb // 0 | floor),
-    (.ram.total_kb // 0 | floor),
-    (.ram.used_pct // 0 | floor),
-    (.ram.swap_used_kb // 0 | floor),
-    (.disk.read_speed // 0 | floor),
-    (.disk.write_speed // 0 | floor),
-    (.disk.used_pct // 0 | floor),
-    (.disk.used_bytes // 0 | floor),
-    (.disk.total_human // "?"),
-    (.temp.fan1 // 0 | floor),
-    (.net.rx_speed // 0 | floor),
-    (.net.tx_speed // 0 | floor)
-  ] | @sh "
-    gpu_pct=\(.[0]); gpu_temp=\(.[1]); gpu_freq=\(.[2]);
-    cpu_avg=\(.[3]); cpu_tc=\(.[4]);
-    ram_ukb=\(.[5]); ram_tkb=\(.[6]); ram_pct=\(.[7]); ram_swp=\(.[8]);
-    disk_r=\(.[9]); disk_w=\(.[10]); disk_up=\(.[11]); disk_used_b=\(.[12]);
-    disk_th=\(.[13]);
-    fan1=\(.[14]); net_rx=\(.[15]); net_tx=\(.[16])
-  "
-' <<< "$data")" || { log "field extract failed"; exit 0; }
+gpu_pct=$(jq -r '(.gpu.busy_pct // 0 | floor)' <<< "$data")
+gpu_temp=$(jq -r '(.gpu.temp_c // 0 | floor)' <<< "$data")
+gpu_freq=$(jq -r '(.gpu.freq // 0 | floor)' <<< "$data")
+cpu_avg=$(jq -r '(.cpu.avg // 0 | floor)' <<< "$data")
+cpu_tc=$(jq -r '(.temp.cpu_c // 0)' <<< "$data")
+ram_ukb=$(jq -r '(.ram.used_kb // 0 | floor)' <<< "$data")
+ram_tkb=$(jq -r '(.ram.total_kb // 0 | floor)' <<< "$data")
+ram_pct=$(jq -r '(.ram.used_pct // 0 | floor)' <<< "$data")
+ram_swp=$(jq -r '(.ram.swap_used_kb // 0 | floor)' <<< "$data")
+disk_r=$(jq -r '(.disk.read_speed // 0 | floor)' <<< "$data")
+disk_w=$(jq -r '(.disk.write_speed // 0 | floor)' <<< "$data")
+disk_up=$(jq -r '(.disk.used_pct // 0 | floor)' <<< "$data")
+disk_used_b=$(jq -r '(.disk.used_bytes // 0 | floor)' <<< "$data")
+disk_th=$(jq -r '(.disk.total_human // "?")' <<< "$data")
+fan1=$(jq -r '(.temp.fan1 // 0 | floor)' <<< "$data")
+net_rx=$(jq -r '(.net.rx_speed // 0 | floor)' <<< "$data")
+net_tx=$(jq -r '(.net.tx_speed // 0 | floor)' <<< "$data")
 
-gpu_pct=${gpu_pct:-0}; gpu_temp=${gpu_temp:-0}; gpu_freq=${gpu_freq:-0}
-cpu_avg=${cpu_avg:-0}; cpu_tc=${cpu_tc:-0}
-ram_ukb=${ram_ukb:-0}; ram_tkb=${ram_tkb:-0}; ram_pct=${ram_pct:-0}; ram_swp=${ram_swp:-0}
-disk_r=${disk_r:-0}; disk_w=${disk_w:-0}; disk_up=${disk_up:-0}; disk_used_b=${disk_used_b:-0}
-disk_th=${disk_th:-?}
-fan1=${fan1:-0}; net_rx=${net_rx:-0}; net_tx=${net_tx:-0}
+: "${gpu_pct:=0}" "${gpu_temp:=0}" "${gpu_freq:=0}"
+: "${cpu_avg:=0}" "${cpu_tc:=0}"
+: "${ram_ukb:=0}" "${ram_tkb:=0}" "${ram_pct:=0}" "${ram_swp:=0}"
+: "${disk_r:=0}" "${disk_w:=0}" "${disk_up:=0}" "${disk_used_b:=0}"
+: "${disk_th:=?}"
+: "${fan1:=0}" "${net_rx:=0}" "${net_tx:=0}"
 
 # ── 1. GPU ─────────────────────────────────────────────────────────────────
 mod_gpu() {

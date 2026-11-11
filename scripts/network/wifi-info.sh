@@ -1,13 +1,12 @@
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env bash
+source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
 export LC_ALL=C
 
-# Net info — two-row output: SSID (bold large) + speeds (small italic below)
-wifi_info=$(nmcli -t -f active,ssid,signal,device dev wifi 2>>/tmp/waybar_errors.log \
-  | grep '^yes' | head -1 || echo "Command failed: [wifi] $?" >>/tmp/waybar_errors.log)
+wifi_info=$(nmcli -t -f active,ssid,signal,device dev wifi 2>>"$ERRLOG" \
+  | grep '^yes' | head -1 || true)
 
 if [ -z "$wifi_info" ]; then
-  jq -n --compact-output '{"text": "", "class": "disconnected"}'
+  emit_json "" "disconnected"
   exit 0
 fi
 
@@ -16,22 +15,23 @@ signal=$(printf '%s' "$wifi_info" | cut -d: -f3)
 iface=$(printf '%s' "$wifi_info" | cut -d: -f4)
 
 [ ${#ssid} -gt 16 ] && ssid="${ssid:0:13}…"
+signal=${signal:-0}
 
-# Signal-based class for info tile
-if   [ "$signal" -ge 80 ] 2>>/tmp/waybar_errors.log; then sig_cls="good"
-elif [ "$signal" -ge 60 ] 2>>/tmp/waybar_errors.log; then sig_cls="medium"
-elif [ "$signal" -ge 40 ] 2>>/tmp/waybar_errors.log; then sig_cls="warning"
-elif [ "$signal" -ge 20 ] 2>>/tmp/waybar_errors.log; then sig_cls="critical"
+if   [ "$signal" -ge 80 ]; then sig_cls="good"
+elif [ "$signal" -ge 60 ]; then sig_cls="medium"
+elif [ "$signal" -ge 40 ]; then sig_cls="warning"
+elif [ "$signal" -ge 20 ]; then sig_cls="critical"
 else sig_cls="disconnected"; fi
 
-# Speed sampling — read real-time rate from background poller cache
 rx_fmt="0B"; tx_fmt="0B"; spd_cls="$sig_cls"
 if [ -n "$iface" ] && [ "$iface" != "lo" ]; then
   rx_speed=0
   tx_speed=0
-  if [ -f "$HOME/.config/waybar/feeds/sysmon.json" ]; then
-    read -r rx_speed tx_speed <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0] | @tsv' "$HOME/.config/waybar/feeds/sysmon.json" 2>>/tmp/waybar_errors.log || echo "0 0")"
+  sysmon="$WAYBAR_HOME/feeds/sysmon.json"
+  if [ -f "$sysmon" ]; then
+    read -r rx_speed tx_speed <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0] | @tsv' "$sysmon" 2>>"$ERRLOG")"
   fi
+  read -r rx_speed tx_speed <<< "$rx_speed $tx_speed"
 
   total=$((rx_speed + tx_speed))
   if   [ "$total" -gt 5242880 ]; then spd_cls="critical"
@@ -53,25 +53,28 @@ if [ -n "$iface" ] && [ "$iface" != "lo" ]; then
   tx_fmt=$(fmt_spd "$tx_speed")
 fi
 
-# Worst-of class for info tile
 rank_cls() {
   case "$1" in
-    good) echo 0;; medium) echo 1;; warning) echo 2;; critical) echo 3;; *) echo 5;;
+    good) echo 0;;
+    medium) echo 1;;
+    warning) echo 2;;
+    critical) echo 3;;
+    *) echo 5;;
   esac
 }
 unrank_cls() {
   case "$1" in
-    0) echo good;; 1) echo medium;; 2) echo warning;; 3) echo critical;; *) echo disconnected;;
+    0) echo good;;
+    1) echo medium;;
+    2) echo warning;;
+    3) echo critical;;
+    *) echo disconnected;;
   esac
 }
 r_sig=$(rank_cls "$sig_cls"); r_spd=$(rank_cls "$spd_cls")
-final_cls=$(unrank_cls $(if [ "$r_sig" -ge "$r_spd" ]; then echo "$r_sig"; else echo "$r_spd"; fi))
+final_cls=$(unrank_cls "$(if [ "$r_sig" -ge "$r_spd" ]; then echo "$r_sig"; else echo "$r_spd"; fi)")
 
-# Two-row Pango markup
 text=$(printf "<b>%s</b>\n<span size='small'>↓%s ↑%s</span>" \
   "${ssid^^}" "$rx_fmt" "$tx_fmt")
 
-jq -n --compact-output \
-  --arg text "$text" \
-  --arg cls "$final_cls" \
-  '{text: $text, class: $cls}'
+emit_json "$text" "$final_cls"

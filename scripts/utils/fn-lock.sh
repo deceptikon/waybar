@@ -1,17 +1,17 @@
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env bash
+source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
 
-STATE_FILE="$HOME/.fn_lock_state"
+STATE_FILE="$RUNTIME_DIR/fn_lock_state"
 
-if [ "${1:-}" = "refresh" ]; then
-    if [ ! -f "$STATE_FILE" ]; then
+if [[ "${1:-}" = "refresh" ]]; then
+    if [[ ! -f "$STATE_FILE" ]]; then
         echo "0" > "$STATE_FILE"
     fi
     state=$(cat "$STATE_FILE")
-    if [ "$state" = "1" ]; then
-        jq -n --compact-output '{text:"󰌾 <sub></sub>",class:"active"}'
+    if [[ "$state" = "1" ]]; then
+        emit_json "󰌾 <sub></sub>" "active"
     else
-        jq -n --compact-output '{text:"󰌽 <sub></sub>",class:"inactive"}'
+        emit_json "󰌽 <sub></sub>" "inactive"
     fi
     exit 0
 fi

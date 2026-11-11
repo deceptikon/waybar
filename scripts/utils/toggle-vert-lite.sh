@@ -1,17 +1,17 @@
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env bash
+source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
 
-STATE_FILE="/tmp/waybar-vert-swap"
+STATE_FILE="$RUNTIME_DIR/waybar-vert-swap"
 
 VERT_PID=$(pgrep -f "waybar.*config-vertical[^-]" | head -1)
 LITE_PID=$(pgrep -f "waybar.*config-vertical-lite" | head -1)
 
-if [ -f "$STATE_FILE" ]; then
-  rm -f "$STATE_FILE"
-  [ -n "$VERT_PID" ] && kill -SIGUSR1 "$VERT_PID"
-  [ -n "$LITE_PID" ] && kill -SIGUSR1 "$LITE_PID"
+if [[ -f "$STATE_FILE" ]]; then
+    rm -f "$STATE_FILE"
+    [[ -n "$VERT_PID" ]] && kill -SIGUSR1 "$VERT_PID"
+    [[ -n "$LITE_PID" ]] && kill -SIGUSR1 "$LITE_PID"
 else
-  touch "$STATE_FILE"
-  [ -n "$VERT_PID" ] && kill -SIGUSR1 "$VERT_PID"
-  [ -n "$LITE_PID" ] && kill -SIGUSR1 "$LITE_PID"
+    touch "$STATE_FILE"
+    [[ -n "$VERT_PID" ]] && kill -SIGUSR1 "$VERT_PID"
+    [[ -n "$LITE_PID" ]] && kill -SIGUSR1 "$LITE_PID"
 fi

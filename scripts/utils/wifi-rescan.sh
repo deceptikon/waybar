@@ -1,23 +1,17 @@
-#!/bin/bash
-# Ask NetworkManager to re-scan the air (refreshes its AP cache) and redraw the icon.
-set -euo pipefail
+#!/usr/bin/env bash
+source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
 
-ERRLOG=/tmp/waybar_errors.log
-
-if ! command -v nmcli >/dev/null; then
-    printf "%s wifi-rescan: nmcli not found\n" "$(date -Iseconds)" >>"$ERRLOG"
+if ! command -v nmcli >/dev/null 2>&1; then
+    log_error "wifi-rescan" "nmcli not found"
     exit 1
 fi
 
 out=""
 rc=0
 out=$(nmcli device wifi rescan 2>&1) || rc=$?
-if [ "$rc" -ne 0 ]; then
-    printf "%s wifi-rescan: nmcli rc=%s: %s\n" "$(date -Iseconds)" "$rc" "$out" >>"$ERRLOG"
+if [[ "$rc" -ne 0 ]]; then
+    log_error "wifi-rescan" "nmcli rc=$rc: $out"
 fi
 
-if ! pkill -SIGRTMIN+12 waybar; then
-    printf "%s wifi-rescan: no waybar process matched SIGRTMIN+12\n" "$(date -Iseconds)" >>"$ERRLOG"
-fi
-
+signal_waybar SIGRTMIN+12
 exit "$rc"

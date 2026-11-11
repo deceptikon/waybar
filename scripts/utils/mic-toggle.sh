@@ -1,7 +1,6 @@
-#!/bin/bash
-# Toggle microphone mute state
+#!/usr/bin/env bash
+source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
 
-#amixer -q sset Capture toggle
 wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 sleep 0.1
-pkill -SIGRTMIN+13 waybar || dunstify "Command failed: [mic]"
+signal_waybar SIGRTMIN+13 || dunstify "Command failed: [mic]"

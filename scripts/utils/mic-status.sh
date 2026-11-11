@@ -1,9 +1,8 @@
-#!/bin/bash
-# Returns JSON for waybar custom/mic module
-# active = mic is ON (unmuted), inactive = mic is OFF (muted)
+#!/usr/bin/env bash
+source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
 
-if wpctl get-volume @DEFAULT_AUDIO_SOURCE@| grep -q '\[MUTED\]'; then
-    echo '{"text": "󰍭", "class": "inactive", "tooltip": "Microphone is MUTED (click to unmute)"}'
+if wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q '\[MUTED\]'; then
+    emit_json "󰍭" "inactive" "Microphone is MUTED (click to unmute)"
 else
-    echo '{"text": "󰍬", "class": "active", "tooltip": "Microphone is ON (click to mute)"}'
+    emit_json "󰍬" "active" "Microphone is ON (click to mute)"
 fi

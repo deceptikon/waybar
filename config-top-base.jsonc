@@ -38,9 +38,5 @@
     "tooltip": false,
     "on-click": "~/.config/waybar/scripts/utils/toggle-vert-lite.sh",
     "interval": 86400
-  },
-  "tray": {
-    "icon-size": 20,
-    "spacing": 10
   }
 }

@@ -6,8 +6,7 @@
       "group/bright",
       "custom/keylight",
       "battery",
-      "custom/toggle-vert-lite",
-      "custom/TURNEDOFF_powerbtn"
+      "custom/toggle-vert-lite"
     ],
     "include": "config-top-base.jsonc"
   },

@@ -16,7 +16,7 @@
       "modules": ["custom/dunst", "custom/ext-display"]
     },
     "modules-right": [
-      "sway/workspaces#vert",
+      "sway/workspaces",
       "custom/ollama",
       "custom/llama",
       "custom/checkupdates",

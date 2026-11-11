@@ -48,7 +48,7 @@
       "persistent-workspaces": {
         "0": [],
         "1": ["eDP-1", "HDMI-A-1"],
-        "2": ["HDMI-A-1"],
+        "2": ["HDMI-A-1"]
       }
     },
     "tray": {

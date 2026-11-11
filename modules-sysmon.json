@@ -5,7 +5,7 @@
     "modules": ["custom/qwen-gpu-icon", "custom/qwen-gpu"]
   },
   "custom/qwen-gpu": {
-    "exec": "tail -F ~/.config/waybar/feeds/gpu.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh gpu",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -20,7 +20,7 @@
     "modules": ["custom/qwen-cpu-icon", "custom/qwen-cpu"]
   },
   "custom/qwen-cpu": {
-    "exec": "tail -F ~/.config/waybar/feeds/cpu.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh cpu",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -35,7 +35,7 @@
     "modules": ["custom/qwen-ram-icon", "custom/qwen-ram"]
   },
   "custom/qwen-ram": {
-    "exec": "tail -F ~/.config/waybar/feeds/ram.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh ram",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -50,7 +50,7 @@
     "modules": ["custom/qwen-ssd-icon", "custom/qwen-ssd"]
   },
   "custom/qwen-ssd": {
-    "exec": "tail -F ~/.config/waybar/feeds/ssd.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh ssd",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -65,7 +65,7 @@
     "modules": ["custom/qwen-netfan-icon", "custom/qwen-netfan"]
   },
   "custom/qwen-netfan": {
-    "exec": "tail -F ~/.config/waybar/feeds/netfan.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh netfan",
     "format": "{}",
     "return-type": "json",
     "justify": "center",

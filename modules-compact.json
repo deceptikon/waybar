@@ -1,6 +1,6 @@
 {
   "custom/compact-gpu": {
-    "exec": "tail -F ~/.config/waybar/feeds/compact-gpu.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh compact-gpu",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -9,7 +9,7 @@
     "on-right-click": "nvtop"
   },
   "custom/compact-cpu": {
-    "exec": "tail -F ~/.config/waybar/feeds/compact-cpu.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh compact-cpu",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -18,7 +18,7 @@
     "on-right-click": "gnome-system-monitor"
   },
   "custom/compact-ram": {
-    "exec": "tail -F ~/.config/waybar/feeds/compact-ram.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh compact-ram",
     "format": "{}",
     "return-type": "json",
     "justify": "center",
@@ -27,7 +27,7 @@
     "on-right-click": "free -h"
   },
   "custom/compact-ssd": {
-    "exec": "tail -F ~/.config/waybar/feeds/compact-ssd.json",
+    "exec": "~/.config/waybar/scripts/modules/tail-feed.sh compact-ssd",
     "format": "{}",
     "return-type": "json",
     "justify": "center",

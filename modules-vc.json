@@ -29,10 +29,10 @@
     "format": "{}",
     "interval": "once",
     "return-type": "json",
-    "exec": "echo \"$(pgrep -x wf-recorder > /tmp/wf_pgrep.log && echo '{\"text\":\"󰨜 <sup>󰑊</sup>\",\"class\":\"recording\"}' || echo '{\"text\":\"󰨜 <sup></sup>\",\"class\":\"stopped\"}')\"",
+    "exec": "~/.config/waybar/scripts/modules/recorder-status.sh",
     "signal": 8,
     "on-click": "~/.config/waybar/scripts/utils/capturer.sh",
-    "on-right-click": "kill $(pgrep -x wf-recorder)",
+    "on-right-click": "~/.config/waybar/scripts/modules/run-and-signal.sh SIGRTMIN+8 pkill -INT wf-recorder",
     "tooltip": false
   },
   "custom/fnlock": {
@@ -64,7 +64,7 @@
     }
   },
   "custom/ollama": {
-    "exec": "if curl -s http://localhost:11111/api/tags > /tmp/llama_curl.log 2>&1; then models=$(OLLAMA_HOST=localhost:11111 ollama ps | awk 'NR>1 {print $1}' | paste -sd ' ' -); if [ -n \"$models\" ]; then jq -cn --arg m \"$models\" '{text:(\"󱚣 \" + $m),tooltip:(\"Running: \" + $m),class:\"on\"}'; else jq -cn '{text:\"󱚣 UP\",tooltip:\"Ollama is running (no models loaded)\",class:\"on\"}'; fi; else jq -cn '{text:\"󱚣 DOWN\",tooltip:\"Ollama is not running\",class:\"off\"}'; fi",
+    "exec": "~/.config/waybar/scripts/modules/ollama-status.sh",
     "interval": 5,
     "format": "{}",
     "return-type": "json"
@@ -77,7 +77,7 @@
     "on-click": "asusctl profile next"
   },
   "custom/powerbtn": {
-    "exec": "uptime -p | sed 's/up //' | awk '{d=0;h=0;m=0; if($0~/(day)/){match($0,/([0-9]+)[[:space:]]*day/,a);d=a[1]+0} if($0~/(hour)/){match($0,/([0-9]+)[[:space:]]*hour/,a);h=a[1]+0} if($0~/(min)/){match($0,/([0-9]+)[[:space:]]*min/,a);m=a[1]+0} t=d*24*60+h*60+m; printf \" <sub>%dh </sub> ⏻ <sub> %dm</sub>\", int(t/60), t%60}'",
+    "exec": "~/.config/waybar/scripts/modules/uptime-widget.sh",
     "interval": 60,
     "format": "{}",
     "tooltip": false,

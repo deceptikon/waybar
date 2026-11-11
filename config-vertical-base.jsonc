@@ -77,7 +77,7 @@
     "return-type": "json",
     "interval": 3600,
     "format": "{}",
-    "on-click": "wezterm -e yay -Syyu --noconfirm && yay -Sc --noconfirm && pkill -SIGRTMIN+8 waybar && notify-send 'Обновление завершено'",
+    "on-click": "wezterm -e ~/.config/waybar/scripts/modules/run-updates.sh",
     "signal": 8
   },
   "include": [

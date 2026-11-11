@@ -1,29 +1,38 @@
 #!/usr/bin/env bash
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
 PORT=22222
 CLASS="llama-server-term"
 export GGUF_PATH="$HOME/.MODELS/gemma4-coding-q4_k_m.gguf"
 
 health() {
-    local err rc
-    err=$(curl -sS -f --max-time 2 --connect-timeout 1 \
-        "http://127.0.0.1:${PORT}/health" 2>&1 >/dev/null)
+    # On success, print the JSON body (used by status()). On failure, print
+    # nothing and log the curl diagnostic to the project error log.
+    local body rc
+    body=$(curl -sS -f --max-time 2 --connect-timeout 1 \
+        "http://127.0.0.1:${PORT}/health" 2>&1)
     rc=$?
-    (( rc == 0 )) && { rm -f "$STATE_DIR/llama_health_lastlog"; return 0; }
+    if (( rc == 0 )); then
+        rm -f "$STATE_DIR/llama_health_lastlog"
+        printf '%s' "$body"
+        return 0
+    fi
 
     local now last=0
     now=$(date +%s)
-    [[ -f "$STATE_DIR/llama_health_lastlog" ]] && last=$(cat "$STATE_DIR/llama_health_lastlog")
+    if [[ -f "$STATE_DIR/llama_health_lastlog" ]]; then
+        last=$(cat "$STATE_DIR/llama_health_lastlog" 2>/dev/null || echo 0)
+    fi
+    case "$last" in ''|*[!0-9]*) last=0 ;; esac
 
     local log_cooldown=300
-    if [[ $err == *refused* || $err == *timed\ out* || $err == *Timeout* || $rc -eq 7 || $rc -eq 28 ]]; then
+    if [[ $body == *refused* || $body == *timed\ out* || $body == *Timeout* || $rc -eq 7 || $rc -eq 28 ]]; then
         if (( now - last >= log_cooldown )); then
-            log_error "llama" "down rc=$rc $err"
+            log_error "llama" "down rc=$rc $body"
             echo "$now" >"$STATE_DIR/llama_health_lastlog"
         fi
     else
-        log_error "llama" "error rc=$rc $err"
+        log_error "llama" "error rc=$rc $body"
         echo "$now" >"$STATE_DIR/llama_health_lastlog"
     fi
     return "$rc"
@@ -70,7 +79,7 @@ stop_server() {
 }
 
 refresh() {
-    signal_waybar SIGRTMIN+22 || log_error "llama" "refresh signal failed"
+    signal_waybar SIGRTMIN+22
 }
 
 case "${1:-status}" in

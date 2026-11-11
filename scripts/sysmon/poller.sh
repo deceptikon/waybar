@@ -2,10 +2,10 @@
 # poller.sh — single writer for feeds/sysmon.json + module feeds
 set -euo pipefail
 
-DIR="$(cd "$(dirname "$0")" && pwd)"
-WAYBAR_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
+DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+WAYBAR_HOME="${WAYBAR_HOME:-$(cd -- "$DIR/../.." && pwd)}"
 FEEDS="${WAYBAR_HOME}/feeds"
-LOG_DIR="${WAYBAR_HOME}/logs"
+LOG_DIR="${WAYBAR_LOG_DIR:-${WAYBAR_HOME}/logs}"
 ENV_FILE="${WAYBAR_HOME}/sysmon.env"
 SYSMON_LOG="${SYSMON_LOG:-$LOG_DIR/sysmon.log}"
 

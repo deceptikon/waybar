@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
 if ! command -v nmcli >/dev/null 2>&1; then
     log_error "wifi-rescan" "nmcli not found"

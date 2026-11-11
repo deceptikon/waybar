@@ -2,9 +2,9 @@
 
 set -u
 
-readonly LOG_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/waybar-updates.log"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
-mkdir -p "$(dirname "$LOG_FILE")"
+readonly LOG_FILE="$LOG_DIR/updates.log"
 
 tmp_dir="$(mktemp -d)"
 tmp_cleanup_status=$?
@@ -146,15 +146,3 @@ else
         }
     '
 fi
-
-
-#!/bin/bash
-#set -euo pipefail
-
-# count=$(checkupdates 2>>/tmp/waybar_errors.log | grep -cv "\[ignored\]")
-#
-# if [ "$count" -ne 0 ]; then
-#     jq -nc --arg c "$count" '{"text":" <sup>\($c)</sup>","tooltip":"\($c) updates pending","class":"notify"}'
-# else
-#     jq -nc '{"text":"  ","tooltip":"System is up-to-date","class":"good"}'
-# fi

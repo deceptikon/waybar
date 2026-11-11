@@ -1,19 +1,28 @@
 #!/usr/bin/env bash
 # scripts/lib/common.sh — shared helpers for Waybar scripts
 #
-# Usage: source "$WAYBAR_HOME/scripts/lib/common.sh"
+# Usage (from scripts/<area>/foo.sh):
+#   source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
+#
+# This library intentionally does NOT change shell options. Waybar `exec`
+# scripts must keep running when a probe (grep, iwgetid, curl, …) exits
+# non-zero; side-effect scripts can opt into `set -euo pipefail` themselves.
 
-set -euo pipefail
+# Resolve the Waybar root from this file's location, so scripts work both in
+# the repository and when deployed to ~/.config/waybar. WAYBAR_HOME may still
+# be overridden explicitly.
+LIB_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+WAYBAR_HOME="${WAYBAR_HOME:-$(cd -- "$LIB_DIR/../.." && pwd)}"
 
-# Runtime and state locations
-WAYBAR_HOME="${WAYBAR_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}/waybar}"
+# All project logs live in <waybar-root>/logs. Mutable state/PIDs live under
+# XDG_STATE_HOME / XDG_RUNTIME_DIR.
+LOG_DIR="${WAYBAR_LOG_DIR:-$WAYBAR_HOME/logs}"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/waybar"
 RUNTIME_DIR="${XDG_RUNTIME_DIR:-$STATE_DIR/run}"
-LOG_DIR="${WAYBAR_HOME}/logs"
 
-mkdir -p "$STATE_DIR" "$RUNTIME_DIR" "$LOG_DIR"
+mkdir -p "$LOG_DIR" "$STATE_DIR" "$RUNTIME_DIR"
 
-ERRLOG="$STATE_DIR/errors.log"
+ERRLOG="$LOG_DIR/errors.log"
 WAYBAR_PIDFILE="$RUNTIME_DIR/waybar.pid"
 
 # log_error TAG MESSAGE...
@@ -24,12 +33,13 @@ log_error() {
 }
 
 # signal_waybar [SIGRTMIN+N]
+# Missing waybar processes are logged but never fail the caller.
 signal_waybar() {
     local sig="${1:-SIGRTMIN+8}"
-    if ! pkill -"$sig" waybar; then
-        log_error "signal" "pkill $sig failed"
-        return 1
+    if ! pkill -"$sig" waybar 2>/dev/null; then
+        log_error "signal" "pkill $sig failed (no waybar process?)"
     fi
+    return 0
 }
 
 # emit_json TEXT CLASS [TOOLTIP]

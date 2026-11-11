@@ -2,6 +2,12 @@
 
 > Scope: Waybar configuration repo (`/home/dev/work/waybar`).  
 > Method: manual review of shell scripts, JSON/JSONC configs, and CSS. No dynamic testing was performed.
+>
+> **Status:** the `/tmp` log/state findings, the `eval` of `jq` output, the duplicated
+> `health()` function, and the broken `netfan.sh` feed path were fixed in
+> `refactor/cleanup-modules`. All logs now go to `<waybar-root>/logs/`; mutable
+> state lives under `XDG_STATE_HOME` / `XDG_RUNTIME_DIR`. The text below is kept as
+> the original audit record; remaining items are still tracked in §3.
 
 ---
 

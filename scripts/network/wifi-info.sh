@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 export LC_ALL=C
 
 wifi_info=$(nmcli -t -f active,ssid,signal,device dev wifi 2>>"$ERRLOG" \
@@ -15,7 +15,7 @@ signal=$(printf '%s' "$wifi_info" | cut -d: -f3)
 iface=$(printf '%s' "$wifi_info" | cut -d: -f4)
 
 [ ${#ssid} -gt 16 ] && ssid="${ssid:0:13}…"
-signal=${signal:-0}
+case "$signal" in ''|*[!0-9]*) signal=0 ;; esac
 
 if   [ "$signal" -ge 80 ]; then sig_cls="good"
 elif [ "$signal" -ge 60 ]; then sig_cls="medium"
@@ -29,9 +29,11 @@ if [ -n "$iface" ] && [ "$iface" != "lo" ]; then
   tx_speed=0
   sysmon="$WAYBAR_HOME/feeds/sysmon.json"
   if [ -f "$sysmon" ]; then
-    read -r rx_speed tx_speed <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0] | @tsv' "$sysmon" 2>>"$ERRLOG")"
+    speeds=$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0] | @tsv' "$sysmon" 2>>"$ERRLOG") || speeds="0 0"
+    read -r rx_speed tx_speed <<< "$speeds"
   fi
-  read -r rx_speed tx_speed <<< "$rx_speed $tx_speed"
+  case "$rx_speed" in ''|*[!0-9]*) rx_speed=0 ;; esac
+  case "$tx_speed" in ''|*[!0-9]*) tx_speed=0 ;; esac
 
   total=$((rx_speed + tx_speed))
   if   [ "$total" -gt 5242880 ]; then spd_cls="critical"

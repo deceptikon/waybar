@@ -32,7 +32,7 @@ Scripts are all `executable_`-prefixed so chezmoi auto-sets `chmod +x`.
 - `ext-display.sh` — `command -v` was leaking to stdout, breaking JSON parse. Fixed with `>/dev/null`.
 - `toggler.sh` / `keywatcher.sh` — autobacklight regex was broken. Reverted to working state.
 - All scripts now named `executable_*.sh` for chezmoi compatibility.
-- Error logging: errors go to `/tmp/waybar_errors.log` instead of being silenced.
+- Error logging: all logs now go to `<waybar-root>/logs/` (`errors.log`, `sysmon.log`, `waybar-*.log`, `capturer.log`, `updates.log`, `ollama.log`); `/tmp` is no longer used.
 
 ### Known issues
 1. **toggle-vert-lite**: Sends SIGUSR1 but waybar doesn't handle this signal. Non-functional.

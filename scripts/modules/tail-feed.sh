@@ -2,7 +2,7 @@
 # tail-feed.sh — tail a sysmon feed by basename
 set -euo pipefail
 
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
 FEED="${1:-}"
 if [[ -z "$FEED" || "$FEED" =~ [^A-Za-z0-9_-] ]]; then

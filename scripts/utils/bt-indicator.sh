@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
 bt_rfkilled=$(rfkill list bluetooth 2>>"$ERRLOG" | grep "Soft blocked: yes" | wc -l)
 bt_rfkilled=$((bt_rfkilled + 0))

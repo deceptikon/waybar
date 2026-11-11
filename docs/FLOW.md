@@ -8,16 +8,16 @@ poller.sh (background daemon, wakes every 2s)
   │   ▼
   ├─ mapper.sh   (parses labeled sections → unified JSON → stdout)
   │   │
-  │   ├──(tee)──→ /tmp/sysmon.json (atomic write once per cycle)
+  │   ├──(tee)──→ feeds/sysmon.json (atomic write once per cycle)
   │   │
   │   ▼
-  └─ formatter.sh  (reads /tmp/sysmon.json → writes per-metric feeds/)
+  └─ formatter.sh  (reads feeds/sysmon.json → writes per-metric feeds/)
 ```
 
 ```
-/tmp/sysmon.json ← written atomically every 2s by poller (write tmp + mv)
+feeds/sysmon.json ← written atomically every 2s by poller (write tmp + mv)
 
-  └─ sysmon/formatter.sh       ← reads /tmp/sysmon.json, writes to feeds/<metric>.json
+  └─ sysmon/formatter.sh       ← reads feeds/sysmon.json, writes to feeds/<metric>.json
                                  (all bars consume via tail -F:
                                   vertical full + top → feeds/{gpu,cpu,ram,ssd}.json
                                   vertical-lite       → feeds/compact-{gpu,cpu,ram,ssd}.json)
@@ -27,10 +27,10 @@ poller.sh (background daemon, wakes every 2s)
 
 | File | Role |
 |---|---|
-| `sysmon/poller.sh` | Background loop: collect + mapper every 2s → `/tmp/sysmon.json` |
+| `sysmon/poller.sh` | Background loop: collect + mapper every 2s → `feeds/sysmon.json` |
 | `sysmon/collect.sh` | Collector: reads `/proc/*` + sysfs + `sensors -j`, outputs labeled sections |
 | `sysmon/mapper.sh` | Parser: reads labeled raw sections, emits unified JSON tree |
-| `sysmon/formatter.sh` | Formatter: reads `/tmp/sysmon.json` (stdin), writes all per-metric feeds + compact feeds atomically |
+| `sysmon/formatter.sh` | Formatter: reads `feeds/sysmon.json` (stdin), writes all per-metric feeds + compact feeds atomically |
 | `sysmon/icon.sh` | One-liner per metric, outputs Waybar JSON with just the icon glyph |
 
 ## Sources

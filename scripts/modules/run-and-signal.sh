@@ -2,7 +2,7 @@
 # run-and-signal.sh — run a command then signal waybar
 set -euo pipefail
 
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
 if [[ $# -lt 2 ]]; then
     log_error "run-and-signal" "usage: $0 <signal> <command> [args...]"

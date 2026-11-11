@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
 profile=$(powerprofilesctl get 2>>"$ERRLOG" | awk -F': ' '/Active profile:/{print $2}' | tr '[:upper:]' '[:lower:]')
 case "$profile" in

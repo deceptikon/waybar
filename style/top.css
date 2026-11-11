@@ -179,7 +179,7 @@ window#waybar:not(.mode-default) #titlebox-row {
     background: rgba(249, 226, 175, 0.18);
     border: 1px solid @accent_yellow;
 }
-/* Toggle in flight (wg-vpn.sh owns /tmp/waybar_vpn_state): pulses between yellow
+/* Toggle in flight (wg-vpn.sh owns $XDG_RUNTIME_DIR/waybar_vpn_state): pulses between yellow
    and peach so a click that is waiting on a password is not mistaken for idle. */
 #custom-wifi.vpn-connecting {
     color: #1e1e2e;

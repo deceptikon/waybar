@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
-LOG_FILE="$STATE_DIR/capturer.log"
+LOG_FILE="$LOG_DIR/capturer.log"
 SAVE_DIR="$HOME/Media/captured/$(date +%Y-%m)"
 mkdir -p "$SAVE_DIR"
 TEMP_REC="$STATE_DIR/recording_temp.mkv"

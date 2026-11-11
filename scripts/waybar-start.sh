@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CFG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/waybar"
-# The correct XDG standard for logs is ~/.local/state
-LOGS_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/waybar"
+# Resolve the config root from this script's location so the launcher works
+# both from the repository and from ~/.config/waybar.
+SELF_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+CFG_DIR="${WAYBAR_HOME:-$(cd -- "$SELF_DIR/.." && pwd)}"
+LOGS_DIR="${WAYBAR_LOG_DIR:-$CFG_DIR/logs}"
 POLLER="${CFG_DIR}/scripts/sysmon/poller.sh"
 PIDFILE="${LOGS_DIR}/sysmon-poller.pid"
 

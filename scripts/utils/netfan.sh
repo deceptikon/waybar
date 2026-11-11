@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
 data=$(cat "$WAYBAR_HOME/feeds/sysmon.json" 2>>"$ERRLOG" || echo '{}')
 read -r rx tx fan <<< "$(jq -r '[.net.rx_speed // 0, .net.tx_speed // 0, .temp.fan1 // 0] | @tsv' <<< "$data")"

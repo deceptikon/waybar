@@ -6,6 +6,7 @@
 - **Module files**: `modules-*.json` files hold per-module configs, included via `"include"` inside the base.
 - **CSS**: `style/base.css` (shared layout), `style/top.css` (top bar overrides + inline Catppuccin @define-colors), `style/vertical.css`, `style/vertical-lite.css`, `style/bottom.css`.
 - **Scripts**: `scripts/waybar-start.sh` starts all 4 bars sequentially (0.5s gaps) — full restart on reload (pkill + start). Other scripts in `scripts/utils/`, `scripts/network/`, `scripts/sysmon/`.
+- **Logs**: every script writes logs under `logs/` at the project root (gitignored). `scripts/lib/common.sh` resolves `$WAYBAR_HOME/logs` from its own location, so this works both in-repo and when deployed. Mutable state/PIDs live under `XDG_STATE_HOME` / `XDG_RUNTIME_DIR`, never `/tmp`.
 
 ## Key Decisions
 - **No SIGUSR2 reload**: GLib assertion crash with multiple bar instances. Full restart (pkill + sequential start) is the only reliable method.

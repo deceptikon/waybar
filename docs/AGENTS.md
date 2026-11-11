@@ -59,8 +59,8 @@ scripts/lib/                       # Shared lib (executable_draw-module.sh)
 ```
 poller.sh (background, every 2s)
   → collect.sh (reads /proc/* + /sys/* + sensors)
-  → mapper.sh (parses → /tmp/sysmon.json)
-  → formatter.sh (reads /tmp/sysmon.json → writes feeds/<metric>.json + feeds/compact-<metric>.json)
+  → mapper.sh (parses → feeds/sysmon.json)
+  → formatter.sh (reads feeds/sysmon.json → writes feeds/<metric>.json + feeds/compact-<metric>.json)
 
 All bars consume via tail -F:
   vertical full + top → tail -F feeds/{gpu,cpu,ram,ssd,asus,network}.json
@@ -88,7 +88,7 @@ All bars consume via tail -F:
 - **NO `set -euo pipefail`** in waybar `exec`/`return-type: json` scripts — `grep`, `yay -Qu`, etc. return non-zero when they find nothing. `errexit` will kill the script and Waybar shows an empty/broken module.
 - `set -euo pipefail` IS correct in `waybar-start.sh` and other side-effect scripts.
 - JSON output via `jq -cn` / `jq --compact-output`.
-- Log errors to `/tmp/waybar_errors.log` — never silence with `>/dev/null`. Stray stdout breaks JSON parsing in Waybar.
+- Log errors to `logs/errors.log` (i.e. `$WAYBAR_HOME/logs/errors.log`, resolved from the script location) — use `scripts/lib/common.sh:log_error`. All project logs live under `$WAYBAR_HOME/logs/`; never write logs to `/tmp` or XDG state. Stray stdout breaks JSON parsing in Waybar.
 - `command -v foo >/dev/null` is correct for availability checks in exec scripts (redirect stdout only, let stderr flow).
 - Do NOT call `pkill -SIGRTMIN+N` from exec/refresh path (infinite loop). Only from on-click handlers.
 - Background processes: `... & disown`.

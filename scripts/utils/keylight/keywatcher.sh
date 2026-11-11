@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../../lib/common.sh"
 
 KBD_LED="/sys/class/leds/asus::kbd_backlight/brightness"
 TIMEOUT=3
@@ -18,11 +18,14 @@ turn_off() {
     echo "$BASHPID" > "$CHECKER_PID_FILE"
     while true; do
         if [[ -f "$LAST_ACTION" ]]; then
-            last=$(cat "$LAST_ACTION")
+            last=$(cat "$LAST_ACTION" 2>/dev/null || echo 0)
+            case "$last" in ''|*[!0-9]*) last=0 ;; esac
             now=$(date +%s)
             diff=$((now - last))
             if [[ "$diff" -ge "$TIMEOUT" ]]; then
-                if [[ "$(cat "$KBD_LED")" -ne 0 ]]; then
+                led=$(cat "$KBD_LED" 2>/dev/null || echo 0)
+                case "$led" in ''|*[!0-9]*) led=0 ;; esac
+                if [[ "$led" -ne 0 ]]; then
                     turn_off
                 fi
             fi
@@ -34,7 +37,9 @@ turn_off() {
 stdbuf -oL evtest "$KBD_DEV" 2>>"$ERRLOG" \
     | grep --line-buffered "value 1" \
     | while read -r _line; do
-        if [[ "$(cat "$KBD_LED")" -eq 0 ]]; then
+        led=$(cat "$KBD_LED" 2>/dev/null || echo 0)
+        case "$led" in ''|*[!0-9]*) led=0 ;; esac
+        if [[ "$led" -eq 0 ]]; then
             echo 2 > "$KBD_LED"
         fi
         date +%s > "$LAST_ACTION"

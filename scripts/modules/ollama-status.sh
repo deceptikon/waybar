@@ -2,7 +2,7 @@
 # ollama-status.sh — local ollama server status for waybar
 set -euo pipefail
 
-source "${WAYBAR_HOME:-$HOME/.config/waybar}/scripts/lib/common.sh"
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/../lib/common.sh"
 
 OLLAMA_HOST="localhost:11111"
 LOG_FILE="$LOG_DIR/ollama.log"
@@ -14,7 +14,8 @@ fi
 
 models=$(OLLAMA_HOST="$OLLAMA_HOST" ollama ps 2>>"$ERRLOG" \
     | awk 'NR>1 {print $1}' \
-    | paste -sd ' ' -)
+    | paste -sd ' ' - \
+    || true)
 
 if [[ -n "$models" ]]; then
     emit_json "󱚣 $models" "on" "Running: $models"

@@ -26,10 +26,14 @@ echo "NET_RAW"
 cat /proc/net/dev
 
 echo "SENSORS_JSON"
-if ! sensors -j 2>>"$ERRLOG"; then
-  echo "{}"
-  log_error "collect" "sensors -j failed: $?"
+# sensors may print partial JSON and still exit non-zero; capture once, validate,
+# and always emit exactly one JSON value (never two concatenated objects).
+if ! sensors_json=$(sensors -j 2>>"$ERRLOG" | jq -c . 2>>"$ERRLOG"); then
+  sensors_json='{}'
+  log_error "collect" "sensors -j failed or returned invalid JSON"
 fi
+[ -n "$sensors_json" ] || sensors_json='{}'
+printf '%s\n' "$sensors_json"
 
 echo "GPU_RAW"
 shopt -s nullglob

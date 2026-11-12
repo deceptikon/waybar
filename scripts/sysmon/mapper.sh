@@ -9,14 +9,17 @@ source "$(cd "$(dirname "$0")" && pwd)/../lib/common.sh"
 
 ENV_FILE="${WAYBAR_HOME}/sysmon.env"
 SYSMON_LOG="${SYSMON_LOG:-${LOG_DIR}/sysmon.log}"
-STATE_FILE="${FEEDS}/.state"
-
-mkdir -p "$FEEDS" "$LOG_DIR"
 
 if [ -f "$ENV_FILE" ]; then
   # shellcheck disable=SC1091
   . "$ENV_FILE"
 fi
+
+# FEEDS must be known after sysmon.env is loaded (SYSMON_FEEDS may be set there).
+FEEDS="${SYSMON_FEEDS:-$WAYBAR_HOME/feeds}"
+STATE_FILE="${FEEDS}/.state"
+
+mkdir -p "$FEEDS" "$LOG_DIR"
 
 log() {
   printf '%s mapper: %s\n' "$(date -Iseconds)" "$*" >>"$SYSMON_LOG"

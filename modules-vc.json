@@ -87,7 +87,7 @@
       "shutdown": "loginctl shutdown",
       "reboot": "loginctl reboot",
       "suspend": "loginctl suspend",
-      "": "loginctl hibernate"
+      "hibernate": "loginctl hibernate"
     }
   }
 }

@@ -46,7 +46,9 @@ if rfkill list wifi 2>>"$ERRLOG" | grep -q "Soft blocked: yes"; then
     wifi_class="disabled"
     wifi_tip="WiFi disabled"
 else
-    ssid=$(iwgetid -r 2>>"$ERRLOG" || true)
+    ssid=$(nmcli -t -f ACTIVE,SSID dev wifi 2>>"$ERRLOG" \
+        | awk -F: '$1=="yes" { print substr($0, index($0, ":") + 1); exit }' \
+        || true)
     wifi_icon=󰖩
     if [[ -n "$ssid" ]]; then
         wifi_class="connected"

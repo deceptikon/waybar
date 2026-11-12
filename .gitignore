@@ -2,7 +2,7 @@
 .qwen/
 
 feeds/*
-!feeds/wifi-menu.xml
+!feeds/*.xml
 logs/
 
 __pycache__/

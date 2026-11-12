@@ -4,17 +4,18 @@ set -euo pipefail
 
 DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WAYBAR_HOME="${WAYBAR_HOME:-$(cd -- "$DIR/../.." && pwd)}"
-FEEDS="${WAYBAR_HOME}/feeds"
-LOG_DIR="${WAYBAR_LOG_DIR:-${WAYBAR_HOME}/logs}"
 ENV_FILE="${WAYBAR_HOME}/sysmon.env"
-SYSMON_LOG="${SYSMON_LOG:-$LOG_DIR/sysmon.log}"
-
-mkdir -p "$FEEDS" "$LOG_DIR"
 
 if [ -f "$ENV_FILE" ]; then
   # Optional SYSMON_* overrides (see sysmon.env)
   . "$ENV_FILE"
 fi
+
+FEEDS="${SYSMON_FEEDS:-${WAYBAR_HOME}/feeds}"
+LOG_DIR="${WAYBAR_LOG_DIR:-${WAYBAR_HOME}/logs}"
+SYSMON_LOG="${SYSMON_LOG:-$LOG_DIR/sysmon.log}"
+
+mkdir -p "$FEEDS" "$LOG_DIR"
 
 SLEEP="${SYSMON_POLL_SLEEP:-2}"
 

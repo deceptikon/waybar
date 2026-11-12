@@ -122,26 +122,76 @@ window.bar-bottom {
     border-radius: 8px;
 }
 
-#custom-ollama {
-    color: #249e94;
-    font-size: 6px;
+/* Right-area tools as compact buttons (inspired by vertical VR zone) */
+#custom-ollama,
+#custom-llama,
+#custom-checkupdates,
+#custom-recorder,
+#custom-fnlock {
+    background: rgba(20, 20, 28, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 5px;
+    margin: 1px 3px;
     padding: 0 6px;
-    min-height: 0;
-    margin: 0;
+    min-height: 8px;
+    min-width: 14px;
+    font-size: 8px;
+    color: #a6adc8;
+    transition: all 0.2s ease;
 }
-#custom-ollama.on  { color: #94e2d5; }
-#custom-ollama.off { color: #666; }
 
-#custom-llama {
-    color: #249e94;
-    font-size: 6px;
-    padding: 0 6px;
-    min-height: 0;
-    margin: 0;
+#custom-ollama:hover,
+#custom-llama:hover,
+#custom-checkupdates:hover,
+#custom-recorder:hover,
+#custom-fnlock:hover {
+    background: rgba(148, 226, 213, 0.15);
+    border-color: rgba(148, 226, 213, 0.4);
+    color: #cdd6f4;
 }
-#custom-llama.off { color: #666; }
-#custom-llama.idle  { color: #94e2d5; }
-#custom-llama.active { color: #a6e3a1; }
+
+/* Active / state accents */
+#custom-checkupdates.notify,
+#custom-fnlock.active {
+    border-color: rgba(148, 226, 213, 0.5);
+    background: rgba(0, 128, 128, 0.15);
+    color: #94e2d5;
+}
+#custom-checkupdates.active {
+    border-color: rgba(166, 227, 161, 0.5);
+    background: rgba(166, 227, 161, 0.12);
+    color: #a6e3a1;
+}
+#custom-recorder.recording {
+    border-color: rgba(243, 139, 168, 0.5);
+    background: rgba(243, 139, 168, 0.15);
+    color: #f38ba8;
+}
+
+#custom-ollama.on {
+    border-color: rgba(148, 226, 213, 0.5);
+    background: rgba(0, 128, 128, 0.15);
+    color: #94e2d5;
+}
+#custom-ollama.off {
+    border-color: rgba(255, 255, 255, 0.04);
+    color: #585b70;
+}
+
+#custom-llama.idle {
+    border-color: rgba(148, 226, 213, 0.5);
+    background: rgba(0, 128, 128, 0.15);
+    color: #94e2d5;
+}
+#custom-llama.active {
+    border-color: rgba(166, 227, 161, 0.5);
+    background: rgba(166, 227, 161, 0.15);
+    color: #a6e3a1;
+}
+#custom-llama.off {
+    border-color: rgba(255, 255, 255, 0.04);
+    color: #585b70;
+}
 
 #mode {
     font-size: 6px;

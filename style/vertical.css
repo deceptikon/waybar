@@ -34,9 +34,10 @@ tooltip label {
     font-size: 16px;
     color: #fab387;
     opacity: 0.4;
-    padding: 2px;
+    padding: 2px 0;
     min-height: 0;
     margin: 4px 0 0 0;
+    text-align: center;
     transition: opacity 0.2s ease;
 }
 #custom-powerbtn:hover {

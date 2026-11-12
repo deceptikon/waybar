@@ -2,7 +2,7 @@
   "layer": "top",
   "position": "right",
   "reload_style_on_change": true,
-  "fixed-center": true,
+  "fixed-center": false,
 "modules-center": [
       "group/vc-row1",
       "group/vc-row2"
@@ -16,7 +16,8 @@
       "modules": ["custom/dunst", "custom/ext-display"]
     },
     "modules-right": [
-      "sway/workspaces#bottom"
+      "sway/workspaces#vert",
+      "custom/powerbtn"
     ],
     // "sway/workspaces#vert": {
     //   "disable-scroll": false,

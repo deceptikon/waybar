@@ -7,21 +7,21 @@
     "height": 10,
     "fixed-center": true,
     "modules-right": [
-      "sway/workspaces",
       "custom/ollama",
       "custom/llama",
       "custom/checkupdates",
       "custom/recorder",
-      "custom/fnlock",
-      "custom/powerbtn"
+      "custom/fnlock"
     ],
     "modules-center": [
-      "tray"
     ],
     "modules-left": [
-	"ext/workspaces"
+      "tray"
     ],
-    "include": [],
+    "include": [
+    "modules-vc.json"
+
+    ],
 "ext/workspaces": {
 	"format": "{name}: {icon}",
 	"on-click": "activate",

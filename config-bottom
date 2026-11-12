@@ -4,7 +4,7 @@
     "layer": "top",
     "position": "bottom",
     "reload_style_on_change": true,
-    "height": 10,
+    "height": 20,
     "fixed-center": true,
     "modules-right": [
       "custom/ollama",

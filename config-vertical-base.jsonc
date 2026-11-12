@@ -67,14 +67,6 @@
         "thunar": "📁"
       }
     },
-  "custom/checkupdates": {
-    "exec": "~/.config/waybar/scripts/utils/checkupdates.sh",
-    "return-type": "json",
-    "interval": 3600,
-    "format": "{}",
-    "on-click": "wezterm -e ~/.config/waybar/scripts/modules/run-updates.sh",
-    "signal": 8
-  },
   "include": [
     "modules-vc.json"
   ]

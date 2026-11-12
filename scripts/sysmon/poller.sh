@@ -4,6 +4,8 @@ set -euo pipefail
 
 DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WAYBAR_HOME="${WAYBAR_HOME:-$(cd -- "$DIR/../.." && pwd)}"
+FEEDS="${WAYBAR_HOME}/feeds"
+LOG_DIR="${WAYBAR_LOG_DIR:-${WAYBAR_HOME}/logs}"
 ENV_FILE="${WAYBAR_HOME}/sysmon.env"
 
 if [ -f "$ENV_FILE" ]; then

@@ -7,7 +7,13 @@
     "height": 10,
     "fixed-center": true,
     "modules-right": [
-      "sway/workspaces#bottom"
+      "sway/workspaces",
+      "custom/ollama",
+      "custom/llama",
+      "custom/checkupdates",
+      "custom/recorder",
+      "custom/fnlock",
+      "custom/powerbtn"
     ],
     "modules-center": [
       "tray"

@@ -13,5 +13,5 @@ uptime -p 2>>"$ERRLOG" \
         if ($0 ~ /(hour)/)   { match($0, /([0-9]+)[[:space:]]*hour/, a);   h = a[1] + 0 }
         if ($0 ~ /(min)/)    { match($0, /([0-9]+)[[:space:]]*min/, a);    m = a[1] + 0 }
         t = d * 24 * 60 + h * 60 + m
-        printf " <sub>%dh </sub> ⏻ <sub> %dm</sub>", int(t / 60), t % 60
+        printf " <sub>%3dh</sub>  ⏻  <sub>%3dm</sub> ", int(t / 60), t % 60
     }'
